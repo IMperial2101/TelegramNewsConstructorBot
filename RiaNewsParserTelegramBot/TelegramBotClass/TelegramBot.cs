@@ -26,7 +26,7 @@ namespace NewsPropertyBot.TelegramBotClass
                 Console.WriteLine($"Ошибка при отправке сообщения: {ex.Message}");
             }
         }
-        public async Task SendMyNewToChannel(MyNew myNew)
+        public async Task SendMyNewToChannelAsync(MyNew myNew)
         {
             try
             {
@@ -47,6 +47,7 @@ namespace NewsPropertyBot.TelegramBotClass
 
                 await botClient.SendTextMessageAsync(channelId, message, ParseMode.Markdown);
                 Console.WriteLine($"Успешно отправили новость в канал");
+
             }
             catch (Exception ex)
             {

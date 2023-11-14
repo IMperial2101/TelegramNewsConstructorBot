@@ -16,13 +16,19 @@ namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
-        private XPathStrings xPathStrings = new XPathStrings();
-        private List<string> mainPageLinks = new List<string>();
-        private string lastNewLink = null;
-        private string urlToParse;
-        private HttpClient httpClient;
-        private HtmlDocument htmlDocumentMainPage = new HtmlDocument();
-        private TelegramBot telegramBot;
+        Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
+        Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
+        List<string> linksToParse = new List<string>();
+        HtmlDocument htmlDocumentMainPage = new HtmlDocument();
+        List<string> mainPageLinks = new List<string>();
+        XPathStrings xPathStrings = new XPathStrings();
+        
+        HttpClient httpClient;
+        TelegramBot telegramBot;
+        string lastNewLink = null;
+        string urlToParse;
+        static int minViewCount = 1000;
+        
 
         public Parser()
         {
@@ -40,6 +46,13 @@ namespace NewsPropertyBot.ParsingClasses
 
             httpClient.MaxResponseContentBufferSize = int.MaxValue;
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
+        }
+        public async Task StartParseNews()
+        {
+            await ParseNewLinksFuncAsync();
+            CheckMainLinksForView();
+            await ParseAndSendNewsAsync();
+
         }
         public async Task ParsePageAsync(string pageUrl, HtmlDocument htmlDocument)
         {
@@ -67,8 +80,9 @@ namespace NewsPropertyBot.ParsingClasses
                 return;
             }
         }
-        public async Task MainParseFunction()
+        public async Task ParseNewLinksFuncAsync()
         {
+            
             try
             {
                 await ParsePageAsync(urlToParse, htmlDocumentMainPage);
@@ -80,28 +94,23 @@ namespace NewsPropertyBot.ParsingClasses
             }
             try
             {
-                HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.AllNewLinks);
+                HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.mainLinksDivContainer);
 
                 if (newNewsNodes != null)
                 {
                     foreach (var node in newNewsNodes)
-                        mainPageLinks.Add(node.GetAttributeValue("href", ""));
-                    Console.WriteLine($"Проверяем наличие новых ссылок, последняя актуальная ссылка - {lastNewLink}");
-                    List<string> linkstoParse = GetLinksToParse(mainPageLinks, ref lastNewLink);
-                    if (linkstoParse != null)
                     {
-                        Console.WriteLine("Есть новые ссылки для парсинга");
-                        await ParseAndSendAsync(linkstoParse);
-                    }  
-                    else
-                    {
-                        mainPageLinks.Clear();
-                        return;
+                        try
+                        {
+                            mainPageLinksWithViewsDict.Add(node.SelectSingleNode(".//a[contains(@class,'list-item__title')]").GetAttributeValue("href", ""), Convert.ToInt32(node.SelectSingleNode(".//div[@class = 'list-item__views-text']").InnerText));
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Две одинаковые ссылки на странице");
+                        }
                     }
-                        
                 }
-                else
-                {
+                else{
                     Console.WriteLine("No new news nodes found.");
                     return;
                 }
@@ -110,22 +119,25 @@ namespace NewsPropertyBot.ParsingClasses
             {
                 // Обработка ошибки при парсинге новых элементов
                 Console.WriteLine($"Error parsing new elements: {ex.Message}");
+                return;
             }
         }
-        public async Task ParseAndSendAsync(List<string> linksToParse)
+        public async Task ParseAndSendNewsAsync()
         {
-            var tasks = linksToParse.Select(link => ParseOneNew(link)).ToList();
+            var tasks = currLinksForSendInChannel
+    .Where(kv => !kv.Value) // Фильтруем по значению
+    .Select(kv => ParseOneNewAsync(kv.Key)) // Применяем функцию к каждой отфильтрованной ссылке
+    .ToList(); // Преобразуем в список задач
 
             try
             {
                 var results = await Task.WhenAll(tasks);
 
-                // Отправка сообщений после завершения всех задач парсинга
                 foreach (var myNew in results)
                 {
                     if (myNew != null)
                     {
-                        await telegramBot.SendMyNewToChannel(myNew);
+                        await telegramBot.SendMyNewToChannelAsync(myNew);
                     }
                 }
             }
@@ -135,12 +147,14 @@ namespace NewsPropertyBot.ParsingClasses
                 return;
             }
         }
-        public async Task<MyNew> ParseOneNew(string url)
+        public async Task<MyNew> ParseOneNewAsync(string url)
         {
+            currLinksForSendInChannel[url] = true;
             HtmlDocument htmlDocumentNew = new HtmlDocument();
             try
             {
                 await ParsePageAsync(url, htmlDocumentNew);
+
                 MyNew myNew = new MyNew();
                 myNew.url = url;
 
@@ -187,23 +201,23 @@ namespace NewsPropertyBot.ParsingClasses
                 return null;
             }
         }
-
-
-
-
-        public async Task MainParseFunction_Originn()
+        private void CheckMainLinksForView()
         {
-            await ParsePageAsync(urlToParse, htmlDocumentMainPage);
-            HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.AllNewLinks);
-            foreach (var node in newNewsNodes)
-                mainPageLinks.Add(node.GetAttributeValue("href", ""));
+            foreach(var link in currLinksForSendInChannel)
+            {
+                if(!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
+                {
+                    currLinksForSendInChannel.Remove(link.Key);
+                }
+            }
+            foreach(var myNew in mainPageLinksWithViewsDict)
+            {
 
-            List<string> linkstoParse = GetLinksToParse(mainPageLinks, ref lastNewLink);
-            if (linkstoParse != null)
-                await ParseAndSendAsync(linkstoParse);
-            else
-                return;
-
+                if(!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > minViewCount)
+                {
+                    currLinksForSendInChannel.Add(myNew.Key,false);
+                }
+            }
         }
 
     }
