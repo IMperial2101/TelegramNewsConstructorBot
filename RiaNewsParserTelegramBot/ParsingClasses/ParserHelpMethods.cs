@@ -12,15 +12,20 @@ namespace NewsPropertyBot.ParsingClasses
         {
             if (lastNewLink == null)
             {
+                Console.WriteLine("Последняя актуальная ссылка = null");
                 lastNewLink = mainPageLinks[0];
                 return null;
             }
             else if (lastNewLink == mainPageLinks[0])
+            {
+                Console.WriteLine("Новых ссылок не найдено");
                 return null;
+            }
             else
             {
                 if (!mainPageLinks.Contains(lastNewLink))
                 {
+                    Console.WriteLine("Полседняя ссылка не равна null, но она не нашлась в новом списке");
                     lastNewLink = mainPageLinks[0];
                     return null;
                 }

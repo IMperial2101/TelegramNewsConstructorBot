@@ -46,6 +46,7 @@ namespace NewsPropertyBot.TelegramBotClass
                 }
 
                 await botClient.SendTextMessageAsync(channelId, message, ParseMode.Markdown);
+                Console.WriteLine($"Успешно отправили новость в канал");
             }
             catch (Exception ex)
             {

@@ -18,7 +18,7 @@ namespace NewsPropertyBot.ParsingClasses
     {
         private XPathStrings xPathStrings = new XPathStrings();
         private List<string> mainPageLinks = new List<string>();
-        private string lastNewLink = "https://ria.ru/20231113/konferentsiya-1909249179.html";
+        private string lastNewLink = null;
         private string urlToParse;
         private HttpClient httpClient;
         private HtmlDocument htmlDocumentMainPage = new HtmlDocument();
@@ -54,6 +54,7 @@ namespace NewsPropertyBot.ParsingClasses
                 if (!response.IsSuccessStatusCode)
                     return;
                 htmlDocument.LoadHtml(await response.Content.ReadAsStringAsync());
+                Console.WriteLine($"\n\nСкачали успешно страницу - {pageUrl}");
             }
             catch (HttpRequestException ex)
             {
@@ -66,20 +67,50 @@ namespace NewsPropertyBot.ParsingClasses
                 return;
             }
         }
-
         public async Task MainParseFunction()
         {
-            await ParsePageAsync(urlToParse, htmlDocumentMainPage);
-            HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.AllNewLinks);
-            foreach(var node in newNewsNodes)
-                mainPageLinks.Add(node.GetAttributeValue("href", ""));
+            try
+            {
+                await ParsePageAsync(urlToParse, htmlDocumentMainPage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading page: {ex.Message}");
+                return;
+            }
+            try
+            {
+                HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.AllNewLinks);
 
-            List<string> linkstoParse = GetLinksToParse(mainPageLinks,ref lastNewLink);
-            if (linkstoParse != null)
-                await ParseAndSendAsync(linkstoParse);
-            else
-                return;           
-
+                if (newNewsNodes != null)
+                {
+                    foreach (var node in newNewsNodes)
+                        mainPageLinks.Add(node.GetAttributeValue("href", ""));
+                    Console.WriteLine($"Проверяем наличие новых ссылок, последняя актуальная ссылка - {lastNewLink}");
+                    List<string> linkstoParse = GetLinksToParse(mainPageLinks, ref lastNewLink);
+                    if (linkstoParse != null)
+                    {
+                        Console.WriteLine("Есть новые ссылки для парсинга");
+                        await ParseAndSendAsync(linkstoParse);
+                    }  
+                    else
+                    {
+                        mainPageLinks.Clear();
+                        return;
+                    }
+                        
+                }
+                else
+                {
+                    Console.WriteLine("No new news nodes found.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Обработка ошибки при парсинге новых элементов
+                Console.WriteLine($"Error parsing new elements: {ex.Message}");
+            }
         }
         public async Task ParseAndSendAsync(List<string> linksToParse)
         {
@@ -155,6 +186,24 @@ namespace NewsPropertyBot.ParsingClasses
                 Console.WriteLine($"Ошибка: {ex.Message}");
                 return null;
             }
+        }
+
+
+
+
+        public async Task MainParseFunction_Originn()
+        {
+            await ParsePageAsync(urlToParse, htmlDocumentMainPage);
+            HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.AllNewLinks);
+            foreach (var node in newNewsNodes)
+                mainPageLinks.Add(node.GetAttributeValue("href", ""));
+
+            List<string> linkstoParse = GetLinksToParse(mainPageLinks, ref lastNewLink);
+            if (linkstoParse != null)
+                await ParseAndSendAsync(linkstoParse);
+            else
+                return;
+
         }
 
     }
