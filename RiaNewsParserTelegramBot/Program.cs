@@ -22,13 +22,16 @@ class Program
         parser = new Parser(proxy.GetWebProxy(), "https://ria.ru/world/", telegramBot);
 
 
-        
         while(true)
         {
+            Console.WriteLine("Начало парсинга");
             await parser.StartParseNews();
+            Console.WriteLine("Конец, ожидание 5 минут ", DateTime.Now);
             await Task.Delay(TimeSpan.FromMinutes(5));
-
         }
+
+        Console.ReadLine();
+        
         
 
         

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using NewsPropertyBot.TelegramBotClass;
 using static System.Net.WebRequestMethods;
 using NewsPropertyBot.XpathClass;
+using AngleSharp.Dom;
 
 namespace NewsPropertyBot.ParsingClasses
 {
@@ -19,9 +20,10 @@ namespace NewsPropertyBot.ParsingClasses
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
         Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
         List<string> linksToParse = new List<string>();
-        HtmlDocument htmlDocumentMainPage = new HtmlDocument();
         List<string> mainPageLinks = new List<string>();
         XPathStrings xPathStrings = new XPathStrings();
+        HtmlDocument htmlDocumentMainPage = new HtmlDocument();
+        string lastLink = "";
         
         HttpClient httpClient;
         TelegramBot telegramBot;
@@ -49,53 +51,77 @@ namespace NewsPropertyBot.ParsingClasses
         }
         public async Task StartParseNews()
         {
-            await ParseNewLinksFuncAsync();
-            CheckMainLinksForView();
-            await ParseAndSendNewsAsync();
+            await DownloadPageAsync(urlToParse, htmlDocumentMainPage);
+            string parseNewLinksResponse = ParseNewLinks();
+            switch (parseNewLinksResponse)
+            {
+                case "NoNewLinksFound":
+                    {
+                        break;
+                    }
+                case "Succes":
+                    {
+                        RemoveNoActualLinks();
+                        AddNewLinksToSend();
+                        var newsList = await ParseNewsAsync();
+                        await SendNewsToChannelAsync(newsList);
+                        break;
+                    }
+            }
 
         }
-        public async Task ParsePageAsync(string pageUrl, HtmlDocument htmlDocument)
+        public async Task DownloadPageAsync(string pageUrl,HtmlDocument htmlDocument)
         {
-            if (string.IsNullOrWhiteSpace(pageUrl))
+            try
             {
-                throw new ArgumentException("Page URL cannot be empty or null.", nameof(pageUrl));
+                if (string.IsNullOrWhiteSpace(pageUrl))
+                    throw new ArgumentException("Page URL cannot be empty or null.", nameof(pageUrl));
+            }
+            catch(ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                htmlDocument = null;
+                return;
             }
             try
             {
                 HttpResponseMessage response;
                 response = await httpClient.GetAsync(pageUrl);
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode != true)
+                {
+                    htmlDocument = null;
                     return;
+                }
                 htmlDocument.LoadHtml(await response.Content.ReadAsStringAsync());
-                Console.WriteLine($"\n\nСкачали успешно страницу - {pageUrl}");
+                if(htmlDocument.DocumentNode.SelectSingleNode("//html") == null)
+                {
+                    htmlDocument = null;
+                    return;
+                }
+                return;
             }
             catch (HttpRequestException ex)
             {
                 Console.WriteLine($"HTTP Request Error: {ex.Message}");
-                return;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return;
             }
+            htmlDocument = null;
+            return;
         }
-        public async Task ParseNewLinksFuncAsync()
+        public string ParseNewLinks()
         {
-            
             try
-            {
-                await ParsePageAsync(urlToParse, htmlDocumentMainPage);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error downloading page: {ex.Message}");
-                return;
-            }
-            try
-            {
+            {               
                 HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.mainLinksDivContainer);
-
+                string firstNewLink = newNewsNodes[0].SelectSingleNode(".//a[contains(@class,'list-item__title')]").GetAttributeValue("href", "");
+                if (lastLink == firstNewLink)
+                {
+                    return "NoNewLinksFound";
+                }
+                mainPageLinksWithViewsDict.Clear();
                 if (newNewsNodes != null)
                 {
                     foreach (var node in newNewsNodes)
@@ -109,25 +135,24 @@ namespace NewsPropertyBot.ParsingClasses
                             Console.WriteLine("Две одинаковые ссылки на странице");
                         }
                     }
+                    lastLink = firstNewLink;
                 }
                 else{
-                    Console.WriteLine("No new news nodes found.");
-                    return;
+                    return "HtmlNodeCollectionIsNull";
                 }
             }
             catch (Exception ex)
             {
-                // Обработка ошибки при парсинге новых элементов
                 Console.WriteLine($"Error parsing new elements: {ex.Message}");
-                return;
             }
+            return "Succes";
         }
-        public async Task ParseAndSendNewsAsync()
+        public async Task ParseAndSendNewsAsyncT()
         {
             var tasks = currLinksForSendInChannel
-    .Where(kv => !kv.Value) // Фильтруем по значению
-    .Select(kv => ParseOneNewAsync(kv.Key)) // Применяем функцию к каждой отфильтрованной ссылке
-    .ToList(); // Преобразуем в список задач
+    .Where(kv => !kv.Value) 
+    .Select(kv => ParseOneNewAsync(kv.Key)) 
+    .ToList(); 
 
             try
             {
@@ -138,6 +163,7 @@ namespace NewsPropertyBot.ParsingClasses
                     if (myNew != null)
                     {
                         await telegramBot.SendMyNewToChannelAsync(myNew);
+                        await Task.Delay(TimeSpan.FromSeconds(1));
                     }
                 }
             }
@@ -147,13 +173,46 @@ namespace NewsPropertyBot.ParsingClasses
                 return;
             }
         }
+        public async Task<List<MyNew>> ParseNewsAsync()
+        {
+            var tasks = currLinksForSendInChannel
+                .Where(kv => !kv.Value)
+                .Select(kv => ParseOneNewAsync(kv.Key))
+                .ToList();
+
+            try
+            {
+                var results = await Task.WhenAll(tasks);
+                return results.Where(myNew => myNew != null).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при выполнении асинхронных задач парсинга: {ex.Message}");
+                return new List<MyNew>();
+            }
+        }
+        public async Task SendNewsToChannelAsync(List<MyNew> newsList)
+        {
+            foreach (var myNew in newsList)
+            {
+                try
+                {
+                    await telegramBot.SendMyNewToChannelAsync(myNew);
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при отправке новости в канал: {ex.Message}");
+                }
+            }
+        }
         public async Task<MyNew> ParseOneNewAsync(string url)
         {
             currLinksForSendInChannel[url] = true;
             HtmlDocument htmlDocumentNew = new HtmlDocument();
             try
             {
-                await ParsePageAsync(url, htmlDocumentNew);
+                await DownloadPageAsync(url, htmlDocumentNew);
 
                 MyNew myNew = new MyNew();
                 myNew.url = url;
@@ -201,21 +260,24 @@ namespace NewsPropertyBot.ParsingClasses
                 return null;
             }
         }
-        private void CheckMainLinksForView()
-        {
-            foreach(var link in currLinksForSendInChannel)
-            {
-                if(!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
-                {
-                    currLinksForSendInChannel.Remove(link.Key);
-                }
-            }
+        private void AddNewLinksToSend()
+        {  
             foreach(var myNew in mainPageLinksWithViewsDict)
             {
 
                 if(!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > minViewCount)
                 {
                     currLinksForSendInChannel.Add(myNew.Key,false);
+                }
+            }
+        }
+        private void RemoveNoActualLinks()
+        {
+            foreach (var link in currLinksForSendInChannel)
+            {
+                if (!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
+                {
+                    currLinksForSendInChannel.Remove(link.Key);
                 }
             }
         }
