@@ -1,7 +1,7 @@
 ﻿{
 	"botToken": "6904948865:AAFIPhq_bhiLPVoQZqrwLHHxbixXxKwtIT8",
-	"channelID": "@MoscowPropertyNews",
-	"parseLink": "https://ria.ru/defense_safety/",
+	"channelID": "@MoscowPropetyNews",
+	"parseLink": "https://ria.ru/economy/",
 	"useProxy": "yes",
 	"myProxy":{
 		"host": "91.188.243.122",
@@ -14,5 +14,5 @@
 	"timeBetweenSendMessSeconds": 10,
 	"smile": "🇷🇺",
 	"maxParagraphCount": 2,
-	"maxDescripSymbCount": 150 
+	"maxDescripSymbCount": 200 
 }

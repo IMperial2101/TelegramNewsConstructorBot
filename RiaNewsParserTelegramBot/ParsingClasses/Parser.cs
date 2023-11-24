@@ -210,19 +210,24 @@ namespace NewsPropertyBot.ParsingClasses
                 myNew.url = url;
 
                 HtmlNode name = htmlDocumentNew.DocumentNode.SelectSingleNode(xPathStrings.title);
-                if (name != null)               
-                    myNew.title = HttpUtility.HtmlDecode(name.InnerText.Trim());              
-                else{
-                    Console.WriteLine($"Ошибка: Не удалось найти узел для заголовка.- {url}");
-                    return null;
+                if (name != null)
+                    myNew.title = HttpUtility.HtmlDecode(name.InnerText.Trim());
+                else
+                {
+                    name = htmlDocumentNew.DocumentNode.SelectSingleNode(xPathStrings.titleH1);
+                    if (name != null)
+                        myNew.title = HttpUtility.HtmlDecode(name.InnerText.Trim());
+                    else
+                    {
+                        Console.WriteLine("Ошибка: Не удалось найти узел для заголовка.");
+                        return null;
+                    }
                 }
-
-                HtmlNode afterName = htmlDocumentNew.DocumentNode.SelectSingleNode(xPathStrings.secondTitle);
+                    HtmlNode afterName = htmlDocumentNew.DocumentNode.SelectSingleNode(xPathStrings.secondTitle);
                 if (afterName != null)               
-                    myNew.secondTitle = HttpUtility.HtmlDecode(afterName.InnerText.Trim());               
+                    myNew.secondTitle = "\n" + HttpUtility.HtmlDecode(afterName.InnerText.Trim());               
                 else{
                     Console.WriteLine($"Ошибка: Не удалось найти узел для описания после заголовка.- {url}");
-                    return null;
                 }
 
                 HtmlNode photo = htmlDocumentNew.DocumentNode.SelectSingleNode(xPathStrings.photoNew);
@@ -230,7 +235,6 @@ namespace NewsPropertyBot.ParsingClasses
                     myNew.photoUrl = photo.GetAttributeValue("src", "");               
                 else{
                     Console.WriteLine($"Ошибка: Не удалось найти узел для изображения.- {url}");
-                    return null;
                 }
 
                 HtmlNodeCollection descriptionAbzatc = htmlDocumentNew.DocumentNode.SelectNodes(xPathStrings.descriptionText);
@@ -240,7 +244,6 @@ namespace NewsPropertyBot.ParsingClasses
                 }
                 else{
                     Console.WriteLine($"Ошибка: Не удалось найти узлы для описания.- {url}");
-                    return null;
                 }
                 
                 return myNew;

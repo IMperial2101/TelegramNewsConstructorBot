@@ -33,9 +33,7 @@ class Program
             Console.WriteLine("Начало парсинга");
             await parser.StartParseNews();
             Console.WriteLine($"Конец, ожидание {timeBetweenMainParseSeconds/60} минут {DateTime.Now}\n");
-            await Task.Delay(timeBetweenMainParseSeconds);
-
-            Console.ReadLine();
+            await Task.Delay(TimeSpan.FromSeconds(timeBetweenMainParseSeconds));
         }        
     }
     static MyProperties ReadLineProperties()

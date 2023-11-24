@@ -48,7 +48,7 @@ namespace NewsPropertyBot.TelegramBotClass
                 if (!string.IsNullOrEmpty(myNew.photoUrl))
                 {
                     // Send the photo first
-                    await botClient.SendPhotoAsync(channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*\n_{myNew.secondTitle}_\n{MakeDescription(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                    await botClient.SendPhotoAsync(channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{myNew.secondTitle}_\n{MakeDescription(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
                 }
                 else
                 {
