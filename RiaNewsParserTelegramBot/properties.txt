@@ -1,0 +1,18 @@
+﻿{
+	"botToken": "6904948865:AAFIPhq_bhiLPVoQZqrwLHHxbixXxKwtIT8",
+	"channelID": "@MoscowPropertyNews",
+	"parseLink": "https://ria.ru/defense_safety/",
+	"useProxy": "yes",
+	"myProxy":{
+		"host": "91.188.243.122",
+		"port": 9487,
+		"login": "XrVHcG",
+		"password": "pthNrV"
+	},
+	"timeBetweenMainParseSeconds": 300,
+	"minViewCount": 1000,
+	"timeBetweenSendMessSeconds": 10,
+	"smile": "🇷🇺",
+	"maxParagraphCount": 2,
+	"maxDescripSymbCount": 150 
+}

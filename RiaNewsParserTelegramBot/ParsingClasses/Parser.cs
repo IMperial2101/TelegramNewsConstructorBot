@@ -12,6 +12,7 @@ using NewsPropertyBot.TelegramBotClass;
 using static System.Net.WebRequestMethods;
 using NewsPropertyBot.XpathClass;
 using AngleSharp.Dom;
+using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace NewsPropertyBot.ParsingClasses
 {
@@ -27,31 +28,35 @@ namespace NewsPropertyBot.ParsingClasses
         
         HttpClient httpClient;
         TelegramBot telegramBot;
+        string useProxy;
         string lastNewLink = null;
-        string urlToParse;
-        static int minViewCount = 1000;
-        
-
+        string parseLink;
+        static int minViewCount;
+        int timeBetweenSendMessSeconds;
         public Parser()
         {
             httpClient = new HttpClient();
         }
-        public Parser(WebProxy proxy,string url, TelegramBot telegramBot)
+        public Parser(TelegramBot telegramBot, MyProperties properties)
         {
             this.telegramBot = telegramBot;
-            urlToParse = url;
+            parseLink = properties.parseLink;
             HttpClientHandler httpHandler = new HttpClientHandler();
-            httpHandler.Proxy = proxy;
+            httpHandler.Proxy = properties.myProxy.GetWebProxy();
             httpHandler.UseDefaultCredentials = false;
 
             httpClient = new HttpClient(httpHandler);
 
             httpClient.MaxResponseContentBufferSize = int.MaxValue;
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
+
+            minViewCount = properties.minViewCount;
+            timeBetweenSendMessSeconds = properties.timeBetweenSendMessSeconds;
+            useProxy = properties.useProxy;
         }
         public async Task StartParseNews()
         {
-            await DownloadPageAsync(urlToParse, htmlDocumentMainPage);
+            await DownloadPageAsync(parseLink, htmlDocumentMainPage);
             string parseNewLinksResponse = ParseNewLinks();
             switch (parseNewLinksResponse)
             {
@@ -61,10 +66,11 @@ namespace NewsPropertyBot.ParsingClasses
                     }
                 case "Succes":
                     {
+                        Console.WriteLine("Успешно скачали главную страницу");
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
                         var newsList = await ParseNewsAsync();
-                        await SendNewsToChannelAsync(newsList);
+                        SendNewsToChannelAsync(newsList);
                         break;
                     }
                 default:
@@ -147,32 +153,6 @@ namespace NewsPropertyBot.ParsingClasses
             }
             return "Succes";
         }
-        public async Task ParseAndSendNewsAsyncT()
-        {
-            var tasks = currLinksForSendInChannel
-    .Where(kv => !kv.Value) 
-    .Select(kv => ParseOneNewAsync(kv.Key)) 
-    .ToList(); 
-
-            try
-            {
-                var results = await Task.WhenAll(tasks);
-
-                foreach (var myNew in results)
-                {
-                    if (myNew != null)
-                    {
-                        await telegramBot.SendMyNewToChannelAsync(myNew);
-                        await Task.Delay(TimeSpan.FromSeconds(1));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при выполнении асинхронных задач: {ex.Message}");
-                return;
-            }
-        }
         public async Task<List<MyNew>> ParseNewsAsync()
         {
             var tasks = currLinksForSendInChannel
@@ -180,16 +160,28 @@ namespace NewsPropertyBot.ParsingClasses
                 .Select(kv => ParseOneNewAsync(kv.Key))
                 .ToList();
 
-            try
+            var results = new List<MyNew>();
+
+            foreach (var task in tasks)
             {
-                var results = await Task.WhenAll(tasks);
-                return results.Where(myNew => myNew != null).ToList();
+                try
+                {
+                    var result = await task;
+                    if (result != null)
+                    {
+                        results.Add(result);
+                        Console.WriteLine($"Успешно отпарсили ссылку \"{result.title.Substring(0,20)}...");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при выполнении асинхронной задачи парсинга: {ex.Message}");
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при выполнении асинхронных задач парсинга: {ex.Message}");
-                return new List<MyNew>();
-            }
+
+            return results;
         }
         public async Task SendNewsToChannelAsync(List<MyNew> newsList)
         {
@@ -198,7 +190,7 @@ namespace NewsPropertyBot.ParsingClasses
                 try
                 {
                     await telegramBot.SendMyNewToChannelAsync(myNew);
-                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    await Task.Delay(TimeSpan.FromSeconds(timeBetweenSendMessSeconds));
                 }
                 catch (Exception ex)
                 {
@@ -221,7 +213,7 @@ namespace NewsPropertyBot.ParsingClasses
                 if (name != null)               
                     myNew.title = HttpUtility.HtmlDecode(name.InnerText.Trim());              
                 else{
-                    Console.WriteLine("Ошибка: Не удалось найти узел для заголовка.");
+                    Console.WriteLine($"Ошибка: Не удалось найти узел для заголовка.- {url}");
                     return null;
                 }
 
@@ -229,7 +221,7 @@ namespace NewsPropertyBot.ParsingClasses
                 if (afterName != null)               
                     myNew.secondTitle = HttpUtility.HtmlDecode(afterName.InnerText.Trim());               
                 else{
-                    Console.WriteLine("Ошибка: Не удалось найти узел для описания после заголовка.");
+                    Console.WriteLine($"Ошибка: Не удалось найти узел для описания после заголовка.- {url}");
                     return null;
                 }
 
@@ -237,7 +229,7 @@ namespace NewsPropertyBot.ParsingClasses
                 if (photo != null)                
                     myNew.photoUrl = photo.GetAttributeValue("src", "");               
                 else{
-                    Console.WriteLine("Ошибка: Не удалось найти узел для изображения.");
+                    Console.WriteLine($"Ошибка: Не удалось найти узел для изображения.- {url}");
                     return null;
                 }
 
@@ -247,7 +239,7 @@ namespace NewsPropertyBot.ParsingClasses
                         myNew.description.Add(HttpUtility.HtmlDecode(abzatc.InnerText));                    
                 }
                 else{
-                    Console.WriteLine("Ошибка: Не удалось найти узлы для описания.");
+                    Console.WriteLine($"Ошибка: Не удалось найти узлы для описания.- {url}");
                     return null;
                 }
                 
@@ -256,7 +248,7 @@ namespace NewsPropertyBot.ParsingClasses
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка: {ex.Message}");
+                Console.WriteLine($"Ошибка: {ex.Message} - {url}");
                 return null;
             }
         }

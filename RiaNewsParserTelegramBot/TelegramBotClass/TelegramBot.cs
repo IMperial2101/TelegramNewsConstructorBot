@@ -1,4 +1,5 @@
 ﻿using NewsPropertyBot.NewClass;
+using RiaNewsParserTelegramBot.PropertiesClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,26 @@ namespace NewsPropertyBot.TelegramBotClass
 {
     public class TelegramBot
     {
-        static string token = "6904948865:AAFIPhq_bhiLPVoQZqrwLHHxbixXxKwtIT8";
-        static int maxAbzatcCount = 2;
-        static int maxDescriptionSymbCount = 100;
-        static string channelId = "@MoscowPropetyNews";
-        static TelegramBotClient botClient = new TelegramBotClient(token);
+        string botToken;
+        int maxParagraphCount;
+        int maxDescripSymbCount;
+        string channelID;
+        string smile;
+        TelegramBotClient botClient;
+        public TelegramBot(MyProperties properties)
+        {
+            botToken = properties.botToken;
+            channelID = properties.channelID;
+            maxDescripSymbCount = properties.maxDescripSymbCount;
+            maxParagraphCount = properties.maxParagraphCount;           
+            smile = properties.smile;
+            botClient = new TelegramBotClient(botToken);
+        }
         public async Task SendMessageToChannel(string message)
         {
             try
             {
-                await botClient.SendTextMessageAsync(channelId, message);
+                await botClient.SendTextMessageAsync(channelID, message);
             }
             catch (Exception ex)
             {
@@ -37,7 +48,7 @@ namespace NewsPropertyBot.TelegramBotClass
                 if (!string.IsNullOrEmpty(myNew.photoUrl))
                 {
                     // Send the photo first
-                    await botClient.SendPhotoAsync(channelId, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*\n_{myNew.secondTitle}_\n{MakeDescription(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                    await botClient.SendPhotoAsync(channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*\n_{myNew.secondTitle}_\n{MakeDescription(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
                 }
                 else
                 {
@@ -47,7 +58,7 @@ namespace NewsPropertyBot.TelegramBotClass
                     message += MakeDescription(myNew);
                     
 
-                    await botClient.SendTextMessageAsync(channelId, message, ParseMode.Markdown);
+                    await botClient.SendTextMessageAsync(channelID, message, ParseMode.Markdown);
                 }
 
                 Console.WriteLine($"Успешно отправили новость в канал");
@@ -61,21 +72,21 @@ namespace NewsPropertyBot.TelegramBotClass
         {
             string description = "";
             if (myNew.description.Count != 0)
-                description += "\n🌎";
+                description += $"\n{smile}";
             if (myNew.description.Count == 1)
             {
-                maxAbzatcCount = 1;
+                maxParagraphCount = 1;
             }
-            else if (myNew.description.Count < maxAbzatcCount)
-                maxAbzatcCount = myNew.description.Count - 1;
+            else if (myNew.description.Count < maxParagraphCount)
+                maxParagraphCount = myNew.description.Count - 1;
 
-            for (int i = 0; i < maxAbzatcCount; i++)
+            for (int i = 0; i < maxParagraphCount; i++)
             {
                 description += $"{myNew.description[i]}\n\n";
             }
-            if(description.Length > maxDescriptionSymbCount)
+            if(description.Length > maxDescripSymbCount)
             {
-                description = description.Substring(0, maxDescriptionSymbCount) + "...\n";
+                description = description.Substring(0, maxDescripSymbCount) + "...\n";
             }
             return description;
         }
