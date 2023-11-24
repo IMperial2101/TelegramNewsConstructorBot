@@ -15,6 +15,7 @@ namespace NewsPropertyBot.TelegramBotClass
     {
         static string token = "6904948865:AAFIPhq_bhiLPVoQZqrwLHHxbixXxKwtIT8";
         static int maxAbzatcCount = 2;
+        static int maxDescriptionSymbCount = 100;
         static string channelId = "@MoscowPropetyNews";
         static TelegramBotClient botClient = new TelegramBotClient(token);
         public async Task SendMessageToChannel(string message)
@@ -71,6 +72,10 @@ namespace NewsPropertyBot.TelegramBotClass
             for (int i = 0; i < maxAbzatcCount; i++)
             {
                 description += $"{myNew.description[i]}\n\n";
+            }
+            if(description.Length > maxDescriptionSymbCount)
+            {
+                description = description.Substring(0, maxDescriptionSymbCount) + "...\n";
             }
             return description;
         }

@@ -22,9 +22,9 @@ class Program
         parser = new Parser(proxy.GetWebProxy(), "https://ria.ru/world/", telegramBot);
         int countdownTimeInSeconds = 5 * 60; // 5 минут в секундах
 
-        
 
-
+        telegramBot.SendMyNewToChannelAsync(await parser.ParseOneNewAsync("https://ria.ru/20231124/besporyadki-1911613054.html"));
+        Console.ReadLine();
         while (true)
         {
             Console.WriteLine("Начало парсинга");
