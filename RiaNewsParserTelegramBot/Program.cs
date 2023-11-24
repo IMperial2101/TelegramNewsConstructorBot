@@ -20,14 +20,24 @@ class Program
         TelegramBot telegramBot = new TelegramBot();
         proxy = new MyProxy("91.188.243.122",9487, "XrVHcG", "pthNrV");
         parser = new Parser(proxy.GetWebProxy(), "https://ria.ru/world/", telegramBot);
+        int countdownTimeInSeconds = 5 * 60; // 5 минут в секундах
 
 
-        while(true)
+        telegramBot.SendMyNewToChannelAsync(await parser.ParseOneNewAsync("https://ria.ru/20231124/besporyadki-1911613054.html"));
+        Console.ReadLine();
+        while (true)
         {
             Console.WriteLine("Начало парсинга");
             await parser.StartParseNews();
             Console.WriteLine("Конец, ожидание 5 минут ", DateTime.Now);
-            await Task.Delay(TimeSpan.FromMinutes(5));
+            for (int i = countdownTimeInSeconds; i > 0; i--)
+            {
+                Console.Write($"Осталось {TimeSpan.FromSeconds(i)}"); // Пишем текст без перевода строки
+
+                await Task.Delay(1000); // Задержка на 1 секунду (1000 миллисекунд)
+
+                Console.SetCursorPosition(Console.CursorLeft - $"Осталось {TimeSpan.FromSeconds(i)}".Length, Console.CursorTop); // Перемещаем курсор влево
+            }
         }
 
         Console.ReadLine();

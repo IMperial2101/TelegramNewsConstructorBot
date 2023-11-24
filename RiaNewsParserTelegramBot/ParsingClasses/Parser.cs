@@ -67,6 +67,10 @@ namespace NewsPropertyBot.ParsingClasses
                         await SendNewsToChannelAsync(newsList);
                         break;
                     }
+                default:
+                    {
+                        break;
+                    }
             }
 
         }
@@ -117,10 +121,6 @@ namespace NewsPropertyBot.ParsingClasses
             {               
                 HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.mainLinksDivContainer);
                 string firstNewLink = newNewsNodes[0].SelectSingleNode(".//a[contains(@class,'list-item__title')]").GetAttributeValue("href", "");
-                if (lastLink == firstNewLink)
-                {
-                    return "NoNewLinksFound";
-                }
                 mainPageLinksWithViewsDict.Clear();
                 if (newNewsNodes != null)
                 {
