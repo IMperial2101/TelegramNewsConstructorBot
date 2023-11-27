@@ -25,16 +25,10 @@ class Program
         TelegramBot telegramBot = new TelegramBot(properties);
         MyProxy proxy = properties.myProxy;
         Parser parser = new Parser(telegramBot, properties);
-        int timeBetweenMainParseSeconds = properties.timeBetweenMainParseSeconds;
+        int timeBetweenMainParseMinutes = properties.timeBetweenMainParseMinutes;
 
 
-        while (true)
-        {
-            Console.WriteLine("Начало парсинга");
-            await parser.StartParseNews();
-            Console.WriteLine($"Конец, ожидание {timeBetweenMainParseSeconds/60} минут {DateTime.Now}\n");
-            await Task.Delay(TimeSpan.FromSeconds(timeBetweenMainParseSeconds));
-        }        
+        await parser.Start();       
     }
     static MyProperties ReadLineProperties()
     {

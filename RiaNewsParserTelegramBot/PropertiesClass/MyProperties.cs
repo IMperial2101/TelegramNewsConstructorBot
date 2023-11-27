@@ -15,7 +15,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public string parseLink { get; set; }
         public string useProxy { get; set; }
         public MyProxy myProxy { get; set; }
-        public int timeBetweenMainParseSeconds { get; set; }
+        public int timeBetweenMainParseMinutes { get; set; }
         public int minViewCount { get; set; }
         public int timeBetweenSendMessSeconds { get; set; }
         public string smile { get; set; }

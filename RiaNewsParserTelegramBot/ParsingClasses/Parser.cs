@@ -33,12 +33,14 @@ namespace NewsPropertyBot.ParsingClasses
         string parseLink;
         static int minViewCount;
         int timeBetweenSendMessSeconds;
+        MyProperties properties;
         public Parser()
         {
             httpClient = new HttpClient();
         }
         public Parser(TelegramBot telegramBot, MyProperties properties)
         {
+            this.properties = properties;
             this.telegramBot = telegramBot;
             parseLink = properties.parseLink;
             HttpClientHandler httpHandler = new HttpClientHandler();
@@ -70,7 +72,7 @@ namespace NewsPropertyBot.ParsingClasses
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
                         var newsList = await ParseNewsAsync();
-                        SendNewsToChannelAsync(newsList);
+                        await SendNewsToChannelAsync(newsList);
                         break;
                     }
                 default:
@@ -274,6 +276,16 @@ namespace NewsPropertyBot.ParsingClasses
                 {
                     currLinksForSendInChannel.Remove(link.Key);
                 }
+            }
+        }
+        public async Task Start()
+        {
+            while (true)
+            {
+                Console.WriteLine("Начало парсинга");
+                await StartParseNews();
+                Console.WriteLine($"Конец, ожидание {properties.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
+                await Task.Delay(TimeSpan.FromMinutes(properties.timeBetweenMainParseMinutes));
             }
         }
 

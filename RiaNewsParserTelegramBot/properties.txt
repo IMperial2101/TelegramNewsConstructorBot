@@ -1,7 +1,7 @@
 ﻿{
 	"botToken": "6904948865:AAFIPhq_bhiLPVoQZqrwLHHxbixXxKwtIT8",
 	"channelID": "@MoscowPropetyNews",
-	"parseLink": "https://ria.ru/economy/",
+	"parseLink": "https://ria.ru/world/",
 	"useProxy": "yes",
 	"myProxy":{
 		"host": "91.188.243.122",
@@ -9,9 +9,9 @@
 		"login": "XrVHcG",
 		"password": "pthNrV"
 	},
-	"timeBetweenMainParseSeconds": 300,
+	"timeBetweenMainParseMinutes": 5,
 	"minViewCount": 1000,
-	"timeBetweenSendMessSeconds": 10,
+	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
 	"maxParagraphCount": 2,
 	"maxDescripSymbCount": 200 
