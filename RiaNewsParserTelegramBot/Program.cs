@@ -17,16 +17,10 @@ using Telegram.Bot.Types.InputFiles;
 class Program
 {
     static MyProperties properties = ReadLineProperties();
-    static MyProxy proxy;
-    static Parser parser;
-
     static async Task Main()
     {
         TelegramBot telegramBot = new TelegramBot(properties);
-        MyProxy proxy = properties.myProxy;
         Parser parser = new Parser(telegramBot, properties);
-        int timeBetweenMainParseMinutes = properties.timeBetweenMainParseMinutes;
-
 
         await parser.Start();       
     }

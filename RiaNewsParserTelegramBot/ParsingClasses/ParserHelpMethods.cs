@@ -10,30 +10,83 @@ namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
-        
-        static bool CheckViewCount(HtmlNode views)
+        private void AddNewLinksToSend()
         {
-            if (views != null)
+            try
             {
-                if (int.TryParse(views.InnerText, out int number))
+                foreach (var myNew in mainPageLinksWithViewsDict)
                 {
-                    if (number < minViewCount)
+
+                    if (!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > properties.minViewCount)
                     {
-                        return false;
+                        currLinksForSendInChannel.Add(myNew.Key, false);
                     }
                 }
-                else
+            }
+            catch (Exception ex)
+            {
+                telegramBot.SendMessageToOwner($"Ошибка в методе AddNewLinksToSend(): {ex.Message}");
+            }
+        }
+        private void RemoveNoActualLinks()
+        {
+            try
+            {
+
+
+                foreach (var link in currLinksForSendInChannel)
                 {
-                    Console.WriteLine("Ошибка: Не удалось определить количество просмотров.");
-                    return false;
+                    if (!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
+                    {
+                        currLinksForSendInChannel.Remove(link.Key);
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Ошибка: Не удалось найти количество просмотров.");
-                return false;
+                telegramBot.SendMessageToOwner($"Ошибка в методе RemoveNoActualLinks(): {ex.Message}");
             }
-            return true;
+        }
+        public async Task DownloadPageAsync(string pageUrl, HtmlDocument htmlDocument)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(pageUrl))
+                    throw new ArgumentException("Page URL cannot be empty or null.", nameof(pageUrl));
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                htmlDocument = null;
+                return;
+            }
+            try
+            {
+                HttpResponseMessage response;
+                response = await httpClient.GetAsync(pageUrl);
+                if (response.IsSuccessStatusCode != true)
+                {
+                    htmlDocument = null;
+                    return;
+                }
+                htmlDocument.LoadHtml(await response.Content.ReadAsStringAsync());
+                if (htmlDocument.DocumentNode.SelectSingleNode("//html") == null)
+                {
+                    htmlDocument = null;
+                    return;
+                }
+                return;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTP Request Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            htmlDocument = null;
+            return;
         }
 
     }

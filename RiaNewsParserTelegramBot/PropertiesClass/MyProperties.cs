@@ -15,11 +15,15 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public string parseLink { get; set; }
         public string useProxy { get; set; }
         public MyProxy myProxy { get; set; }
+        public bool randomMessageDesign { get; set; }
+        public int sendPhotoRandomPersent { get; set; }
+        public int sendSecondTitleRandomPersent { get; set; }
         public int timeBetweenMainParseMinutes { get; set; }
         public int minViewCount { get; set; }
         public int timeBetweenSendMessSeconds { get; set; }
         public string smile { get; set; }
         public int maxParagraphCount { get; set; }
         public int maxDescripSymbCount { get; set; }
+        public int ownerId { get; set; }
     }
 }

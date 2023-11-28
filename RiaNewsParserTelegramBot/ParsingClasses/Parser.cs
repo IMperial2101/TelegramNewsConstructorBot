@@ -13,27 +13,22 @@ using static System.Net.WebRequestMethods;
 using NewsPropertyBot.XpathClass;
 using AngleSharp.Dom;
 using RiaNewsParserTelegramBot.PropertiesClass;
+using System.Linq.Expressions;
 
 namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
+        MyProperties properties;
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
         Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
-        List<string> linksToParse = new List<string>();
-        List<string> mainPageLinks = new List<string>();
         XPathStrings xPathStrings = new XPathStrings();
-        HtmlDocument htmlDocumentMainPage = new HtmlDocument();
-        string lastLink = "";
-        
+        HtmlDocument htmlDocumentMainPage = new HtmlDocument();        
         HttpClient httpClient;
         TelegramBot telegramBot;
-        string useProxy;
-        string lastNewLink = null;
+
         string parseLink;
-        static int minViewCount;
-        int timeBetweenSendMessSeconds;
-        MyProperties properties;
+        
         public Parser()
         {
             httpClient = new HttpClient();
@@ -51,10 +46,6 @@ namespace NewsPropertyBot.ParsingClasses
 
             httpClient.MaxResponseContentBufferSize = int.MaxValue;
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
-
-            minViewCount = properties.minViewCount;
-            timeBetweenSendMessSeconds = properties.timeBetweenSendMessSeconds;
-            useProxy = properties.useProxy;
         }
         public async Task StartParseNews()
         {
@@ -62,73 +53,30 @@ namespace NewsPropertyBot.ParsingClasses
             string parseNewLinksResponse = ParseNewLinks();
             switch (parseNewLinksResponse)
             {
-                case "NoNewLinksFound":
-                    {
-                        break;
-                    }
                 case "Succes":
                     {
                         Console.WriteLine("Успешно скачали главную страницу");
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
-                        var newsList = await ParseNewsAsync();
+                        var newsList = await ParseAllNewsAsync();
                         await SendNewsToChannelAsync(newsList);
                         break;
                     }
                 default:
                     {
+                        Console.WriteLine($"Не удалость скачать страницу {parseLink}");
+                        await telegramBot.SendMessageToOwner($"Не удалость скачать страницу [{parseLink}]({parseLink})\n");
+
                         break;
                     }
             }
 
-        }
-        public async Task DownloadPageAsync(string pageUrl,HtmlDocument htmlDocument)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(pageUrl))
-                    throw new ArgumentException("Page URL cannot be empty or null.", nameof(pageUrl));
-            }
-            catch(ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-                htmlDocument = null;
-                return;
-            }
-            try
-            {
-                HttpResponseMessage response;
-                response = await httpClient.GetAsync(pageUrl);
-                if (response.IsSuccessStatusCode != true)
-                {
-                    htmlDocument = null;
-                    return;
-                }
-                htmlDocument.LoadHtml(await response.Content.ReadAsStringAsync());
-                if(htmlDocument.DocumentNode.SelectSingleNode("//html") == null)
-                {
-                    htmlDocument = null;
-                    return;
-                }
-                return;
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"HTTP Request Error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-            htmlDocument = null;
-            return;
-        }
+        }       
         public string ParseNewLinks()
         {
             try
             {               
                 HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.mainLinksDivContainer);
-                string firstNewLink = newNewsNodes[0].SelectSingleNode(".//a[contains(@class,'list-item__title')]").GetAttributeValue("href", "");
                 mainPageLinksWithViewsDict.Clear();
                 if (newNewsNodes != null)
                 {
@@ -143,19 +91,20 @@ namespace NewsPropertyBot.ParsingClasses
                             Console.WriteLine("Две одинаковые ссылки на странице");
                         }
                     }
-                    lastLink = firstNewLink;
                 }
                 else{
+                    telegramBot.SendMessageToOwner($"HtmlNodeCollectionIsNull [{parseLink}]({parseLink})\n");
                     return "HtmlNodeCollectionIsNull";
                 }
             }
             catch (Exception ex)
             {
+                telegramBot.SendMessageToOwner($"Error parsing new elements: {ex.Message}");
                 Console.WriteLine($"Error parsing new elements: {ex.Message}");
             }
             return "Succes";
         }
-        public async Task<List<MyNew>> ParseNewsAsync()
+        public async Task<List<MyNew>> ParseAllNewsAsync()
         {
             var tasks = currLinksForSendInChannel
                 .Where(kv => !kv.Value)
@@ -177,6 +126,7 @@ namespace NewsPropertyBot.ParsingClasses
                 }
                 catch (Exception ex)
                 {
+                    telegramBot.SendMessageToOwner($"Ошибка при выполнении асинхронной задачи парсинга: {ex.Message}");
                     Console.WriteLine($"Ошибка при выполнении асинхронной задачи парсинга: {ex.Message}");
                 }
 
@@ -192,10 +142,11 @@ namespace NewsPropertyBot.ParsingClasses
                 try
                 {
                     await telegramBot.SendMyNewToChannelAsync(myNew);
-                    await Task.Delay(TimeSpan.FromSeconds(timeBetweenSendMessSeconds));
+                    await Task.Delay(TimeSpan.FromSeconds(properties.timeBetweenSendMessSeconds));
                 }
                 catch (Exception ex)
                 {
+                    telegramBot.SendMessageToOwner($"Ошибка при отправке новости в канал: {ex.Message}");
                     Console.WriteLine($"Ошибка при отправке новости в канал: {ex.Message}");
                 }
             }
@@ -221,6 +172,7 @@ namespace NewsPropertyBot.ParsingClasses
                         myNew.title = HttpUtility.HtmlDecode(name.InnerText.Trim());
                     else
                     {
+                        telegramBot.SendMessageToOwner($"Ошибка: Не удалось найти узел для заголовка.[url]({url})");
                         Console.WriteLine("Ошибка: Не удалось найти узел для заголовка.");
                         return null;
                     }
@@ -229,6 +181,7 @@ namespace NewsPropertyBot.ParsingClasses
                 if (afterName != null)               
                     myNew.secondTitle = "\n" + HttpUtility.HtmlDecode(afterName.InnerText.Trim());               
                 else{
+                    telegramBot.SendMessageToOwner($"Ошибка: Не удалось найти узел для описания после заголовка.- [url]({url})");
                     Console.WriteLine($"Ошибка: Не удалось найти узел для описания после заголовка.- {url}");
                 }
 
@@ -236,6 +189,7 @@ namespace NewsPropertyBot.ParsingClasses
                 if (photo != null)                
                     myNew.photoUrl = photo.GetAttributeValue("src", "");               
                 else{
+                    telegramBot.SendMessageToOwner($"Ошибка: Не удалось найти узел для изображения.- [url]({url})");
                     Console.WriteLine($"Ошибка: Не удалось найти узел для изображения.- {url}");
                 }
 
@@ -245,6 +199,7 @@ namespace NewsPropertyBot.ParsingClasses
                         myNew.description.Add(HttpUtility.HtmlDecode(abzatc.InnerText));                    
                 }
                 else{
+                    telegramBot.SendMessageToOwner($"Ошибка: Не удалось найти узлы для описания.- [url]({url})");
                     Console.WriteLine($"Ошибка: Не удалось найти узлы для описания.- {url}");
                 }
                 
@@ -253,31 +208,11 @@ namespace NewsPropertyBot.ParsingClasses
             }
             catch (Exception ex)
             {
+                telegramBot.SendMessageToOwner($"Ошибка: {ex.Message} - {url}");
                 Console.WriteLine($"Ошибка: {ex.Message} - {url}");
                 return null;
             }
-        }
-        private void AddNewLinksToSend()
-        {  
-            foreach(var myNew in mainPageLinksWithViewsDict)
-            {
-
-                if(!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > minViewCount)
-                {
-                    currLinksForSendInChannel.Add(myNew.Key,false);
-                }
-            }
-        }
-        private void RemoveNoActualLinks()
-        {
-            foreach (var link in currLinksForSendInChannel)
-            {
-                if (!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
-                {
-                    currLinksForSendInChannel.Remove(link.Key);
-                }
-            }
-        }
+        }     
         public async Task Start()
         {
             while (true)
