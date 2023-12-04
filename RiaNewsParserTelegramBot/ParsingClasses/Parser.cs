@@ -215,6 +215,7 @@ namespace NewsPropertyBot.ParsingClasses
         }
         public async Task Start()
         {
+            await FirstParseAddLinks();
             while (true)
             {
                 Console.WriteLine("Начало парсинга");
@@ -231,6 +232,30 @@ namespace NewsPropertyBot.ParsingClasses
                 await Task.Delay(TimeSpan.FromMinutes(properties.timeBetweenMainParseMinutes));
             }
         }
+        private async Task FirstParseAddLinks()
+        {
+            await DownloadPageAsync(parseLink, htmlDocumentMainPage);
+            string parseNewLinksResponse = ParseNewLinks();
+            switch (parseNewLinksResponse)
+            {
+                case "Succes":
+                    {
+                        Console.WriteLine("Успешно скачали главную страницу");
+                        AddNewLinksToSend();
+                        foreach (var key in currLinksForSendInChannel.Keys.ToList())
+                        {
+                            currLinksForSendInChannel[key] = true;
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        Console.WriteLine($"Не удалость скачать страницу {parseLink}");
+                        await telegramBot.SendMessageToOwner($"Не удалость скачать страницу [{parseLink}]({parseLink})\n");
 
+                        break;
+                    }
+            }
+        }
     }
 }
