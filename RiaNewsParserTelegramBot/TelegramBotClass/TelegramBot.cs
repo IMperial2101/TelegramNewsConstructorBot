@@ -23,9 +23,11 @@ namespace NewsPropertyBot.TelegramBotClass
         TelegramBotClient botClient;
         string ownerMessage;
         MyProperties properties;
+        int lastParagraphCount;
         public TelegramBot(MyProperties properties)
         {
-            this.properties = properties;          
+            this.properties = properties;
+            lastParagraphCount = properties.maxParagraphCount;
             botClient = new TelegramBotClient(properties.botToken);
             ownerMessage = $"Channel: {properties.channelID}\n" +
                            $"Date: {DateTime.Now}\n" +
@@ -54,7 +56,7 @@ namespace NewsPropertyBot.TelegramBotClass
                     {
                         // Send the photo first
                         if (sendPhoto)
-                            await botClient.SendPhotoAsync(properties.channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*\n_{(sendSecondTitle ? myNew.secondTitle : "")}_\n{(maxParagraphCount != 0 ? MakeDescriptionRandomDesign(myNew) : "")}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                            await botClient.SendPhotoAsync(properties.channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{(sendSecondTitle ? myNew.secondTitle : "")}_\n{(maxParagraphCount != 0 ? MakeDescriptionRandomDesign(myNew) : "\n")}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
                     }
                     else
                     {
@@ -67,7 +69,7 @@ namespace NewsPropertyBot.TelegramBotClass
                     if (!string.IsNullOrEmpty(myNew.photoUrl))
                     {
                         // Send the photo first
-                        await botClient.SendPhotoAsync(properties.channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*\n_{myNew.secondTitle}_\n{MakeDescriptionNoRandomDesign(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                        await botClient.SendPhotoAsync(properties.channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{myNew.secondTitle}_\n{MakeDescriptionNoRandomDesign(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
                     }
                     else
                     {
@@ -134,7 +136,12 @@ namespace NewsPropertyBot.TelegramBotClass
         {
             if (properties.randomMessageDesign)
             {
-                maxParagraphCount = random.Next(properties.maxParagraphCount <= 1 ? 0 : properties.maxParagraphCount - 1, properties.maxParagraphCount <= 1 ? 2 : properties.maxParagraphCount + 1);
+                //поработать с количеством абхацев
+                while(lastParagraphCount == maxParagraphCount)
+                {
+                    maxParagraphCount = random.Next(0, properties.maxParagraphCount <= 1 ? 2 : properties.maxParagraphCount + 1);
+                }
+                lastParagraphCount = maxParagraphCount;
                 maxDescripSymbCount = random.Next(properties.maxDescripSymbCount <= 50 ? 0 : properties.maxDescripSymbCount - 50, properties.maxDescripSymbCount <= 50 ? 150 : properties.maxDescripSymbCount + 50);
 
                 if (properties.sendPhotoRandomPersent > 100 || properties.sendPhotoRandomPersent < 0)

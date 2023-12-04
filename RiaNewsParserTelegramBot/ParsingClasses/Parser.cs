@@ -212,13 +212,21 @@ namespace NewsPropertyBot.ParsingClasses
                 Console.WriteLine($"Ошибка: {ex.Message} - {url}");
                 return null;
             }
-        }     
+        }
         public async Task Start()
         {
             while (true)
             {
                 Console.WriteLine("Начало парсинга");
                 await StartParseNews();
+                
+                DateTime currentTime = DateTime.Now;
+
+                if (currentTime.Hour >= 0 && currentTime.Hour < 5)
+                    properties.timeBetweenMainParseMinutes = 60; 
+                else
+                    properties.timeBetweenMainParseMinutes = 5;
+
                 Console.WriteLine($"Конец, ожидание {properties.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
                 await Task.Delay(TimeSpan.FromMinutes(properties.timeBetweenMainParseMinutes));
             }

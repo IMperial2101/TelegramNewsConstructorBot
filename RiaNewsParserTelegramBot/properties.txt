@@ -10,13 +10,13 @@
 		"password": "YPHAsM"
 	},
 	"randomMessageDesign": true,
-	"sendPhotoRandomPersent": 70,
+	"sendPhotoRandomPersent": 90,
 	"sendSecondTitleRandomPersent": 50,
 	"timeBetweenMainParseMinutes": 5,
 	"minViewCount": 1000,
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
-	"maxParagraphCount": 1,
+	"maxParagraphCount": 2,
 	"maxDescripSymbCount": 400,
 	"ownerId": 626774740
 }
