@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -29,8 +30,7 @@ namespace NewsPropertyBot.TelegramBotClass
             this.properties = properties;
             lastParagraphCount = properties.maxParagraphCount;
             botClient = new TelegramBotClient(properties.botToken);
-            ownerMessage = $"Channel: {properties.channelID}\n" +
-                           $"Date: {DateTime.Now}\n" +
+            ownerMessage = $"Date: {DateTime.Now}\n" +
                            $"Exception: ";
             
         }
@@ -38,7 +38,7 @@ namespace NewsPropertyBot.TelegramBotClass
         {
             try
             {
-                await botClient.SendTextMessageAsync(properties.ownerId, ownerMessage+= message, parseMode: ParseMode.Markdown);
+                await botClient.SendTextMessageAsync(properties.ownerId,$"{ownerMessage} {message}", parseMode: ParseMode.Markdown);
             }
             catch (Exception ex)
             {
@@ -47,73 +47,75 @@ namespace NewsPropertyBot.TelegramBotClass
         }
         public async Task SendMyNewToChannelAsync(MyNew myNew)
         {
-            MakeRandomProperties();
-            try
+            for(int i = 0;i<properties.channelID.Length;i++)
             {
-                if(properties.randomMessageDesign)
+                MakeRandomProperties();
+                try
                 {
-                    if (!string.IsNullOrEmpty(myNew.photoUrl) && sendPhoto)
+                    if (properties.randomMessageDesign)
                     {
-                        // Send the photo first
-                        if (sendPhoto)
-                            await botClient.SendPhotoAsync(properties.channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{(sendSecondTitle ? myNew.secondTitle : "")}_\n{(maxParagraphCount != 0 ? MakeDescriptionRandomDesign(myNew) : "\n")}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                        if (!string.IsNullOrEmpty(myNew.photoUrl) && sendPhoto)
+                        {
+                            // Send the photo first
+                            if (sendPhoto)
+                                await botClient.SendPhotoAsync(properties.channelID[i], new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{(sendSecondTitle ? myNew.secondTitle : "")}_\n{(maxParagraphCount != 0 ? MakeDescriptionRandomDesign(myNew) : "\n")}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                        }
+                        else
+                        {
+                            // If no photo, send text only
+                            await botClient.SendTextMessageAsync(properties.channelID[i], $"*{myNew.title}*\n\n[Читать полность]({myNew.url})🔗", ParseMode.Markdown);
+                        }
                     }
                     else
                     {
-                        // If no photo, send text only
-                        await botClient.SendTextMessageAsync(properties.channelID, $"*{myNew.title}*\n\n[Читать полность]({myNew.url})🔗", ParseMode.Markdown);
+                        if (!string.IsNullOrEmpty(myNew.photoUrl))
+                        {
+                            // Send the photo first
+                            await botClient.SendPhotoAsync(properties.channelID[i], new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{myNew.secondTitle}_\n{MakeDescriptionNoRandomDesign(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
+                        }
+                        else
+                        {
+                            // If no photo, send text only
+                            string message = $"*{myNew.title}*\n{myNew.secondTitle}";
+                            message += MakeDescriptionNoRandomDesign(myNew);
+                            await botClient.SendTextMessageAsync(properties.channelID[i], message, ParseMode.Markdown);
+                        }
                     }
+
+                    Console.WriteLine($"Успешно отправили новость в канал");
                 }
-                else
+                catch (Exception ex)
                 {
-                    if (!string.IsNullOrEmpty(myNew.photoUrl))
-                    {
-                        // Send the photo first
-                        await botClient.SendPhotoAsync(properties.channelID, new InputOnlineFile(myNew.photoUrl), caption: $"*{myNew.title}*_{myNew.secondTitle}_\n{MakeDescriptionNoRandomDesign(myNew)}[Читать полность]({myNew.url})🔗", parseMode: ParseMode.Markdown);
-                    }
-                    else
-                    {
-                        // If no photo, send text only
-                        string message = $"*{myNew.title}*\n{myNew.secondTitle}";
-                        message += MakeDescriptionNoRandomDesign(myNew);
-                        await botClient.SendTextMessageAsync(properties.channelID, message, ParseMode.Markdown);
-                    }
+                    Console.WriteLine($"Ошибка при отправке сообщения: {ex.Message}");
                 }
-               
-                Console.WriteLine($"Успешно отправили новость в канал");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при отправке сообщения: {ex.Message}");
-            }
+            
         }
         private string MakeDescriptionRandomDesign(MyNew myNew)
         {
-            string description = "";
+            StringBuilder descriptionBuilder = new StringBuilder("");
             if (myNew.description.Count != 0)
-                description += $"\n{properties.smile}";
+                descriptionBuilder.Append($"\n{properties.smile}");
+            else
+                return "";
             if (myNew.description.Count == 1)
-            {
                 maxParagraphCount = 1;
-            }
             else if (myNew.description.Count < maxParagraphCount)
                 maxParagraphCount = myNew.description.Count - 1;
 
             for (int i = 0; i < maxParagraphCount; i++)
-            {
-                description += $"{myNew.description[i]}\n\n";
-            }
-            if(description.Length > maxDescripSymbCount)
-            {
-                description = description.Substring(0, maxDescripSymbCount) + "...\n\n";
-            }
-            return description;
+                descriptionBuilder.Append($"{myNew.description[i]}\n\n");
+
+            if (descriptionBuilder.Length > maxDescripSymbCount)
+                descriptionBuilder.Length = maxDescripSymbCount;
+
+            return descriptionBuilder.ToString();
         }
         private string MakeDescriptionNoRandomDesign(MyNew myNew)
         {
             string description = "";
             if (myNew.description.Count != 0)
-                description += "\n🌎";
+                description +=  $"\n{properties.smile}";
             if (myNew.description.Count == 1)
             {
                 properties.maxParagraphCount = 1;
@@ -136,7 +138,6 @@ namespace NewsPropertyBot.TelegramBotClass
         {
             if (properties.randomMessageDesign)
             {
-                //поработать с количеством абхацев
                 while(lastParagraphCount == maxParagraphCount)
                 {
                     maxParagraphCount = random.Next(0, properties.maxParagraphCount <= 1 ? 2 : properties.maxParagraphCount + 1);

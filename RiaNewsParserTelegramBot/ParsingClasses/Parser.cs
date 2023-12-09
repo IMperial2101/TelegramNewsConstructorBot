@@ -59,7 +59,7 @@ namespace NewsPropertyBot.ParsingClasses
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
                         var newsList = await ParseAllNewsAsync();
-                        await SendNewsToChannelAsync(newsList);
+                        SendNewsToChannelAsync(newsList);
                         break;
                     }
                 default:
@@ -208,26 +208,19 @@ namespace NewsPropertyBot.ParsingClasses
             }
             catch (Exception ex)
             {
-                telegramBot.SendMessageToOwner($"Ошибка: {ex.Message} - {url}");
+                await telegramBot.SendMessageToOwner($"Ошибка: {ex.Message} - {url}");
                 Console.WriteLine($"Ошибка: {ex.Message} - {url}");
                 return null;
             }
         }
         public async Task Start()
         {
-            await FirstParseAddLinks();
+            //await FirstParseAddLinks();
             while (true)
             {
                 Console.WriteLine("Начало парсинга");
                 await StartParseNews();
-                
-                DateTime currentTime = DateTime.Now;
-
-                if (currentTime.Hour >= 0 && currentTime.Hour < 5)
-                    properties.timeBetweenMainParseMinutes = 60; 
-                else
-                    properties.timeBetweenMainParseMinutes = 5;
-
+         
                 Console.WriteLine($"Конец, ожидание {properties.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
                 await Task.Delay(TimeSpan.FromMinutes(properties.timeBetweenMainParseMinutes));
             }

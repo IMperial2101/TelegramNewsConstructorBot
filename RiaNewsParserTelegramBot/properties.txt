@@ -1,6 +1,6 @@
 ﻿{
 	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
-	"channelID": "@RiaNewsParseWorld2",
+	"channelID": ["@RiaNewsParseWorld2"],
 	"parseLink": "https://ria.ru/world/",
 	"useProxy": "yes",
 	"myProxy":{
@@ -17,6 +17,6 @@
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
 	"maxParagraphCount": 2,
-	"maxDescripSymbCount": 400,
+	"maxDescripSymbCount": 600,
 	"ownerId": 626774740
 }
