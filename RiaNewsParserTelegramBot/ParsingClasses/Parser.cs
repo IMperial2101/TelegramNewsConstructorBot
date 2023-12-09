@@ -215,7 +215,7 @@ namespace NewsPropertyBot.ParsingClasses
         }
         public async Task Start()
         {
-            //await FirstParseAddLinks();
+            await FirstParseAddLinks();
             while (true)
             {
                 Console.WriteLine("Начало парсинга");
