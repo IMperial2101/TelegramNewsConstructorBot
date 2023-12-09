@@ -1,0 +1,22 @@
+﻿{
+	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
+	"channelID": ["@RiaNewsParseWorld2"],
+	"parseLink": "https://ria.ru/world/",
+	"useProxy": "yes",
+	"myProxy":{
+		"host": "194.67.220.148",
+		"port": 9588,
+		"login": "8N8L6s",
+		"password": "YPHAsM"
+	},
+	"randomMessageDesign": true,
+	"sendPhotoRandomPersent": 90,
+	"sendSecondTitleRandomPersent": 50,
+	"timeBetweenMainParseMinutes": 5,
+	"minViewCount": 1000,
+	"timeBetweenSendMessSeconds": 5,
+	"smile": "🇷🇺",
+	"maxParagraphCount": 2,
+	"maxDescripSymbCount": 600,
+	"ownerId": 626774740
+}

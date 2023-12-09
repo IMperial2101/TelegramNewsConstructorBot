@@ -9,20 +9,24 @@ namespace NewsPropertyBot.ProxyClass
 {
     public  class MyProxy
     {
-        string ip;
-        int port;
-        string login;
-        string password;
-        public MyProxy(string ip,int port,string login, string password)
+        public string host { get; set; }
+        public int port { get; set; }
+        public string login { get; set; }
+        public string password { get; set; }
+        public MyProxy()
         {
-            this.ip = ip;
+            
+        }
+        public MyProxy(string host,int port,string login, string password)
+        {
+            this.host = host;
             this.port = port;
             this.login = login;
             this.password = password;
         }
         public WebProxy GetWebProxy()
         {
-            WebProxy proxy = new WebProxy(ip,port);
+            WebProxy proxy = new WebProxy(host,port);
             proxy.Credentials = new NetworkCredential(login, password);
             return proxy;
         }
