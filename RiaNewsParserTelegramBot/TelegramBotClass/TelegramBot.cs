@@ -21,7 +21,7 @@ namespace NewsPropertyBot.TelegramBotClass
         int maxDescripSymbCount;
         bool sendPhoto;
         bool sendSecondTitle;
-        TelegramBotClient botClient;
+        public TelegramBotClient botClient;
         string ownerMessage;
         MyProperties properties;
         int lastParagraphCount;
