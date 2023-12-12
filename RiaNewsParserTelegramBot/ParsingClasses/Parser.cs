@@ -14,11 +14,14 @@ using NewsPropertyBot.XpathClass;
 using AngleSharp.Dom;
 using RiaNewsParserTelegramBot.PropertiesClass;
 using System.Linq.Expressions;
+using RiaNewsParserTelegramBot.NewClass;
+using Telegram.Bot.Types.InputFiles;
 
 namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
+        static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         MyProperties properties;
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
         Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
@@ -58,8 +61,16 @@ namespace NewsPropertyBot.ParsingClasses
                         Console.WriteLine("Успешно скачали главную страницу");
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
-                        var newsList = await ParseAllNewsAsync();
-                        SendNewsToChannelAsync(newsList);
+                        List<MyNew> newsList = await ParseAllNewsAsync();
+                        foreach (var el in newsList)
+                        {
+                            MyNewConstructor.MakeMyNewProperties(el);
+                        }
+                        await MakeNewsPhotos(newsList);
+
+                        telegramBot.SendNewsToChannelAsync(newsList);
+                        
+                        
                         break;
                     }
                 default:
@@ -71,7 +82,12 @@ namespace NewsPropertyBot.ParsingClasses
                     }
             }
 
-        }       
+        }
+        public async Task MakeNewsPhotos(List<MyNew> newsList)
+        {
+            var tasks = newsList.Select(async el => await MyNewConstructor.MakePhotoWithText(el));
+            await Task.WhenAll(tasks);
+        }
         public string ParseNewLinks()
         {
             try
@@ -135,22 +151,7 @@ namespace NewsPropertyBot.ParsingClasses
 
             return results;
         }
-        public async Task SendNewsToChannelAsync(List<MyNew> newsList)
-        {
-            foreach (var myNew in newsList)
-            {
-                try
-                {
-                    await telegramBot.SendMyNewToChannelAsync(myNew);
-                    await Task.Delay(TimeSpan.FromSeconds(properties.timeBetweenSendMessSeconds));
-                }
-                catch (Exception ex)
-                {
-                    telegramBot.SendMessageToOwner($"Ошибка при отправке новости в канал: {ex.Message}");
-                    Console.WriteLine($"Ошибка при отправке новости в канал: {ex.Message}");
-                }
-            }
-        }
+        
         public async Task<MyNew> ParseOneNewAsync(string url)
         {
             currLinksForSendInChannel[url] = true;
@@ -215,7 +216,7 @@ namespace NewsPropertyBot.ParsingClasses
         }
         public async Task Start()
         {
-            await FirstParseAddLinks();
+            //await FirstParseAddLinks();
             while (true)
             {
                 Console.WriteLine("Начало парсинга");
@@ -250,5 +251,6 @@ namespace NewsPropertyBot.ParsingClasses
                     }
             }
         }
+
     }
 }
