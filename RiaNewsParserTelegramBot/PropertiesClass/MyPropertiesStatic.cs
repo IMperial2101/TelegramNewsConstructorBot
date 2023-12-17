@@ -1,9 +1,4 @@
 ﻿using NewsPropertyBot.ProxyClass;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.PropertiesClass
 {
@@ -25,5 +20,27 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public static int maxParagraphCount { get; set; }
         public static int maxDescripSymbCount { get; set; }
         public static int ownerId { get; set; }
+        public static void MakeStaticProperties(MyProperties properties)
+        {
+            MyPropertiesStatic.botToken = properties.botToken;
+            MyPropertiesStatic.channelID = properties.channelID;
+            MyPropertiesStatic.parseLink = properties.parseLink;
+            MyPropertiesStatic.useProxy = properties.useProxy;
+            MyPropertiesStatic.myProxy = properties.myProxy;
+            MyPropertiesStatic.randomMessageDesign = properties.randomMessageDesign;
+            MyPropertiesStatic.sendPhotoPercent = properties.sendPhotoPercent;
+            MyPropertiesStatic.sendPhotoWithTextRandomPercent = properties.sendPhotoWithTextRandomPercent;
+            MyPropertiesStatic.sendSecondTitleRandomPerсent = properties.sendSecondTitleRandomPerсent;
+            MyPropertiesStatic.timeBetweenMainParseMinutes = properties.timeBetweenMainParseMinutes;
+            MyPropertiesStatic.minViewCount = properties.minViewCount;
+            MyPropertiesStatic.timeBetweenSendMessSeconds = properties.timeBetweenSendMessSeconds;
+            MyPropertiesStatic.smile = properties.smile;
+            MyPropertiesStatic.maxParagraphCount = properties.maxParagraphCount;
+            MyPropertiesStatic.maxDescripSymbCount = properties.maxDescripSymbCount;
+            MyPropertiesStatic.ownerId = properties.ownerId;
+        }
+
+        public static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
     }
+
 }

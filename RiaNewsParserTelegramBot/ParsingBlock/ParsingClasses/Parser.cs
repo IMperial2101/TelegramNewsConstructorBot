@@ -1,28 +1,16 @@
 ﻿using HtmlAgilityPack;
 using NewsPropertyBot.NewClass;
-using NewsPropertyBot.ProxyClass;
-using System;
 using System.Web;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using NewsPropertyBot.TelegramBotClass;
-using static System.Net.WebRequestMethods;
 using NewsPropertyBot.XpathClass;
-using AngleSharp.Dom;
 using RiaNewsParserTelegramBot.PropertiesClass;
-using System.Linq.Expressions;
 using RiaNewsParserTelegramBot.NewClass;
-using Telegram.Bot.Types.InputFiles;
 
 namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
         static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
-        MyProperties properties;
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
         Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
         XPathStrings xPathStrings = new XPathStrings();
@@ -32,17 +20,12 @@ namespace NewsPropertyBot.ParsingClasses
 
         string parseLink;
         
-        public Parser()
+        public Parser(TelegramBot telegramBot)
         {
-            httpClient = new HttpClient();
-        }
-        public Parser(TelegramBot telegramBot, MyProperties properties)
-        {
-            this.properties = properties;
             this.telegramBot = telegramBot;
-            parseLink = properties.parseLink;
+            parseLink = MyPropertiesStatic.parseLink;
             HttpClientHandler httpHandler = new HttpClientHandler();
-            httpHandler.Proxy = properties.myProxy.GetWebProxy();
+            httpHandler.Proxy = MyPropertiesStatic.myProxy.GetWebProxy();
             httpHandler.UseDefaultCredentials = false;
 
             httpClient = new HttpClient(httpHandler);
@@ -150,8 +133,7 @@ namespace NewsPropertyBot.ParsingClasses
             }
 
             return results;
-        }
-        
+        } 
         public async Task<MyNew> ParseOneNewAsync(string url)
         {
             currLinksForSendInChannel[url] = true;
@@ -222,11 +204,11 @@ namespace NewsPropertyBot.ParsingClasses
                 Console.WriteLine("Начало парсинга");
                 await StartParseNews();
          
-                Console.WriteLine($"Конец, ожидание {properties.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
-                await Task.Delay(TimeSpan.FromMinutes(properties.timeBetweenMainParseMinutes));
+                Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
+                await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
             }
         }
-        private async Task FirstParseAddLinks()
+       private async Task FirstParseAddLinks()
         {
             await DownloadPageAsync(parseLink, htmlDocumentMainPage);
             string parseNewLinksResponse = ParseNewLinks();

@@ -4,7 +4,6 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.Text;
 using NewsPropertyBot.NewClass;
-using Telegram.Bot.Types;
 
 namespace RiaNewsParserTelegramBot.NewClass
 {
@@ -77,7 +76,7 @@ namespace RiaNewsParserTelegramBot.NewClass
 
 
                         string text2 = "🔥Marshall News, вооружение🔥";
-                        //string text2 = "**************************************************************************************************************";
+
                         using (Font font2 = new Font("Segoe UI Emoji", 100))
                         {
                             StringFormat stringFormat2 = new StringFormat();
