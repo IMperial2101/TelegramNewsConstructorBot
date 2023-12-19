@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.NewConstructorBlock
 {
-    internal class MyNewConstructor : INewsConstructor
+    internal class MyNewConstructor
     {
         static Random random = new Random();
         static int lastParagraphCount;
@@ -37,22 +37,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.NewConstructorBlock
                 descriptionBuilder.Length = maxDescripSymbCount;
 
             return descriptionBuilder.ToString();
-        }
-
-        public void MakeMyNewProperties(MyNew myNew)
-        {
-            MakeRandomProperties();
-            myNew.descriptionToSend = MakeDescriptionRandomDesign(myNew);
-
-            if (sendPhoto)
-            {
-                myNew.sendPhotoBool = true;
-                if (sendPhotoWithText && myNew.photoUrl != null && myNew.title != null)
-                {
-                    myNew.sendPhotoWithTextBool = true;
-                    myNew.photoName = MakeRandomString();
-                }
-            }
         }
         static private void MakeRandomProperties()
         {
@@ -103,17 +87,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.NewConstructorBlock
                 sendPhotoWithText = true;
             }
         }
-        static string MakeRandomString()
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            StringBuilder result = new StringBuilder(5);
 
-            for (int i = 0; i < 5; i++)
-            {
-                result.Append(chars[random.Next(chars.Length)]);
-            }
-            return result.ToString();
-        }
     }
 }

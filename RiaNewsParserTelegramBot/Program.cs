@@ -1,6 +1,9 @@
-﻿using NewsPropertyBot.ParsingClasses;
+﻿using NewsPropertyBot.NewClass;
+using NewsPropertyBot.ParsingClasses;
 using NewsPropertyBot.TelegramBotClass;
 using Newtonsoft.Json;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
 using RiaNewsParserTelegramBot.PropertiesClass;
 
 class Program
@@ -14,6 +17,17 @@ class Program
         TelegramBot telegramBot = new TelegramBot();
         Parser parser = new Parser(telegramBot);
 
+
+        MyNew myNew;
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20231219/aeroport-1916722185.html");
+        PhotoConstructor photoConstructor = new PhotoConstructor();
+        photoConstructor.SetStrategyAddText(new PhotoTextUnderDescription());
+        await photoConstructor.MakePhoto(myNew);
+
+        Console.WriteLine("Press to delete");
+        Console.ReadLine();
+        PhotoConstructor.DeletePhotoes(myNew.photoName);
+        Console.ReadLine();
         /*
         MyNew myNew = await parser.ParseOneNewAsync("https://ria.ru/20231212/kanadets-1915407469.html");
         myNew.photoName = MakeRandomString();

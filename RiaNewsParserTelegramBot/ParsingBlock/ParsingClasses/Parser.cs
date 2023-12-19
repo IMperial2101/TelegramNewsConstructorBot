@@ -4,7 +4,7 @@ using System.Web;
 using NewsPropertyBot.TelegramBotClass;
 using NewsPropertyBot.XpathClass;
 using RiaNewsParserTelegramBot.PropertiesClass;
-using RiaNewsParserTelegramBot.NewClass;
+
 
 namespace NewsPropertyBot.ParsingClasses
 {
@@ -45,11 +45,6 @@ namespace NewsPropertyBot.ParsingClasses
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
                         List<MyNew> newsList = await ParseAllNewsAsync();
-                        foreach (var el in newsList)
-                        {
-                            MyNewConstructor.MakeMyNewProperties(el);
-                        }
-                        await MakeNewsPhotos(newsList);
 
                         telegramBot.SendNewsToChannelAsync(newsList);
                         
@@ -65,11 +60,6 @@ namespace NewsPropertyBot.ParsingClasses
                     }
             }
 
-        }
-        public async Task MakeNewsPhotos(List<MyNew> newsList)
-        {
-            var tasks = newsList.Select(async el => await MyNewConstructor.MakePhotoWithText(el));
-            await Task.WhenAll(tasks);
         }
         public string ParseNewLinks()
         {

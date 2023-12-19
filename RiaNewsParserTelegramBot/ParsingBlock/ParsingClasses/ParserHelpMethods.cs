@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace NewsPropertyBot.ParsingClasses
 {
@@ -11,7 +12,7 @@ namespace NewsPropertyBot.ParsingClasses
                 foreach (var myNew in mainPageLinksWithViewsDict)
                 {
 
-                    if (!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > properties.minViewCount)
+                    if (!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > MyPropertiesStatic.minViewCount)
                     {
                         currLinksForSendInChannel.Add(myNew.Key, false);
                     }
