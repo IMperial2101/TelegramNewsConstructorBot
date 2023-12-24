@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 {
-    internal class PhotoTextUnderTitle : AbstractPhotoConstructor, IAddText
+    internal class PhotoTextUnderTitle : AbstractPhotoConstructor, IConstructor
     {
         public void AddGradient(Image image)
         {
@@ -32,6 +32,11 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
             }
         }
 
+        public void AddImage(Image image)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddTextOnImage(MyNew myNew, Image image)
         {
             using (Graphics graphics = Graphics.FromImage(image))
@@ -45,8 +50,25 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 
                 RectangleF rect1 = MakeRectangleWithPaddings(50, 5, 5, 5, width, height);
                 Font font1 = AdjustFontSize(graphics, myNew.title, rect1);
-                graphics.DrawString(myNew.title, font1, Brushes.White, rect1, stringFormat1);
+
+                Color color = ColorTranslator.FromHtml("#FD7E4F"); 
+
+                Brush brush = new SolidBrush(color);
+
+                graphics.DrawString(myNew.title, font1, brush, rect1, stringFormat1);
+                
             }
+        }
+
+        public void MakePhoto(Image image, MyNew myNew)
+        {
+            AddGradient(image);
+            AddTextOnImage(myNew, image);
+        }
+
+        Image IConstructor.MakePhoto(Image image, MyNew myNew)
+        {
+            throw new NotImplementedException();
         }
     }
 }

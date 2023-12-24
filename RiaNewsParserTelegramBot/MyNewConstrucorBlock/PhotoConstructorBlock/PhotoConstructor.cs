@@ -14,8 +14,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
     internal class PhotoConstructor
     {
         private string photoName;
-        private IAddText? addText;
-        public void SetStrategyAddText(IAddText addText)
+        private IConstructor? addText;
+        public void SetStrategyAddText(IConstructor addText)
         {
             this.addText = addText;
         }
@@ -28,11 +28,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
             myNew.photoName = MakeRandomString();
             await DownloadImage(myNew);
             using (Image image = Image.FromFile(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + ".png"))
-            {               
-
-                addText.AddGradient(image);
-                addText.AddTextOnImage(myNew,image);
-                image.Save(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + "Done.png", ImageFormat.Png);
+            {
+                addText.AddImage(image);
+                Image finalImage = addText.MakePhoto(image,myNew);           
+                finalImage.Save(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + "Done.png", ImageFormat.Png);
             }
         }
         public async Task DownloadImage(MyNew myNew)

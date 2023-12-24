@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class PhotoTextUnderDescription : AbstractPhotoConstructor,IAddText
+    internal class PhotoTextUnderDescription : AbstractPhotoConstructor,IConstructor
     {
         public void AddGradient(Image image)
         {
@@ -31,6 +31,11 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             }
         }
 
+        public void AddImage(Image image)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddTextOnImage(MyNew myNew, Image image)
         {
             using (Graphics graphics = Graphics.FromImage(image))
@@ -47,11 +52,22 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 graphics.DrawString(MakeDescription(myNew), font1, Brushes.White, rect1, stringFormat1);
             }
         }
+
+        public void MakePhoto(Image image, MyNew myNew)
+        {
+            throw new NotImplementedException();
+        }
+
         private string MakeDescription(MyNew myNew)
         {
-            if (myNew.description[1].Length < 1000)
-                myNew.descriptionToSend = myNew.description[1];
+            if (myNew.description[0].Length < 500)
+                myNew.descriptionToSend = myNew.description[0];
             return myNew.descriptionToSend;
+        }
+
+        Image IConstructor.MakePhoto(Image image, MyNew myNew)
+        {
+            throw new NotImplementedException();
         }
     }
 }

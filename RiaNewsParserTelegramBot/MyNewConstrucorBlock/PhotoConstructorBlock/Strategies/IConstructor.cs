@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    public interface IAddText
+    public interface IConstructor
     {
         public abstract void AddTextOnImage(MyNew myNew, Image image);
         public abstract void AddGradient(Image image);
+        public abstract Image MakePhoto(Image image, MyNew myNew);
+        public abstract void AddImage(Image image);
     }
 }

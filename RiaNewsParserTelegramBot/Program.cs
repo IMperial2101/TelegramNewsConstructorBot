@@ -19,20 +19,13 @@ class Program
 
 
         MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20231219/aeroport-1916722185.html");
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20231224/spetsoperatsiya-1917753953.html");
         PhotoConstructor photoConstructor = new PhotoConstructor();
-        photoConstructor.SetStrategyAddText(new PhotoTextUnderDescription());
+        photoConstructor.SetStrategyAddText(new TitleUnderBlackBlock());
         await photoConstructor.MakePhoto(myNew);
 
-        Console.WriteLine("Press to delete");
         Console.ReadLine();
-        PhotoConstructor.DeletePhotoes(myNew.photoName);
-        Console.ReadLine();
-        /*
-        MyNew myNew = await parser.ParseOneNewAsync("https://ria.ru/20231212/kanadets-1915407469.html");
-        myNew.photoName = MakeRandomString();
-        await MyNewConstructor.DownloadImage(myNew);
-        */
+
 
         await parser.Start();       
     }

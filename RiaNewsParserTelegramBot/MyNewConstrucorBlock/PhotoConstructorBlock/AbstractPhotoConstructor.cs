@@ -23,16 +23,15 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             {
                 font = new Font("Montserrat", fontSize, FontStyle.Bold);
 
-                textSize = graphics.MeasureString(text, font);
+                textSize = graphics.MeasureString(text, font,(int)rect.Width);
 
-                stringsCount = (int)(textSize.Width / rect.Width);
-
-                if (stringsCount * textSize.Height > rect.Height)
+                if (textSize.Height > rect.Height)
                 {
                     fontSize--;
                 }
                 else
                     break;
+
             }
               
             return font;
