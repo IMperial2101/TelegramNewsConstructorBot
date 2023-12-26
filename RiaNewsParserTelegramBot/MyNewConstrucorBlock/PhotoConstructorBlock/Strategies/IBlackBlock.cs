@@ -9,7 +9,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     public interface IBlackBlock
     {
-        public abstract Image AddBlackBlock(Image originalImage, int blackRectangleHeight);
+        public abstract Image MakeImageWithBlackBlock(Image originalImage, int blackRectangleHeight, string gradientColor);
 
     }
 }

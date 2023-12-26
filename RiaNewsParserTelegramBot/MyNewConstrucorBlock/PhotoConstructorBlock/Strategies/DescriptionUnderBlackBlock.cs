@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class TitleUnderBlackBlock : AbstractPhotoConstructor, IConstructor
+    internal class DescriptionUnderBlackBlock : AbstractPhotoConstructor, IConstructor
     {
-        private const int textPaddingTop = 70;
+        private const int textPaddingTop = 60;
         private const int textPaddingBottom = 3;
         private const int textPaddingLeft = 5;
         private const int textPaddingRight = 5;
         public Image MakePhoto(Image image, MyNew myNew)
         {
-            string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_);
+            string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_Purple);
             Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
             RectangleF TextRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-            AddTextOnImage(finalphoto, myNew.title, colors[1], TextRectangle, StringAlignment.Center, StringAlignment.Center);
+            AddTextOnImage(finalphoto, myNew.description[0], colors[1], TextRectangle, StringAlignment.Center, StringAlignment.Center);
 
             return finalphoto;
         }
@@ -62,7 +62,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 int width = image.Width;
                 int height = image.Height;
 
-                int rectangleHeight = 300;
+                int rectangleHeight = (int)(image.Height * 0.5);
 
                 int rectangleY = height - blackRectangleHeight - rectangleHeight;
 

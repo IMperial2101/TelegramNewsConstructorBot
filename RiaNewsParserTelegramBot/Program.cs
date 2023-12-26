@@ -19,9 +19,9 @@ class Program
 
 
         MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20231224/spetsoperatsiya-1917753953.html");
+        myNew = await parser.ParseOneNewAsync("https://radiosputnik.ru/20231226/shoygu-1918165586.html");
         PhotoConstructor photoConstructor = new PhotoConstructor();
-        photoConstructor.SetStrategyAddText(new TitleUnderBlackBlock());
+        photoConstructor.SetStrategyAddText(new DescriptionLeftBlackBlock());
         await photoConstructor.MakePhoto(myNew);
 
         Console.ReadLine();

@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\IBlackBlock.cs" />
+    <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderDescription.cs" />
+    <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderTitle.cs" />
+    <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\test.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.0.6" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.54" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

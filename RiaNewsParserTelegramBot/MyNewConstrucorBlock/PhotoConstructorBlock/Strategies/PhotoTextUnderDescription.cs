@@ -31,6 +31,11 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             }
         }
 
+        public void AddGradient(Image image, int blackRectangleHeight)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddImage(Image image)
         {
             throw new NotImplementedException();

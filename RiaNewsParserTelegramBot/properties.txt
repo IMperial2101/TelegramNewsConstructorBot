@@ -4,10 +4,10 @@
 	"parseLink": "https://ria.ru/world/",
 	"useProxy": "yes",
 	"myProxy":{
-		"host": "194.67.220.148",
-		"port": 9588,
-		"login": "8N8L6s",
-		"password": "YPHAsM"
+		"host": "91.188.243.122",
+		"port": 9487,
+		"login": "XrVHcG",
+		"password": "pthNrV"
 	},
 	"randomMessageDesign": true,
 	"sendPhotoPercent": 90,

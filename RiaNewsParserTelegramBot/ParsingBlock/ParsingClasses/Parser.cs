@@ -25,9 +25,11 @@ namespace NewsPropertyBot.ParsingClasses
             this.telegramBot = telegramBot;
             parseLink = MyPropertiesStatic.parseLink;
             HttpClientHandler httpHandler = new HttpClientHandler();
-            httpHandler.Proxy = MyPropertiesStatic.myProxy.GetWebProxy();
-            httpHandler.UseDefaultCredentials = false;
-
+            if(MyPropertiesStatic.useProxy == "yes")
+            {
+                httpHandler.Proxy = MyPropertiesStatic.myProxy.GetWebProxy();
+                httpHandler.UseDefaultCredentials = false;
+            }
             httpClient = new HttpClient(httpHandler);
 
             httpClient.MaxResponseContentBufferSize = int.MaxValue;

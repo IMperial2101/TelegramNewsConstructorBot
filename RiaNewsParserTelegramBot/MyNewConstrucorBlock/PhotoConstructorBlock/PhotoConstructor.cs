@@ -29,7 +29,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
             await DownloadImage(myNew);
             using (Image image = Image.FromFile(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + ".png"))
             {
-                addText.AddImage(image);
                 Image finalImage = addText.MakePhoto(image,myNew);           
                 finalImage.Save(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + "Done.png", ImageFormat.Png);
             }
