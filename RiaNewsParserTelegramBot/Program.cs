@@ -11,21 +11,37 @@ class Program
     static MyProperties properties = ReadLineProperties();
     static async Task Main()
     {
-
+        Random random = new Random();
         MakeImagesFolder();
         MyPropertiesStatic.MakeStaticProperties(properties);
         TelegramBot telegramBot = new TelegramBot();
         Parser parser = new Parser(telegramBot);
 
-        await parser.FirstParseAddLinks();
+        MyNew myNew;
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240103/spetsoperatsiya-1919538798.html");
+        PhotoConstructor photoConstructor1 = new PhotoConstructor();
+        photoConstructor1.MakePhoto(myNew, new TitleUnderBlackBlock());
+
+        Console.ReadLine();
+
+
+        List<IConstructor> strateges = new List<IConstructor>();
+        strateges.Add(new DescriptionLeftBlackBlock());
+        strateges.Add(new DescriptionUnderBlackBlock());
+        strateges.Add(new TitleUnderBlackBlock());
+        //await parser.FirstParseAddLinks();
         while (true)
         {
             Console.WriteLine("Начало парсинга");
             List<MyNew> newsList = await parser.ParseNews();
 
             PhotoConstructor photoConstructor = new PhotoConstructor();
-            photoConstructor.SetStrategyAddText(new TitleUnderBlackBlock());
-            photoConstructor.MakePhoto();
+
+            for(int i = 0; i < newsList.Count; i++)
+            {
+                int randomStrategyNumber = random.Next(0, strateges.Count);
+                photoConstructor.MakePhoto(newsList[i], strateges[randomStrategyNumber]);
+            }
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
             await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));

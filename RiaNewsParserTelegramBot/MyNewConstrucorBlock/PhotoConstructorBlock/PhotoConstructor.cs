@@ -13,23 +13,19 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 {
     internal class PhotoConstructor
     {
-        private string photoName;
         private IConstructor? addText;
         public void SetStrategyAddText(IConstructor addText)
         {
             this.addText = addText;
         }
-        public async Task MakePhoto(MyNew myNew)
+        public async Task MakePhoto(MyNew myNew,IConstructor strategy)
         {
-            if(addText is null)
-            {
-                return;
-            }
+
             myNew.photoName = MakeRandomString();
             await DownloadImage(myNew);
             using (Image image = Image.FromFile(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + ".png"))
             {
-                Image finalImage = addText.MakePhoto(image,myNew);           
+                Image finalImage = strategy.MakePhoto(image,myNew);           
                 finalImage.Save(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + "Done.png", ImageFormat.Png);
             }
         }

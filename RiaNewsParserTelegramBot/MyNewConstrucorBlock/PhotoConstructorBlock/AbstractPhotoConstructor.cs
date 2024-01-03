@@ -1,8 +1,6 @@
-﻿using NewsPropertyBot.NewClass;
-using RiaNewsParserTelegramBot.PropertiesClass;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using AForge.Imaging.Filters;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
@@ -165,9 +163,91 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 int y = up ? 20 : image.Height - 20; // Если текст сверху, то отступ снизу, иначе отступ сверху
 
                 // Наложение текста на изображение
-                graphics.DrawString(date, font, brush, new PointF(x, y), stringFormat);
+                graphics.DrawString(DateTime.Now.ToShortDateString(), font, brush, new PointF(x, y), stringFormat);
             }
         }
+        public void AddDateWithBlurOnImage(Image image, bool right, bool up, string date)
+        {
+            // Создаем Bitmap из Image
+            Bitmap bitmap = new Bitmap(image);
+
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                // Шрифт и размер текста
+                Font font = new Font("Base 05", 50, FontStyle.Bold, GraphicsUnit.Pixel);
+
+                // Цвет текста
+                SolidBrush brush = new SolidBrush(Color.White);
+
+                // Определение положения текста
+                StringFormat stringFormat = new StringFormat();
+                stringFormat.Alignment = right ? StringAlignment.Far : StringAlignment.Near;
+                stringFormat.LineAlignment = up ? StringAlignment.Near : StringAlignment.Far;
+
+                // Определение координат текста в зависимости от угла и расстояния от угла
+                int x = right ? image.Width - 20 : 20; // Если текст справа, то отступ слева, иначе отступ справа
+                int y = up ? 20 : image.Height - 20; // Если текст сверху, то отступ снизу, иначе отступ сверху
+
+                // Получаем размер текста
+                SizeF textSize = graphics.MeasureString(DateTime.Now.ToShortDateString(), font);
+
+                // Создание прямоугольника для текста даты
+                RectangleF textRect = new RectangleF(new PointF(x, y), textSize);
+
+                // Рисуем черный прямоугольник за текстом
+                graphics.FillRectangle(new SolidBrush(Color.Black), textRect);
+
+                // Применяем размытие к прямоугольнику
+                int blurAmount = 100; // Измените это значение по вашему усмотрению для управления степенью размытия
+                ApplyBlur(bitmap, textRect, blurAmount);
+
+                // Наложение текста на изображение
+                graphics.DrawString(DateTime.Now.ToShortDateString(), font, brush, new PointF(x, y), stringFormat);
+            }
+
+            // Обновляем изначальное изображение
+            using (Graphics originalGraphics = Graphics.FromImage(image))
+            {
+                originalGraphics.DrawImage(bitmap, new Point(0, 0));
+            }
+        }
+
+        private void ApplyBlur(Bitmap image, RectangleF rectangle, int blurAmount)
+        {
+            int expand = 50; // Значение, на которое увеличиваем прямоугольник во всех направлениях
+
+            using (Graphics graphics = Graphics.FromImage(image))
+            {
+                // Создаем прямоугольник изображения с увеличенными размерами
+                RectangleF expandedRect = new RectangleF(rectangle.X - expand, rectangle.Y - expand,
+                                                         rectangle.Width + 2 * expand, rectangle.Height + 2 * expand);
+                Bitmap croppedImage = new Bitmap((int)expandedRect.Width, (int)expandedRect.Height);
+
+                using (Graphics croppedGraphics = Graphics.FromImage(croppedImage))
+                {
+                    // Вырезаем часть изображения
+                    croppedGraphics.DrawImage(image, new Rectangle(0, 0, croppedImage.Width, croppedImage.Height),
+                                               expandedRect, GraphicsUnit.Pixel);
+
+                    // Создаем фильтр гауссова размытия
+                    AForge.Imaging.Filters.GaussianBlur filter = new AForge.Imaging.Filters.GaussianBlur(blurAmount, 50);
+
+                    // Применяем фильтр к части изображения
+                    filter.ApplyInPlace(croppedImage);
+
+                    // Наложим размытую часть обратно на изображение
+                    graphics.DrawImage(croppedImage, expandedRect.Location);
+                }
+            }
+        }
+
+
+
+
+
+
+
+
 
 
         public enum ColorEnum
