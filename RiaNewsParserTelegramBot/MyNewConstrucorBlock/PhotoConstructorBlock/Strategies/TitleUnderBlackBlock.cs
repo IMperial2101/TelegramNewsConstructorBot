@@ -24,9 +24,9 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
             RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-            MyText descriptionText = new MyText(myNew.title, colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+            MyText titleText = new MyText(myNew.title, colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
 
-            AddTextOnImage(finalphoto, descriptionText);
+            AddTextOnImage(finalphoto, titleText);
             AddDateOnImage(finalphoto, false, true, "");
 
             return finalphoto;

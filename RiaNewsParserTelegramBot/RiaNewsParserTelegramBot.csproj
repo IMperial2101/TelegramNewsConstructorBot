@@ -12,6 +12,7 @@
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderDescription.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderTitle.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\test.cs" />
+    <Compile Remove="TelegramBotClass\TelegramBotSendlerFactory.cs" />
   </ItemGroup>
 
   <ItemGroup>

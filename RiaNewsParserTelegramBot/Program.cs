@@ -12,10 +12,10 @@ class Program
     static async Task Main()
     {
         Random random = new Random();
-        MakeImagesFolder();
         MyPropertiesStatic.MakeStaticProperties(properties);
         TelegramBot telegramBot = new TelegramBot();
         Parser parser = new Parser(telegramBot);
+        MakeImagesFolder();
 
         MyNew myNew;
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240103/spetsoperatsiya-1919538798.html");
@@ -34,7 +34,6 @@ class Program
         {
             Console.WriteLine("Начало парсинга");
             List<MyNew> newsList = await parser.ParseNews();
-
             PhotoConstructor photoConstructor = new PhotoConstructor();
 
             for(int i = 0; i < newsList.Count; i++)

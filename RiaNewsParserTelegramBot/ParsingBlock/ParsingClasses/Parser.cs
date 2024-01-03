@@ -10,7 +10,6 @@ namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
-        static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
         Dictionary<string, int> mainPageLinksWithViewsDict;
         XPathStrings xPathStrings = new XPathStrings();
@@ -185,19 +184,7 @@ namespace NewsPropertyBot.ParsingClasses
                 return null;
             }
         }
-        public async Task Start()
-        {
-            
-            while (true)
-            {
-                Console.WriteLine("Начало парсинга");
-                await ParseNews();
-         
-                Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
-                await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
-            }
-        }
-       public async Task FirstParseAddLinks()
+        public async Task FirstParseAddLinks()
         {
             await DownloadPageAsync(parseLink, htmlDocumentMainPage);
             mainPageLinksWithViewsDict = ParseNewLinks();
@@ -208,9 +195,8 @@ namespace NewsPropertyBot.ParsingClasses
                         Console.WriteLine("Успешно скачали главную страницу");
                         AddNewLinksToSend();
                         foreach (var key in currLinksForSendInChannel.Keys.ToList())
-                        {
                             currLinksForSendInChannel[key] = true;
-                        }
+
                         break;
                     }
                 default:
