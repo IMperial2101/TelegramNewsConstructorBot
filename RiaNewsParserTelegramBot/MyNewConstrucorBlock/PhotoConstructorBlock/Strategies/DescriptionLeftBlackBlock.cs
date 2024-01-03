@@ -3,6 +3,7 @@ using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strate
 using static RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies.AbstractPhotoConstructor;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
 internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructor
 {
@@ -13,23 +14,24 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
 
     public Image MakePhoto(Image image, MyNew myNew)
     {
-        string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_Purple);
+        string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
         Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
         RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-        AddTextOnImage(finalphoto, myNew.description[0], colors[1], textRectangle,StringAlignment.Near,StringAlignment.Center);
+        MyText descriptionText = new MyText(myNew.description[0], colors[1],"Montserrat",textRectangle, StringAlignment.Near,StringAlignment.Center);
+
+        AddTextOnImage(finalphoto, descriptionText);
+        AddDateOnImage(finalphoto, true, false, "3 Января 2024");
 
         return finalphoto;
     }
-
     private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor)
     {
         int blackRectangleWidth = CalculateRectangleWidth(textPaddingLeft, textPaddingRight, image.Width);
-        Image imageWithBlackBlock = MakeImageWithBlackBlock(image, blackRectangleWidth, gradientColor);
+        Image imageWithBlackBlock = MakeImageWithBlackBlockWide(image, blackRectangleWidth, gradientColor);
         AddGradient(imageWithBlackBlock, blackRectangleWidth, gradientColor);
         return imageWithBlackBlock;
     }
-
     private Image MakeImageWithBlackBlock(Image originalImage, int blackRectangleWidth, string gradientColor)
     {
         int newWidth = originalImage.Width;

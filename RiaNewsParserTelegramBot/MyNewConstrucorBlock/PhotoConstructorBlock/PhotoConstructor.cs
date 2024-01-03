@@ -45,7 +45,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
             await stream.CopyToAsync(file);
             Console.WriteLine($"Скачали фото {myNew.title.Substring(0, 20)}");
         }
-
         static string MakeRandomString()
         {
             Random random = new Random();

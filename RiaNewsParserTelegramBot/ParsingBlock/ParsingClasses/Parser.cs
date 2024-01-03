@@ -12,7 +12,7 @@ namespace NewsPropertyBot.ParsingClasses
     {
         static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
-        Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
+        Dictionary<string, int> mainPageLinksWithViewsDict;
         XPathStrings xPathStrings = new XPathStrings();
         HtmlDocument htmlDocumentMainPage = new HtmlDocument();        
         HttpClient httpClient;
@@ -35,40 +35,37 @@ namespace NewsPropertyBot.ParsingClasses
             httpClient.MaxResponseContentBufferSize = int.MaxValue;
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
         }
-        public async Task StartParseNews()
+        public async Task<List<MyNew>> ParseNews()
         {
             await DownloadPageAsync(parseLink, htmlDocumentMainPage);
-            string parseNewLinksResponse = ParseNewLinks();
-            switch (parseNewLinksResponse)
+            mainPageLinksWithViewsDict = ParseNewLinks();
+            switch (mainPageLinksWithViewsDict != null)
             {
-                case "Succes":
+                case true:
                     {
                         Console.WriteLine("Успешно скачали главную страницу");
                         RemoveNoActualLinks();
                         AddNewLinksToSend();
                         List<MyNew> newsList = await ParseAllNewsAsync();
-
-                        telegramBot.SendNewsToChannelAsync(newsList);
-                        
-                        
+                        return newsList;
                         break;
                     }
                 default:
                     {
                         Console.WriteLine($"Не удалость скачать страницу {parseLink}");
                         await telegramBot.SendMessageToOwner($"Не удалость скачать страницу [{parseLink}]({parseLink})\n");
-
+                        return null;
                         break;
                     }
             }
 
         }
-        public string ParseNewLinks()
+        public Dictionary<string, int> ParseNewLinks()
         {
+            Dictionary<string, int> mainPageLinksWithViewsDict = new Dictionary<string, int>();
             try
             {               
                 HtmlNodeCollection newNewsNodes = htmlDocumentMainPage.DocumentNode.SelectNodes(xPathStrings.mainLinksDivContainer);
-                mainPageLinksWithViewsDict.Clear();
                 if (newNewsNodes != null)
                 {
                     foreach (var node in newNewsNodes)
@@ -85,7 +82,7 @@ namespace NewsPropertyBot.ParsingClasses
                 }
                 else{
                     telegramBot.SendMessageToOwner($"HtmlNodeCollectionIsNull [{parseLink}]({parseLink})\n");
-                    return "HtmlNodeCollectionIsNull";
+                    return null;
                 }
             }
             catch (Exception ex)
@@ -93,7 +90,7 @@ namespace NewsPropertyBot.ParsingClasses
                 telegramBot.SendMessageToOwner($"Error parsing new elements: {ex.Message}");
                 Console.WriteLine($"Error parsing new elements: {ex.Message}");
             }
-            return "Succes";
+            return mainPageLinksWithViewsDict;
         }
         public async Task<List<MyNew>> ParseAllNewsAsync()
         {
@@ -190,23 +187,23 @@ namespace NewsPropertyBot.ParsingClasses
         }
         public async Task Start()
         {
-            //await FirstParseAddLinks();
+            
             while (true)
             {
                 Console.WriteLine("Начало парсинга");
-                await StartParseNews();
+                await ParseNews();
          
                 Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
                 await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
             }
         }
-       private async Task FirstParseAddLinks()
+       public async Task FirstParseAddLinks()
         {
             await DownloadPageAsync(parseLink, htmlDocumentMainPage);
-            string parseNewLinksResponse = ParseNewLinks();
-            switch (parseNewLinksResponse)
+            mainPageLinksWithViewsDict = ParseNewLinks();
+            switch (mainPageLinksWithViewsDict != null)
             {
-                case "Succes":
+                case true:
                     {
                         Console.WriteLine("Успешно скачали главную страницу");
                         AddNewLinksToSend();

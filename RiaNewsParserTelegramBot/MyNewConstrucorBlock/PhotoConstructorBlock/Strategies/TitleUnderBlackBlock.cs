@@ -20,11 +20,14 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         private const int textPaddingRight = 5;
         public Image MakePhoto(Image image, MyNew myNew)
         {
-            string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_);
+            string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
             Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
-            RectangleF TextRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-            AddTextOnImage(finalphoto, myNew.title, colors[1], TextRectangle, StringAlignment.Center, StringAlignment.Center);
+            RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
+            MyText descriptionText = new MyText(myNew.title, colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+
+            AddTextOnImage(finalphoto, descriptionText);
+            AddDateOnImage(finalphoto, false, true, "3 Января 2024");
 
             return finalphoto;
         }

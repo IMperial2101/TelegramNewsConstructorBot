@@ -17,17 +17,21 @@ class Program
         TelegramBot telegramBot = new TelegramBot();
         Parser parser = new Parser(telegramBot);
 
+        await parser.FirstParseAddLinks();
+        while (true)
+        {
+            Console.WriteLine("Начало парсинга");
+            List<MyNew> newsList = await parser.ParseNews();
 
-        MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://radiosputnik.ru/20231226/shoygu-1918165586.html");
-        PhotoConstructor photoConstructor = new PhotoConstructor();
-        photoConstructor.SetStrategyAddText(new DescriptionLeftBlackBlock());
-        await photoConstructor.MakePhoto(myNew);
+            PhotoConstructor photoConstructor = new PhotoConstructor();
+            photoConstructor.SetStrategyAddText(new TitleUnderBlackBlock());
+            photoConstructor.MakePhoto();
 
+            Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
+            await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
+        }
         Console.ReadLine();
-
-
-        await parser.Start();       
+     
     }
 
     static MyProperties ReadLineProperties()
@@ -46,8 +50,7 @@ class Program
             Console.WriteLine("Ошибка чтения файла JSON: " + ex.Message);
         }
         return null;
-    } 
-    
+    }   
     static void MakeImagesFolder()
     {
         if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images")))
