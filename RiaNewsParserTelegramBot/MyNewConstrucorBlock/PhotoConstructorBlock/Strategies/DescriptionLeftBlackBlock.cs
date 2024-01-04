@@ -18,10 +18,11 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
         Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
         RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-        MyText descriptionText = new MyText(myNew.description[0], colors[1],"Montserrat",textRectangle, StringAlignment.Near,StringAlignment.Center);
+        myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
+        MyText descriptionText = new MyText(myNew.descriptionToSend, colors[1],"Montserrat",textRectangle, StringAlignment.Near,StringAlignment.Center);
 
         AddTextOnImage(finalphoto, descriptionText);
-        AddDateOnImage(finalphoto, true, false, "3 Января 2024");
+        AddDateWithBlackBlock(finalphoto, true, false);
 
         return finalphoto;
     }

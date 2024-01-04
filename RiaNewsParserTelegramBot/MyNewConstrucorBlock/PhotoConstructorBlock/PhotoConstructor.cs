@@ -20,7 +20,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
         }
         public async Task MakePhoto(MyNew myNew,IConstructor strategy)
         {
-
+            
             myNew.photoName = MakeRandomString();
             await DownloadImage(myNew);
             using (Image image = Image.FromFile(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + ".png"))

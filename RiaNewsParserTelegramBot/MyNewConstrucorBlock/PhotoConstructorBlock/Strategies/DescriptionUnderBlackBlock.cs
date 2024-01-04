@@ -28,7 +28,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             MyText descriptionText = new MyText(myNew.description[0], colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
 
             AddTextOnImage(finalphoto, descriptionText);
-            AddDateOnImage(finalphoto, false, true, "3 Января 2024");
+            AddDateOnImage(finalphoto, false, true);
 
             return finalphoto;
         }

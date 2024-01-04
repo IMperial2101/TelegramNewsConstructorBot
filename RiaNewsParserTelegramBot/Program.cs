@@ -18,9 +18,9 @@ class Program
         MakeImagesFolder();
 
         MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240103/spetsoperatsiya-1919538798.html");
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240104/poteri-1919702769.html");
         PhotoConstructor photoConstructor1 = new PhotoConstructor();
-        photoConstructor1.MakePhoto(myNew, new TitleUnderBlackBlock());
+        photoConstructor1.MakePhoto(myNew, new DescriptionLeftBlackBlock());
 
         Console.ReadLine();
 

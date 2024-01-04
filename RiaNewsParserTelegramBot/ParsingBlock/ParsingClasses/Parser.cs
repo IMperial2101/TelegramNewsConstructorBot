@@ -43,10 +43,10 @@ namespace NewsPropertyBot.ParsingClasses
                 case true:
                     {
                         Console.WriteLine("Успешно скачали главную страницу");
-                        RemoveNoActualLinks();
-                        AddNewLinksToSend();
+                        RemoveNoActualLinks(mainPageLinksWithViewsDict,currLinksForSendInChannel);
+                        AddNewLinksToSend(mainPageLinksWithViewsDict, currLinksForSendInChannel);
                         List<MyNew> newsList = await ParseAllNewsAsync();
-                        return newsList;
+                        return newsList;//явный вывод
                         break;
                     }
                 default:
@@ -193,7 +193,7 @@ namespace NewsPropertyBot.ParsingClasses
                 case true:
                     {
                         Console.WriteLine("Успешно скачали главную страницу");
-                        AddNewLinksToSend();
+                        AddNewLinksToSend(mainPageLinksWithViewsDict,currLinksForSendInChannel);
                         foreach (var key in currLinksForSendInChannel.Keys.ToList())
                             currLinksForSendInChannel[key] = true;
 
