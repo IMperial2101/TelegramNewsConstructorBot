@@ -20,7 +20,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         private const int textPaddingRight = 5;
         public Image MakePhoto(Image image, MyNew myNew)
         {
-            string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+            string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
             Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
             RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);

@@ -11,10 +11,10 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
     private const int textPaddingBottom = 7;
     private const int textPaddingLeft = 5;
     private const int textPaddingRight = 55;
-
+    
     public Image MakePhoto(Image image, MyNew myNew)
     {
-        string[] colors = ColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+        string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
         Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
 
         RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);

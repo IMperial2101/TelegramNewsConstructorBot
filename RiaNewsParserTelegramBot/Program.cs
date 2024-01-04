@@ -20,7 +20,7 @@ class Program
         MyNew myNew;
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240104/poteri-1919702769.html");
         PhotoConstructor photoConstructor1 = new PhotoConstructor();
-        photoConstructor1.MakePhoto(myNew, new DescriptionLeftBlackBlock());
+        photoConstructor1.MakePhoto(myNew, new TestStrategyTitleUnder());
 
         Console.ReadLine();
 

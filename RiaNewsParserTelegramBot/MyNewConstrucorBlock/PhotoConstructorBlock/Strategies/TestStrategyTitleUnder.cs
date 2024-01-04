@@ -12,29 +12,33 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class DescriptionUnderBlackBlock : AbstractPhotoConstructor, IConstructor
+    internal class TestStrategyTitleUnder : AbstractPhotoConstructor, IConstructor
     {
-        private const int textPaddingTop = 60;
-        private const int textPaddingBottom = 3;
-        private const int textPaddingLeft = 5;
-        private const int textPaddingRight = 5;
+
+        TextPadding mainTitlePadding = new TextPadding(70, 3, 5, 5);
+        TextPadding linePadding = new TextPadding(60,30,10,10);
         public Image MakePhoto(Image image, MyNew myNew)
         {
             string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
-            Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
+            Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0],mainTitlePadding.Top,mainTitlePadding.Bottom);
 
-            RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
+            RectangleF textRectangle = MakeRectangleWithPaddings(mainTitlePadding.Top, mainTitlePadding.Bottom, mainTitlePadding.Left, mainTitlePadding.Right, finalphoto.Width, finalphoto.Height);         
+            MyText titleText = new MyText(myNew.title, colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+            AddTextOnImage(finalphoto, titleText);
 
-            MyText descriptionText = new MyText(myNew.description[0], colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+            RectangleF lineRectangle = MakeRectangleWithPaddings(linePadding.Top, linePadding.Bottom, linePadding.Left, linePadding.Right, finalphoto.Width, finalphoto.Height);
+            MyText lineUpText = new MyText("🌍", MyColorConverter.white, "Segoe UI Emoji", lineRectangle);
+            AddTextOnImage(finalphoto, lineUpText);
+            DrawGradientLines(finalphoto, lineRectangle,200,10,MyColorConverter.white);
 
-            AddTextOnImage(finalphoto, descriptionText);
-            AddDateOnImage(finalphoto, false, true);
+
+            AddDateWithBlackBlock(finalphoto, false, true);
 
             return finalphoto;
         }
-        private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor)
+        private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor,int topPadding,int bottomPadding)
         {
-            int blackRectangleHeight = CalculateRectangleHeight(textPaddingTop, textPaddingBottom, image.Height);
+            int blackRectangleHeight = CalculateRectangleHeight(topPadding, bottomPadding, image.Height);
             Image imageWithBlackBlock = MakeImageWithBlackBlock(image, blackRectangleHeight, gradientColor);
             AddGradient(imageWithBlackBlock, blackRectangleHeight, gradientColor);
             return imageWithBlackBlock;
@@ -66,7 +70,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 int width = image.Width;
                 int height = image.Height;
 
-                int rectangleHeight = (int)(image.Height * 0.5);
+                int rectangleHeight = 300;
 
                 int rectangleY = height - blackRectangleHeight - rectangleHeight;
 
@@ -101,6 +105,35 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             return (int)(height - topPadding - bottomPadding);
         }
+
+
+        //Нужно доделать эту функцию
+        public void DrawGradientLines(Image image, RectangleF rectangle, int lineWidth, int lineHeight, string htmlColor)
+        {
+            using (Graphics graphics = Graphics.FromImage(image))
+            {
+                Color color = ColorTranslator.FromHtml("#"+htmlColor);
+
+
+                using (LinearGradientBrush leftGradient1 = new LinearGradientBrush(
+                    new PointF(rectangle.Left, rectangle.Top),
+                    new PointF(rectangle.Left + lineWidth, rectangle.Top),
+                    Color.Transparent,
+                    color))
+                {
+                    using (LinearGradientBrush rightGradient1 = new LinearGradientBrush(
+                        new PointF(rectangle.Right, rectangle.Top / 2),
+                        new PointF(rectangle.Right - lineWidth, rectangle.Top / 2),
+                        color,
+                        Color.Transparent))
+                    {
+                        graphics.FillRectangle(leftGradient1, rectangle.Left - lineWidth, rectangle.Top, lineWidth, lineHeight);
+                        graphics.FillRectangle(rightGradient1, rectangle.Right, rectangle.Top, lineWidth, lineHeight);
+                    }
+                }
+            }
+        }
+
 
 
 

@@ -126,31 +126,30 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 // Цвет текста
                 SolidBrush brush = new SolidBrush(Color.White);
 
-                // Определение положения текста
-                StringFormat stringFormat = new StringFormat();
-                stringFormat.Alignment = right ? StringAlignment.Far : StringAlignment.Near;
-                stringFormat.LineAlignment = up ? StringAlignment.Near : StringAlignment.Far;
-
-                // Определение координат текста в зависимости от угла и расстояния от угла
-                int x = right ? image.Width - 0 : 0; // Если текст справа, то отступ слева, иначе отступ справа
-                int y = up ? 0 : image.Height - 0; // Если текст сверху, то отступ снизу, иначе отступ сверху
-
                 // Получаем размер текста
                 SizeF textSize = graphics.MeasureString(DateTime.Now.ToShortDateString(), font);
 
-                // Увеличиваем размеры прямоугольника с отступом 10 во всех направлениях
-                RectangleF textRect = new RectangleF(new PointF(x, y), textSize);
-                textRect.Inflate(10, 10);
+                // Определение координат прямоугольника в зависимости от угла
+                float rectWidth = textSize.Width + 20; // Ширина прямоугольника с небольшим отступом
+                float rectHeight = textSize.Height + 20; // Высота прямоугольника с небольшим отступом
+
+                float rectX = right ? image.Width - rectWidth : 0; // Если текст справа, координата X - ширина прямоугольника, иначе 0
+                float rectY = up ? 0 : image.Height - rectHeight; // Если текст сверху, координата Y - высота прямоугольника, иначе 0
+
+                // Создаем прямоугольник для черного блока
+                RectangleF blackRect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
 
                 // Рисуем черный прямоугольник за текстом
-                graphics.FillRectangle(new SolidBrush(Color.Black), textRect);
+                graphics.FillRectangle(new SolidBrush(Color.Black), blackRect);
 
-                // Наложение текста на изображение
-                graphics.DrawString(DateTime.Now.ToShortDateString(), font, brush, new PointF(x, y), stringFormat);
+                // Определение координат текста внутри прямоугольника
+                float textX = right ? rectX + 10 : rectX + rectWidth - 10 - textSize.Width; // Если текст справа, отступ слева, иначе отступ справа
+                float textY = up ? rectY + 10 : rectY + rectHeight - 10 - textSize.Height; // Если текст сверху, отступ сверху, иначе отступ снизу
+
+                // Наложение текста на изображение внутри прямоугольника
+                graphics.DrawString(DateTime.Now.ToShortDateString(), font, brush, new PointF(textX, textY));
             }
         }
-
-
 
         public RectangleF MakeRectangleWithPaddings(float topPaddingPercent, float bottomPaddingPercent, float leftPaddingPercent, float rightPaddingPercent, int width, int height)
         {
@@ -185,88 +184,82 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         protected string makeDescriptionToSend(string description)
         {
-            int indexOfDot = description.IndexOf(". "); // Ищем первую точку, обозначающую конец предложения
+            int indexOfDot = description.IndexOf(". "); 
 
             if (indexOfDot != -1)
-            {
-                // Если нашли точку, возвращаем текст после этой точки
                 return description.Substring(indexOfDot + 2); // +2 для включения пробела после точки
-            }
             else
-            {
-                // Если точка не найдена, возвращаем пустую строку
                 return string.Empty;
+        }
+
+        public class TextPadding
+        {
+            public TextPadding(int top, int bottom, int left, int right)
+            {
+                Top = top;
+                Bottom = bottom;
+                Left = left;
+                Right = right;
             }
-        }
-
-
-
-
-
-
-
-
-        public enum ColorEnum
-        {
-            Black,
-            White,
-            Red
-        }
-        public enum ColorVariationsEnum
-        {
-            Black_White,
-            Black_Purple,
-            Black_PaleGreen,
-            Black_PaleYellow,
-            Black_GreyBlue,
-            Black_
-        }
-        public static class ColorConverter
-        {
-            public static string black = "000000";
-            public static string greyDark = "1E1E1E";
-            public static string white = "FFFFFF";
-            public static string purple = "D4CCFF";
-            public static string paleGreen = "C2D1A7";
-            public static string paleYellow = "E9CC86";
-            public static string greyBlue = "7099A0";
-            private static readonly Dictionary<ColorEnum, string> ColorMap = new Dictionary<ColorEnum, string>
-                {
-                { ColorEnum.Black, "000000" },
-                { ColorEnum.White, "FFFFFF" },
-                { ColorEnum.Red, "822B31" }
-                };
-
-            private static readonly Dictionary<ColorVariationsEnum, string[]> ColorVariationsMap = new Dictionary<ColorVariationsEnum, string[]>
+            public TextPadding()
             {
-                { ColorVariationsEnum.Black_White, new string[] { black, white } },
-                { ColorVariationsEnum.Black_Purple, new string[] { black, purple } },
-                { ColorVariationsEnum.Black_PaleGreen, new string[] { black, paleGreen } },
-                { ColorVariationsEnum.Black_PaleYellow, new string[] { black, paleYellow } },
-                { ColorVariationsEnum.Black_GreyBlue, new string[] { black, greyBlue } },
-                { ColorVariationsEnum.Black_, new string[] { black, "7099A0" } },
 
-            };
+            }
+            private int textPaddingTop = 0;
+            private int textPaddingBottom = 0;
+            private int textPaddingLeft = 0;
+            private int textPaddingRight = 0;
 
-
-            public static string GetColorCode(ColorEnum color)
+            public int Top
             {
-                if (ColorMap.ContainsKey(color))
+                get { return textPaddingTop; }
+                set 
                 {
-                    return ColorMap[color];
+                    if (value <0 || value > 100)
+                        textPaddingTop = 0;
+                    else
+                        textPaddingTop = value;
                 }
-                throw new ArgumentException("ColorEnum not found in ColorMap");
             }
-
-            public static string[] GetColorVariations(ColorVariationsEnum color)
+            public int Bottom
             {
-                if (ColorVariationsMap.ContainsKey(color))
+                get { return textPaddingBottom; }
+                set
                 {
-                    return ColorVariationsMap[color];
+                    if (value < 0 || value > 100)
+                        textPaddingBottom = 0;
+                    else
+                        textPaddingBottom = value;
                 }
-                throw new ArgumentException("ColorEnum not found in ColorVariationsMap");
+            }
+            public int Left
+            {
+                get { return textPaddingLeft; }
+                set
+                {
+                    if (value < 0 || value > 100)
+                        textPaddingLeft = 0;
+                    else
+                        textPaddingLeft = value;
+                }
+            }
+            public int Right
+            {
+                get { return textPaddingRight; }
+                set
+                {
+                    if (value < 0 || value > 100)
+                        textPaddingRight = 0;
+                    else
+                        textPaddingRight = value;
+                }
             }
         }
+
+
+
+        
+        
     }
     
 }
