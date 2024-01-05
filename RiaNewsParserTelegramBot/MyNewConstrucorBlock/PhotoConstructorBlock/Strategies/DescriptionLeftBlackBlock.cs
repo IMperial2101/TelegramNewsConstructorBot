@@ -22,7 +22,7 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
         MyText descriptionText = new MyText(myNew.descriptionToSend, colors[1],"Montserrat",textRectangle, StringAlignment.Near,StringAlignment.Center);
 
         AddTextOnImage(finalphoto, descriptionText);
-        AddDateWithBlackBlock(finalphoto, true, false);
+        AddDateWithBlackBlock(finalphoto, true, false, colors[0], colors[1]);
 
         return finalphoto;
     }

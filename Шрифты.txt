@@ -1,4 +1,5 @@
-Base 05
+Segoe UI Emoji - эмоджи
+Base 05 - для текста
 Cambria
 
 

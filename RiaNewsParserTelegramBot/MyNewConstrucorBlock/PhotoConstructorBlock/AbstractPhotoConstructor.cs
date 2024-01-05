@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using AForge.Imaging.Filters;
+using NewsPropertyBot.NewClass;
+using RiaNewsParserTelegramBot.PropertiesClass;
 
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
@@ -58,6 +61,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 Brush brush = new SolidBrush(color);
 
                 graphics.DrawString(myText.text, myText.font, brush, myText.textRectangle, stringFormat1);
+
             }
         }
         public void AddGradientTextOnImage(Image image, string text, string color1, string color2, RectangleF textRectangle, StringAlignment alignment, StringAlignment lineAlignment)
@@ -116,7 +120,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 graphics.DrawString(DateTime.Now.ToShortDateString(), font, brush, new PointF(x, y), stringFormat);
             }
         }
-        public void AddDateWithBlackBlock(Image image, bool right, bool up)
+        public void AddDateWithBlackBlock(Image image, bool right, bool up, string blockColor, string dateColor)
         {
             using (Graphics graphics = Graphics.FromImage(image))
             {
@@ -124,7 +128,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 Font font = new Font("Base 05", 50, FontStyle.Bold, GraphicsUnit.Pixel);
 
                 // Цвет текста
-                SolidBrush brush = new SolidBrush(Color.White);
+                SolidBrush brush = new SolidBrush(ColorTranslator.FromHtml($"#{dateColor}"));
 
                 // Получаем размер текста
                 SizeF textSize = graphics.MeasureString(DateTime.Now.ToShortDateString(), font);
@@ -140,7 +144,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 RectangleF blackRect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
 
                 // Рисуем черный прямоугольник за текстом
-                graphics.FillRectangle(new SolidBrush(Color.Black), blackRect);
+                graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml($"#{blockColor}")), blackRect);
 
                 // Определение координат текста внутри прямоугольника
                 float textX = right ? rectX + 10 : rectX + rectWidth - 10 - textSize.Width; // Если текст справа, отступ слева, иначе отступ справа

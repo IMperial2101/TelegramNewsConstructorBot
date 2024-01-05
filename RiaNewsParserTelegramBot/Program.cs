@@ -17,18 +17,19 @@ class Program
         Parser parser = new Parser(telegramBot);
         MakeImagesFolder();
 
+        /*
         MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240104/poteri-1919702769.html");
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240104/ukaz-1919697489.html");
         PhotoConstructor photoConstructor1 = new PhotoConstructor();
-        photoConstructor1.MakePhoto(myNew, new TestStrategyTitleUnder());
-
+        photoConstructor1.MakePhoto(myNew, new TitleUnderWithDecorLine());
         Console.ReadLine();
-
+        */
 
         List<IConstructor> strateges = new List<IConstructor>();
         strateges.Add(new DescriptionLeftBlackBlock());
         strateges.Add(new DescriptionUnderBlackBlock());
         strateges.Add(new TitleUnderBlackBlock());
+        strateges.Add(new TitleUnderWithDecorLine());
         //await parser.FirstParseAddLinks();
         while (true)
         {
