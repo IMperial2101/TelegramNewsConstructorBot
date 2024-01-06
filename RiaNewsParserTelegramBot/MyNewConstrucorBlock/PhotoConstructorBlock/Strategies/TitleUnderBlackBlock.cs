@@ -14,24 +14,27 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     internal class TitleUnderBlackBlock : AbstractPhotoConstructor, IConstructor
     {
-        private const int textPaddingTop = 70;
-        private const int textPaddingBottom = 3;
-        private const int textPaddingLeft = 5;
-        private const int textPaddingRight = 5;
+
         public Image MakePhoto(Image image, MyNew myNew)
         {
+            MyTextPadding titlePadding = new MyTextPadding(70, 3, 5, 5);
+
             string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
-            Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
+            image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,titlePadding.Bottom);
 
-            RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-            MyText titleText = new MyText(myNew.title, colors[1], "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+            AddTitleBlock(image, titlePadding, myNew.title, colors[1]);
+            AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
 
-            AddTextOnImage(finalphoto, titleText);
-            AddDateWithBlackBlock(finalphoto, false, true, colors[0], colors[1]);
-
-            return finalphoto;
+            return image;
         }
-        private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor)
+        private void AddTitleBlock(Image image, MyTextPadding titlePadding,string title,string color)
+        {
+            RectangleF textRectangle = MakeRectangleWithPaddings(titlePadding.Top, titlePadding.Bottom, titlePadding.Left, titlePadding.Right, image.Width, image.Height);
+            MyText titleText = new MyText(title, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+
+            AddTextOnImage(image, titleText);
+        }
+        private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor,int textPaddingTop, int textPaddingBottom)
         {
             int blackRectangleHeight = CalculateRectangleHeight(textPaddingTop, textPaddingBottom, image.Height);
             Image imageWithBlackBlock = MakeImageWithBlackBlock(image, blackRectangleHeight, gradientColor);

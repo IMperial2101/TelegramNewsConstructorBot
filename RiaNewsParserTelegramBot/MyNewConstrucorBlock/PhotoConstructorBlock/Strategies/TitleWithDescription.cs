@@ -1,39 +1,32 @@
 ﻿using NewsPropertyBot.NewClass;
-using RiaNewsParserTelegramBot.PropertiesClass;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class DescriptionUnderBlackBlock : AbstractPhotoConstructor, IConstructor
+    internal class TitleWithDescription : AbstractPhotoConstructor, IConstructor
     {
 
         public Image MakePhoto(Image image, MyNew myNew)
         {
-            MyTextPadding descriptionPadding = new MyTextPadding(60, 3, 5, 5);
+            MyTextPadding descriptionPadding = new MyTextPadding(70, 3, 5, 5);
+            MyTextPadding titlePadding = new MyTextPadding(50,30,5,5);
 
             string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
-            image = MakeImageWithBlackBlockAndGradient(image, colors[0],descriptionPadding.Top,descriptionPadding.Bottom);
+            image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,0);
 
-            AddDescriptionBlock(image, descriptionPadding, myNew, colors[1]);
+            AddTitleBlockOnImage(image, titlePadding, myNew.title, MyColorConverter.orangeLava);
+            AddDescriptionBlockOnImage(image, descriptionPadding, myNew, colors[1]);
+
+
             AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
 
             return image;
-        }
-        private void AddDescriptionBlock(Image image, MyTextPadding descriptionPadding,MyNew myNew,string color)
-        {
-            RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
-            myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
-            MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
-
-            AddTextOnImage(image, descriptionText);
         }
         private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor,int textPaddingTop,int textPaddingBottom)
         {
@@ -104,7 +97,19 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             return (int)(height - topPadding - bottomPadding);
         }
-
+        private void AddTitleBlockOnImage(Image image,MyTextPadding titlePadding,string title,string color)
+        {
+            RectangleF titleRectangle = MakeRectangleWithPaddings(titlePadding.Top, titlePadding.Bottom, titlePadding.Left, titlePadding.Right, image.Width, image.Height);
+            MyText titleText = new MyText(title, color, "Montserrat", titleRectangle, StringAlignment.Center, StringAlignment.Far);
+            AddTextOnImage(image, titleText);
+        }
+        private void AddDescriptionBlockOnImage(Image image,MyTextPadding descriptionPadding,MyNew myNew, string color)
+        {
+            RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
+            myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
+            MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Near);
+            AddTextOnImage(image, descriptionText);
+        }
 
 
 

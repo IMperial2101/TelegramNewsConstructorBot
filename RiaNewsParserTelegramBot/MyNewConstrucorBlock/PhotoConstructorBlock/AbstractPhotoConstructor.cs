@@ -196,16 +196,16 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 return string.Empty;
         }
 
-        public class TextPadding
+        public class MyTextPadding
         {
-            public TextPadding(int top, int bottom, int left, int right)
+            public MyTextPadding(int top, int bottom, int left, int right)
             {
                 Top = top;
                 Bottom = bottom;
                 Left = left;
                 Right = right;
             }
-            public TextPadding()
+            public MyTextPadding()
             {
 
             }

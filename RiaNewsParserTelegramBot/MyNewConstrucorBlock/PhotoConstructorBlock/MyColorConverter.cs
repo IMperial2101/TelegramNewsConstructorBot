@@ -24,13 +24,14 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
     public static class MyColorConverter
     {
         
-        public static string black = "000000";
-        public static string greyDark = "1E1E1E";
-        public static string white = "FFFFFF";
-        public static string purple = "D4CCFF";
-        public static string paleGreen = "C2D1A7";
-        public static string paleYellow = "E9CC86";
-        public static string greyBlue = "7099A0";
+        public readonly static string black = "000000";
+        public readonly static string greyDark = "1E1E1E";
+        public readonly static string white = "FFFFFF";
+        public readonly static string purple = "D4CCFF";
+        public readonly static string paleGreen = "C2D1A7";
+        public readonly static string paleYellow = "E9CC86";
+        public readonly static string greyBlue = "7099A0";
+        public readonly static string orangeLava = "FD6236";
         private static readonly Dictionary<ColorEnum, string> ColorMap = new Dictionary<ColorEnum, string>
                 {
                 { ColorEnum.Black, "000000" },

@@ -7,26 +7,29 @@ using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
 internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructor
 {
-    private const int textPaddingTop = 7;
-    private const int textPaddingBottom = 7;
-    private const int textPaddingLeft = 5;
-    private const int textPaddingRight = 55;
+
     
     public Image MakePhoto(Image image, MyNew myNew)
     {
+        MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 5, 55); 
+
         string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
-        Image finalphoto = MakeImageWithBlackBlockAndGradient(image, colors[0]);
+        image = MakeImageWithBlackBlockAndGradient(image, colors[0],descriptionPadding.Left,descriptionPadding.Right);
+        AddDescriptionBlock(image, descriptionPadding, myNew, colors[1]);
+        
+        AddDateWithBlackBlock(image, true, false, colors[0], colors[1]);
 
-        RectangleF textRectangle = MakeRectangleWithPaddings(textPaddingTop, textPaddingBottom, textPaddingLeft, textPaddingRight, finalphoto.Width, finalphoto.Height);
-        myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
-        MyText descriptionText = new MyText(myNew.descriptionToSend, colors[1],"Montserrat",textRectangle, StringAlignment.Near,StringAlignment.Center);
-
-        AddTextOnImage(finalphoto, descriptionText);
-        AddDateWithBlackBlock(finalphoto, true, false, colors[0], colors[1]);
-
-        return finalphoto;
+        return image;
     }
-    private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor)
+    private void AddDescriptionBlock(Image image,MyTextPadding descriptionPadding,MyNew myNew,string color)
+    {
+        RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
+        myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
+        MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Near, StringAlignment.Center);
+
+        AddTextOnImage(image, descriptionText);
+    }
+    private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor,int textPaddingLeft,int textPaddingRight)
     {
         int blackRectangleWidth = CalculateRectangleWidth(textPaddingLeft, textPaddingRight, image.Width);
         Image imageWithBlackBlock = MakeImageWithBlackBlockWide(image, blackRectangleWidth, gradientColor);
@@ -76,9 +79,6 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
 
         return newImage;
     }
-
-
-
     private void AddGradient(Image image, int blackRectangleWidth, string gradientColor)
     {
         using (Graphics graphics = Graphics.FromImage(image))
@@ -103,7 +103,6 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
             }
         }
     }
-
     private int CalculateRectangleWidth(float leftPaddingPercent, float rightPaddingPercent, int width)
     {
         float leftPadding, rightPadding;

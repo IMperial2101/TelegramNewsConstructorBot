@@ -18,8 +18,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         
         public Image MakePhoto(Image image, MyNew myNew)
         {
-            TextPadding mainTitlePadding = new TextPadding(70, 3, 5, 5);
-            TextPadding linePadding = new TextPadding(60, 30, 45, 45);
+            MyTextPadding mainTitlePadding = new MyTextPadding(70, 3, 5, 5);
+            MyTextPadding linePadding = new MyTextPadding(60, 30, 45, 45);
 
             string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0],mainTitlePadding.Top,mainTitlePadding.Bottom);
@@ -31,6 +31,18 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
 
             return image;
+        }
+        private void AddLineBlockOnImage(Image image, MyTextPadding textPadding, string color)
+        {
+            RectangleF lineRectangle = MakeRectangleWithPaddings(textPadding.Top, textPadding.Bottom, textPadding.Left, textPadding.Right, image.Width, image.Height);
+            MyText lineUpText = new MyText("🌍", color, "Segoe UI Emoji", lineRectangle);
+            AddTextOnImage(image, lineUpText);
+        }
+        private void AddTextBlockOnImage(Image image, MyTextPadding mainTitlePadding, string title, string textColor)
+        {
+            RectangleF textRectangle = MakeRectangleWithPaddings(mainTitlePadding.Top, mainTitlePadding.Bottom, mainTitlePadding.Left, mainTitlePadding.Right, image.Width, image.Height);
+            MyText titleText = new MyText(title, textColor, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
+            AddTextOnImage(image, titleText);
         }
         private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor,int topPadding,int bottomPadding)
         {
@@ -101,20 +113,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             return (int)(height - topPadding - bottomPadding);
         }
-        private void AddLineBlockOnImage(Image image, TextPadding textPadding,string color)
-        {
-            RectangleF lineRectangle = MakeRectangleWithPaddings(textPadding.Top, textPadding.Bottom, textPadding.Left, textPadding.Right, image.Width, image.Height);
-            MyText lineUpText = new MyText("🌍", color, "Segoe UI Emoji", lineRectangle);
-            AddTextOnImage(image, lineUpText);
-        }
-        private void AddTextBlockOnImage(Image image, TextPadding mainTitlePadding,string title,string textColor)
-        {
-            RectangleF textRectangle = MakeRectangleWithPaddings(mainTitlePadding.Top, mainTitlePadding.Bottom, mainTitlePadding.Left, mainTitlePadding.Right, image.Width, image.Height);
-            MyText titleText = new MyText(title, textColor, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
-            AddTextOnImage(image, titleText);
-        }
-
-        public void DrawGradientLines(Image image,TextPadding linePadding,  int lineWidth, int lineHeight, string htmlColor)
+       
+        public void DrawGradientLines(Image image,MyTextPadding linePadding,  int lineWidth, int lineHeight, string htmlColor)
         {
             RectangleF rectangle = MakeRectangleWithPaddings(linePadding.Top, linePadding.Bottom, linePadding.Left, linePadding.Right, image.Width, image.Height);
             using (Graphics graphics = Graphics.FromImage(image))
