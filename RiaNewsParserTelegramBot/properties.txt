@@ -14,7 +14,7 @@
 	"sendPhotoWithTextRandomPercent":70,
 	"sendSecondTitleRandomPerсent": 50,
 	"timeBetweenMainParseMinutes": 5,
-	"minViewCount": 3000,
+	"minViewCount": 1000,
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
 	"maxParagraphCount": 2,

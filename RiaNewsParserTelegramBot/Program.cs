@@ -21,7 +21,7 @@ class Program
         MyNew myNew;
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240106/trevoga-1919914345.html");
         PhotoConstructor photoConstructor1 = new PhotoConstructor();
-        photoConstructor1.MakePhoto(myNew, new TitleUnderWithDecorLine());
+        photoConstructor1.MakePhoto(myNew, new DescriptionRightBlackBlock());
         Console.ReadLine();
         
 
@@ -30,6 +30,8 @@ class Program
         strateges.Add(new DescriptionUnderBlackBlock());
         strateges.Add(new TitleUnderBlackBlock());
         strateges.Add(new TitleUnderWithDecorLine());
+        strateges.Add(new TitleWithDescription());
+        strateges.Add(new DescriptionRightBlackBlock());
         //await parser.FirstParseAddLinks();
         while (true)
         {
