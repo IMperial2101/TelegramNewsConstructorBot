@@ -1,52 +1,82 @@
-﻿
-using AngleSharp;
-using AngleSharp.Html.Parser;
-using HtmlAgilityPack;
+﻿using NewsPropertyBot.NewClass;
 using NewsPropertyBot.ParsingClasses;
-using NewsPropertyBot.ProxyClass;
 using NewsPropertyBot.TelegramBotClass;
 using Newtonsoft.Json;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
 using RiaNewsParserTelegramBot.PropertiesClass;
-using System.Net;
-using System.Net.Http.Json;
-using System.Threading.Channels;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.InputFiles;
 
 class Program
 {
     static MyProperties properties = ReadLineProperties();
     static async Task Main()
     {
-        TelegramBot telegramBot = new TelegramBot(properties);
-        Parser parser = new Parser(telegramBot, properties);
+        Random random = new Random();
+        MyPropertiesStatic.MakeStaticProperties(properties);
+        TelegramBot telegramBot = new TelegramBot();
+        Parser parser = new Parser(telegramBot);
+        MakeImagesFolder();
 
-        await parser.Start();       
+        
+        MyNew myNew;
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240106/trevoga-1919914345.html");
+        PhotoConstructor photoConstructor1 = new PhotoConstructor();
+        photoConstructor1.MakePhoto(myNew, new TitleUnderWithDecorLine());
+        Console.ReadLine();
+        
+
+        List<IConstructor> strateges = new List<IConstructor>();
+        strateges.Add(new DescriptionLeftBlackBlock());
+        strateges.Add(new DescriptionUnderBlackBlock());
+        strateges.Add(new TitleUnderBlackBlock());
+        strateges.Add(new TitleUnderWithDecorLine());
+        //await parser.FirstParseAddLinks();
+        while (true)
+        {
+            Console.WriteLine("Начало парсинга");
+            List<MyNew> newsList = await parser.ParseNews();
+            PhotoConstructor photoConstructor = new PhotoConstructor();
+
+            for(int i = 0; i < newsList.Count; i++)
+            {
+                int randomStrategyNumber = random.Next(0, strateges.Count);
+                photoConstructor.MakePhoto(newsList[i], strateges[randomStrategyNumber]);
+            }
+
+            Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
+            await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
+        }
+        Console.ReadLine();
+     
     }
+
     static MyProperties ReadLineProperties()
     {
         string propertiesJSON = string.Empty;
-        try
-        {
+        try{
             using (StreamReader streamReader = new StreamReader("properties.txt"))
-            {
                 propertiesJSON = streamReader.ReadToEnd();
-            }
+
             if (!string.IsNullOrEmpty(propertiesJSON))
-            {
                 return JsonConvert.DeserializeObject<MyProperties>(propertiesJSON);
-            }
             else
-            {
                 Console.WriteLine("Файл JSON пуст или не найден.");
-            }
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex){
             Console.WriteLine("Ошибка чтения файла JSON: " + ex.Message);
         }
         return null;
+    }   
+    static void MakeImagesFolder()
+    {
+        if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images")))
+        {
+            Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images"));
+        }
     }
- 
+
+
+
+
+
 }

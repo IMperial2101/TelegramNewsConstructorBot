@@ -1,5 +1,6 @@
 ﻿using NewsPropertyBot.ProxyClass;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,9 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public string useProxy { get; set; }
         public MyProxy myProxy { get; set; }
         public bool randomMessageDesign { get; set; }
-        public int sendPhotoRandomPersent { get; set; }
-        public int sendSecondTitleRandomPersent { get; set; }
+        public int sendPhotoPercent { get; set; }
+        public int sendPhotoWithTextRandomPercent { get; set; }
+        public int sendSecondTitleRandomPerсent { get; set; }
         public int timeBetweenMainParseMinutes { get; set; }
         public int minViewCount { get; set; }
         public int timeBetweenSendMessSeconds { get; set; }
@@ -25,5 +27,6 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public int maxParagraphCount { get; set; }
         public int maxDescripSymbCount { get; set; }
         public int ownerId { get; set; }
+        
     }
 }

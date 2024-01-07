@@ -1,39 +1,34 @@
 ﻿using HtmlAgilityPack;
-using NewsPropertyBot.NewClass;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace NewsPropertyBot.ParsingClasses
 {
     partial class Parser
     {
-        private void AddNewLinksToSend()
+        private Dictionary<string, bool> AddNewLinksToSend(Dictionary<string, int> mainPageLinksWithViewsDict, Dictionary<string, bool> currLinksForSendInChannel)
         {
             try
             {
                 foreach (var myNew in mainPageLinksWithViewsDict)
                 {
 
-                    if (!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > properties.minViewCount)
+                    if (!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > MyPropertiesStatic.minViewCount)
                     {
                         currLinksForSendInChannel.Add(myNew.Key, false);
                     }
                 }
+                return currLinksForSendInChannel;
             }
             catch (Exception ex)
             {
                 telegramBot.SendMessageToOwner($"Ошибка в методе AddNewLinksToSend(): {ex.Message}");
+                return null;
             }
         }
-        private void RemoveNoActualLinks()
+        private Dictionary<string, bool> RemoveNoActualLinks(Dictionary<string, int> mainPageLinksWithViewsDict, Dictionary<string, bool> currLinksForSendInChannel)
         {
             try
             {
-
-
                 foreach (var link in currLinksForSendInChannel)
                 {
                     if (!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
@@ -41,10 +36,12 @@ namespace NewsPropertyBot.ParsingClasses
                         currLinksForSendInChannel.Remove(link.Key);
                     }
                 }
+                return currLinksForSendInChannel;
             }
             catch (Exception ex)
             {
                 telegramBot.SendMessageToOwner($"Ошибка в методе RemoveNoActualLinks(): {ex.Message}");
+                return null;
             }
         }
         public async Task DownloadPageAsync(string pageUrl, HtmlDocument htmlDocument)
