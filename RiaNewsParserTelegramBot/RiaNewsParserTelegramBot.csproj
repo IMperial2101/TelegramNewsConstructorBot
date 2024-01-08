@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\AbstractPhotoConstructorSaved.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\IBlackBlock.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderDescription.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderTitle.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\test.cs" />
+    <Compile Remove="TelegramBotClass\AbstractPhotoSendler.cs" />
     <Compile Remove="TelegramBotClass\TelegramBotSendlerFactory.cs" />
   </ItemGroup>
 

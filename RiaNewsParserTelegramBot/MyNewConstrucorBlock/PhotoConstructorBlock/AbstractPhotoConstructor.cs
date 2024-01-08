@@ -43,8 +43,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             return font;
         }
 
-        
-
         public void AddTextOnImage(Image image,MyText myText)
         {
             using (Graphics graphics = Graphics.FromImage(image))
@@ -64,39 +62,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             }
         }
-        public void AddGradientTextOnImage(Image image, string text, string color1, string color2, RectangleF textRectangle, StringAlignment alignment, StringAlignment lineAlignment)
-        {
-            using (Graphics graphics = Graphics.FromImage(image))
-            {
-                int width = image.Width;
-                int height = image.Height;
-
-                StringFormat stringFormat = new StringFormat();
-                stringFormat.Alignment = alignment;
-                stringFormat.LineAlignment = lineAlignment;
-
-                Font font = AdjustFontSize(text, "Montserrat", textRectangle);
-
-                // Конвертируем строки с цветами в объекты Color
-                Color startColor = ColorTranslator.FromHtml($"#{color1}");
-                Color endColor = ColorTranslator.FromHtml($"#{color2}");
-
-                // Создаем градиентный кисть
-                LinearGradientBrush gradientBrush = new LinearGradientBrush(textRectangle, startColor, endColor, LinearGradientMode.Horizontal);
-
-                // Настраиваем цвет текста
-                Brush textBrush = new SolidBrush(Color.Black); // Черный цвет для текста
-
-                // Создаем градиентный текст
-                GraphicsPath textPath = new GraphicsPath();
-                textPath.AddString(text, font.FontFamily, (int)font.Style, font.Size, textRectangle, stringFormat);
-
-                // Рисуем градиентный текст
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                graphics.FillPath(gradientBrush, textPath);
-            }
-        }
-
+       
         public void AddDateOnImage(Image image, bool right, bool up)
         {
             using (Graphics graphics = Graphics.FromImage(image))
@@ -196,69 +162,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 return string.Empty;
         }
 
-        public class MyTextPadding
-        {
-            public MyTextPadding(int top, int bottom, int left, int right)
-            {
-                Top = top;
-                Bottom = bottom;
-                Left = left;
-                Right = right;
-            }
-            public MyTextPadding()
-            {
-
-            }
-            private int textPaddingTop = 0;
-            private int textPaddingBottom = 0;
-            private int textPaddingLeft = 0;
-            private int textPaddingRight = 0;
-
-            public int Top
-            {
-                get { return textPaddingTop; }
-                set 
-                {
-                    if (value <0 || value > 100)
-                        textPaddingTop = 0;
-                    else
-                        textPaddingTop = value;
-                }
-            }
-            public int Bottom
-            {
-                get { return textPaddingBottom; }
-                set
-                {
-                    if (value < 0 || value > 100)
-                        textPaddingBottom = 0;
-                    else
-                        textPaddingBottom = value;
-                }
-            }
-            public int Left
-            {
-                get { return textPaddingLeft; }
-                set
-                {
-                    if (value < 0 || value > 100)
-                        textPaddingLeft = 0;
-                    else
-                        textPaddingLeft = value;
-                }
-            }
-            public int Right
-            {
-                get { return textPaddingRight; }
-                set
-                {
-                    if (value < 0 || value > 100)
-                        textPaddingRight = 0;
-                    else
-                        textPaddingRight = value;
-                }
-            }
-        }
+       
 
 
 
