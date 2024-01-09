@@ -19,15 +19,18 @@ class Program
         MyPropertiesStatic.MakeStaticProperties(properties);
         MyTelegramBot telegramBot = new MyTelegramBot();
         Parser parser = new Parser(telegramBot);
+        PhotoConstructor photoConstructor = new PhotoConstructor();
+        MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
         MakeImagesFolder();
 
         
         MyNew myNew;
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240109/perevooruzhenie-1917044593.html");
-        Console.WriteLine(myNew.title.Length);
-        MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
-        if (telegramSendler.CheckNewAdjust(myNew, new SendPhotoWithTitle()))
-            telegramSendler.SendNew(myNew, new SendPhotoWithTitle(), MyPropertiesStatic.channelID[0]);
+
+
+        await photoConstructor.MakePhoto(myNew, new TitleUnderBlackBlock());
+        if (telegramSendler.CheckNewAdjust(myNew, new PhotoWithTitle()))
+            telegramSendler.SendNew(myNew, new PhotoWithTitle(), MyPropertiesStatic.channelID[0]);
         else
             Console.WriteLine($"Новость {myNew.title.Substring(0,15)} не прошла проверку");
         Console.ReadLine();

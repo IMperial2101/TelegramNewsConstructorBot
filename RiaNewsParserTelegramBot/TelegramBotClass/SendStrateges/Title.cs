@@ -11,7 +11,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    public class SendTitle : ISendNew
+    public class Title : ISendNew
     {
         public async void SendNew(MyTelegramBot myTelegramBot, MyNew myNew,string channelId)
         {

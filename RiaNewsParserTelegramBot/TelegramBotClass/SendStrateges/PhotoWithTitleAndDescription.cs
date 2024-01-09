@@ -1,18 +1,15 @@
 ﻿using NewsPropertyBot.NewClass;
 using NewsPropertyBot.TelegramBotClass;
-using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
-using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.InputFiles;
-using Telegram.Bot.Types;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    internal class SendPhotoWithTitle : ISendNew
+    internal class PhotoWithTitleAndDescription
     {
         string pathToImages = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         public async void SendNew(MyTelegramBot myTelegramBot, MyNew myNew, string channelId)
@@ -36,6 +33,15 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
                 return true;
             return false;
 
+        }
+        protected string makeDescriptionToSend(string description)
+        {
+            int indexOfDot = description.IndexOf(". ");
+
+            if (indexOfDot != -1)
+                return description.Substring(indexOfDot + 2); // +2 для включения пробела после точки
+            else
+                return string.Empty;
         }
     }
 }
