@@ -15,11 +15,11 @@ namespace NewsPropertyBot.ParsingClasses
         XPathStrings xPathStrings = new XPathStrings();
         HtmlDocument htmlDocumentMainPage = new HtmlDocument();        
         HttpClient httpClient;
-        TelegramBot telegramBot;
+        MyTelegramBot telegramBot;
 
         string parseLink;
         
-        public Parser(TelegramBot telegramBot)
+        public Parser(MyTelegramBot telegramBot)
         {
             this.telegramBot = telegramBot;
             parseLink = MyPropertiesStatic.parseLink;

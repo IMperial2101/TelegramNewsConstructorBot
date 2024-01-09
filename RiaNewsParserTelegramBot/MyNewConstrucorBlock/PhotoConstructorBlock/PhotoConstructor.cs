@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 {
-    internal class PhotoConstructor
+    public class PhotoConstructor
     {
         private IConstructor? addText;
         public void SetStrategyAddText(IConstructor addText)

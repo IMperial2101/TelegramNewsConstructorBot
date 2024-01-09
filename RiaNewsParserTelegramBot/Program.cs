@@ -5,43 +5,47 @@ using Newtonsoft.Json;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
 using RiaNewsParserTelegramBot.PropertiesClass;
+using RiaNewsParserTelegramBot.TelegramBotClass;
+using RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges;
 
 class Program
 {
     static MyProperties properties = ReadLineProperties();
     static async Task Main()
     {
+
+
         Random random = new Random();
         MyPropertiesStatic.MakeStaticProperties(properties);
-        TelegramBot telegramBot = new TelegramBot();
+        MyTelegramBot telegramBot = new MyTelegramBot();
         Parser parser = new Parser(telegramBot);
+        PhotoConstructor photoConstructor = new PhotoConstructor();
+        MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
         MakeImagesFolder();
 
         
         MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240106/trevoga-1919914345.html");
-        PhotoConstructor photoConstructor1 = new PhotoConstructor();
-        photoConstructor1.MakePhoto(myNew, new TitleUnderWithDecorLine());
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240109/perevooruzhenie-1917044593.html");
+
+
+        await photoConstructor.MakePhoto(myNew, new TitleUnderBlackBlock());
+        if (telegramSendler.CheckNewAdjust(myNew, new PhotoWithTitle()))
+            telegramSendler.SendNew(myNew, new PhotoWithTitle(), MyPropertiesStatic.channelID[0]);
+        else
+            Console.WriteLine($"Новость {myNew.title.Substring(0,15)} не прошла проверку");
         Console.ReadLine();
         
 
-        List<IConstructor> strateges = new List<IConstructor>();
-        strateges.Add(new DescriptionLeftBlackBlock());
-        strateges.Add(new DescriptionUnderBlackBlock());
-        strateges.Add(new TitleUnderBlackBlock());
-        strateges.Add(new TitleUnderWithDecorLine());
+
         //await parser.FirstParseAddLinks();
         while (true)
         {
             Console.WriteLine("Начало парсинга");
             List<MyNew> newsList = await parser.ParseNews();
-            PhotoConstructor photoConstructor = new PhotoConstructor();
-
-            for(int i = 0; i < newsList.Count; i++)
-            {
-                int randomStrategyNumber = random.Next(0, strateges.Count);
-                photoConstructor.MakePhoto(newsList[i], strateges[randomStrategyNumber]);
-            }
+            
+            //выбор типа новости
+            //конструирование новости
+            //отправка новостей
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
             await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
