@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass
 {
@@ -23,9 +24,9 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         {
             sendStrategy = strategy;
         }
-        public async Task SendNew(MyNew myNew, ISendNew strategy)
+        public async Task SendNew(MyNew myNew, ISendNew strategy,string channel)
         {
-            strategy.SendNew(myTelegramBot, myNew, MyPropertiesStatic.channelID[0]);
+            strategy.SendNew(myTelegramBot, myNew, channel);
         }
         public bool CheckNewAdjust(MyNew myNew, ISendNew strategy)
         {

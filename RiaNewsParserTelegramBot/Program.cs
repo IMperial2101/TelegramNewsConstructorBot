@@ -13,6 +13,8 @@ class Program
     static MyProperties properties = ReadLineProperties();
     static async Task Main()
     {
+
+
         Random random = new Random();
         MyPropertiesStatic.MakeStaticProperties(properties);
         MyTelegramBot telegramBot = new MyTelegramBot();
@@ -21,12 +23,11 @@ class Program
 
         
         MyNew myNew;
-        myNew = new MyNew();
-        myNew.title = "Путин сделал это. Французский генерал откровенно высказался о России";
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240109/perevooruzhenie-1917044593.html");
         Console.WriteLine(myNew.title.Length);
         MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
-        if (telegramSendler.CheckNewAdjust(myNew, new SendTitle()))
-            telegramSendler.SendNew(myNew, new SendTitle());
+        if (telegramSendler.CheckNewAdjust(myNew, new SendPhotoWithTitle()))
+            telegramSendler.SendNew(myNew, new SendPhotoWithTitle(), MyPropertiesStatic.channelID[0]);
         else
             Console.WriteLine($"Новость {myNew.title.Substring(0,15)} не прошла проверку");
         Console.ReadLine();

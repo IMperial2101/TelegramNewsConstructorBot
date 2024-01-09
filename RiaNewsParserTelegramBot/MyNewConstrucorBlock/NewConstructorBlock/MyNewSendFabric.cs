@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.NewConstructorBlock
 {
-    internal class MyNewConstructor
+    internal class MyNewSendFabric
     {
         static Random random = new Random();
         static int lastParagraphCount;
