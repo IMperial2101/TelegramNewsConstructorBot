@@ -1,6 +1,6 @@
 ﻿{
 	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
-	"channelID": ["@RiaNewsParseWorld2"],
+	"channelID": "@RiaNewsParseWorld2",
 	"parseLink": "https://ria.ru/world/",
 	"useProxy": "yes",
 	"myProxy":{

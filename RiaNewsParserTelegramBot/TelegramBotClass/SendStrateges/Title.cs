@@ -13,9 +13,9 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
     public class Title : ISendNew
     {
-        public async void SendNew(MyTelegramBot myTelegramBot, MyNew myNew,string channelId)
+        public async void SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
-            myTelegramBot.botClient.SendTextMessageAsync(channelId, $"*{myNew.title}*", ParseMode.Markdown);
+            myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*", ParseMode.Markdown);
         }
         public bool CheckNewAdjust(MyNew myNew)
         {

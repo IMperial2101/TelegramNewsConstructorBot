@@ -12,7 +12,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
     public class MyProperties
     {
         public string botToken { get; set; }
-        public string[] channelID { get; set; }
+        public string channelID { get; set; }
         public string parseLink { get; set; }
         public string useProxy { get; set; }
         public MyProxy myProxy { get; set; }

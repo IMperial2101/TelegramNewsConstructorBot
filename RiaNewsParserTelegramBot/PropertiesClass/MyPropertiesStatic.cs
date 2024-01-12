@@ -5,7 +5,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
     static class MyPropertiesStatic
     {
         public static string botToken { get; set; }
-        public static string[] channelID { get; set; }
+        public static string channelID { get; set; }
         public static string parseLink { get; set; }
         public static string useProxy { get; set; }
         public static MyProxy myProxy { get; set; }

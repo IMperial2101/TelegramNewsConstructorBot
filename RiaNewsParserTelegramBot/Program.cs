@@ -30,7 +30,7 @@ class Program
 
         await photoConstructor.MakePhoto(myNew, new TitleUnderBlackBlock());
         if (telegramSendler.CheckNewAdjust(myNew, new PhotoWithTitle()))
-            telegramSendler.SendNew(myNew, new PhotoWithTitle(), MyPropertiesStatic.channelID[0]);
+            telegramSendler.SendNew(myNew, new PhotoWithTitle());
         else
             Console.WriteLine($"Новость {myNew.title.Substring(0,15)} не прошла проверку");
         Console.ReadLine();
@@ -43,9 +43,11 @@ class Program
             Console.WriteLine("Начало парсинга");
             List<MyNew> newsList = await parser.ParseNews();
             
-            //выбор типа новости
-            //конструирование новости
-            //отправка новостей
+            foreach(var myNews in newsList)
+            {
+                //конструирование
+                //отправка
+            }
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
             await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
