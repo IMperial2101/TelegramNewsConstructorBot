@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class DescriptionUnderBlackBlock : AbstractPhotoConstructor, IConstructor
+    internal class DescriptionUnderBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
     {
 
         public Image MakePhoto(Image image, MyNew myNew)
@@ -30,7 +30,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         private void AddDescriptionBlock(Image image, MyTextPadding descriptionPadding,MyNew myNew,string color)
         {
             RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
-            myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
+            myNew.descriptionToSend = myNew.description[0];
             MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Far);
 
             AddTextOnImage(image, descriptionText);

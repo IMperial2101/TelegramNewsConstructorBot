@@ -5,10 +5,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
-internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructor
+internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
 {
-
-    
     public Image MakePhoto(Image image, MyNew myNew)
     {
         MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 5, 55); 
@@ -24,7 +22,7 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
     private void AddDescriptionBlock(Image image,MyTextPadding descriptionPadding,MyNew myNew,string color)
     {
         RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
-        myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
+        myNew.descriptionToSend = myNew.description[0];
         MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Near, StringAlignment.Center);
 
         AddTextOnImage(image, descriptionText);

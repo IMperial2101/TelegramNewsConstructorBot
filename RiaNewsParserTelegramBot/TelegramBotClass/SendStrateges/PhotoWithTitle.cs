@@ -13,11 +13,12 @@ using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    internal class PhotoWithTitle : ISendNew
-    {
-        string pathToImages = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
-        public async void SendNew(MyTelegramBot myTelegramBot, MyNew myNew
+     class PhotoWithTitle : PhotoConstructorForSendler, ISendNew
+     {
+        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
+            await MakePhoto(myNew,new TitleUnderBlackBlock());
+
             string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
             if (System.IO.File.Exists(pathToPhoto))
             {
@@ -29,16 +30,6 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
             {
                 Console.WriteLine("Файл не найден!");
             }
-        }
-        public bool CheckNewAdjust(MyNew myNew)
-        {
-            if (myNew.title == null)
-                return false;
-            string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
-            if (System.IO.File.Exists(pathToPhoto))
-                return true;
-            return false;
-
         }
     }
 }

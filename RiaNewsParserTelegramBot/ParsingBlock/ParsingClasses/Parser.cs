@@ -167,7 +167,8 @@ namespace NewsPropertyBot.ParsingClasses
                 HtmlNodeCollection descriptionAbzatc = htmlDocumentNew.DocumentNode.SelectNodes(xPathStrings.descriptionText);
                 if (descriptionAbzatc != null){
                     foreach (HtmlNode abzatc in descriptionAbzatc.ToList())                   
-                        myNew.description.Add(HttpUtility.HtmlDecode(abzatc.InnerText));                    
+                        myNew.description.Add(HttpUtility.HtmlDecode(abzatc.InnerText));
+                    myNew.description[0] = makeDescriptionOnPhoto(myNew.description[0]);
                 }
                 else{
                     telegramBot.SendMessageToOwner($"Ошибка: Не удалось найти узлы для описания.- [url]({url})");
@@ -207,6 +208,15 @@ namespace NewsPropertyBot.ParsingClasses
                         break;
                     }
             }
+        }
+        private string makeDescriptionOnPhoto(string description)
+        {
+            int indexOfDot = description.IndexOf(". ");
+
+            if (indexOfDot != -1)
+                return description.Substring(indexOfDot + 2); // +2 для включения пробела после точки
+            else
+                return string.Empty;
         }
 
     }

@@ -11,22 +11,11 @@ using Telegram.Bot.Types.Enums;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    public class Title : ISendNew
+    public class Title : PhotoConstructorForSendler, ISendNew
     {
-        public async void SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
+        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
             myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*", ParseMode.Markdown);
-        }
-        public bool CheckNewAdjust(MyNew myNew)
-        {
-            if(myNew.title != null && myNew.title.Length < 250)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }

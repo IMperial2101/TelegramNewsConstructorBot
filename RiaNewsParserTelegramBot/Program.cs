@@ -25,17 +25,10 @@ class Program
 
         
         MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240109/perevooruzhenie-1917044593.html");
-
-
-        await photoConstructor.MakePhoto(myNew, new TitleUnderBlackBlock());
-        if (telegramSendler.CheckNewAdjust(myNew, new PhotoWithTitle()))
-            telegramSendler.SendNew(myNew, new PhotoWithTitle());
-        else
-            Console.WriteLine($"Новость {myNew.title.Substring(0,15)} не прошла проверку");
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240114/kupyanskoe-1921269575.html");
+        photoConstructor.MakePhoto(myNew,new TitleUnderBlackBlock());
         Console.ReadLine();
         
-
 
         //await parser.FirstParseAddLinks();
         while (true)
@@ -45,8 +38,7 @@ class Program
             
             foreach(var myNews in newsList)
             {
-                //конструирование
-                //отправка
+                await telegramSendler.SendNew(myNews, new PhotoWithTitleWithDescription());
             }
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    public interface IConstructor
+    public interface IPhotoConstructorStrategy
     {
         public abstract Image MakePhoto(Image image, MyNew myNew);
     }

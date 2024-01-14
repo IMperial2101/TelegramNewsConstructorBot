@@ -26,11 +26,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         }
         public async Task SendNew(MyNew myNew, ISendNew strategy)
         {
-            strategy.SendNew(myTelegramBot, myNew);
+            await strategy.SendNew(myTelegramBot, myNew);
         }
-        public bool CheckNewAdjust(MyNew myNew, ISendNew strategy)
-        {
-            return strategy.CheckNewAdjust(myNew);
-        }
+
     }
 }

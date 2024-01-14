@@ -13,12 +13,12 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 {
     public class PhotoConstructor
     {
-        private IConstructor? addText;
-        public void SetStrategyAddText(IConstructor addText)
+        private IPhotoConstructorStrategy? addText;
+        public void SetStrategyAddText(IPhotoConstructorStrategy addText)
         {
             this.addText = addText;
         }
-        public async Task MakePhoto(MyNew myNew,IConstructor strategy)
+        public async Task MakePhoto(MyNew myNew,IPhotoConstructorStrategy strategy)
         {
             
             myNew.photoName = MakeRandomString();

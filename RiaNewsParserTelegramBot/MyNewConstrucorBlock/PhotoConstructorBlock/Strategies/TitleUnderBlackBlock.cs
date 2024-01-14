@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class TitleUnderBlackBlock : AbstractPhotoConstructor, IConstructor
+    internal class TitleUnderBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
     {
 
         public Image MakePhoto(Image image, MyNew myNew)
