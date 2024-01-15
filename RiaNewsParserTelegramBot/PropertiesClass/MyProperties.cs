@@ -27,6 +27,8 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public int maxParagraphCount { get; set; }
         public int maxDescripSymbCount { get; set; }
         public int ownerId { get; set; }
-        
+        public Dictionary<string,int> WeightSendStrategies { get; set; }
+
+
     }
 }

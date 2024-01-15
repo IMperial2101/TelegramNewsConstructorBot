@@ -24,10 +24,13 @@ class Program
         MakeImagesFolder();
 
         
+        
+        /*
         MyNew myNew;
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240114/kupyanskoe-1921269575.html");
-        photoConstructor.MakePhoto(myNew,new TitleUnderBlackBlock());
+        telegramSendler.SendNew(myNew, new PhotoWithTitle());
         Console.ReadLine();
+        */
         
 
         //await parser.FirstParseAddLinks();
@@ -38,7 +41,7 @@ class Program
             
             foreach(var myNews in newsList)
             {
-                await telegramSendler.SendNew(myNews, new PhotoWithTitleWithDescription());
+                await telegramSendler.SendNew(myNews, RandomSendStrategy(MyPropertiesStatic.WeightSendStrategies));
             }
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
@@ -71,6 +74,48 @@ class Program
         {
             Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images"));
         }
+    }
+    static string ChooseRandomSendStrategy(Dictionary<string, int> weightSendStrategies)
+    {
+        Random random = new Random();
+        int totalWeight = 0;
+
+
+        foreach (var el in weightSendStrategies)
+            totalWeight += el.Value;
+
+        foreach(var el in weightSendStrategies)
+        {
+            if (random.Next(totalWeight) <= el.Value)
+                return el.Key;
+            else
+                totalWeight -= el.Value;
+        }
+        return null;
+    }
+    static ISendNew RandomSendStrategy(Dictionary<string, int> weightSendStrategies)
+    {
+        string strategy = ChooseRandomSendStrategy(weightSendStrategies);
+        switch (strategy)
+        {
+            case "Title":
+                {
+                    return new Title();
+                    break;
+                }
+            case "TitleDescription":
+                {
+                    return new TitleDescription();
+                    break;
+                }
+            case "PhotoWithTitle":
+                {
+                    return new PhotoWithTitle();
+                    break;
+                }
+        }
+        return null;
+
     }
 
 

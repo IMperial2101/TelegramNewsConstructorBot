@@ -13,7 +13,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
 {
     internal class MyNewTelegramSendler
     {
-        
+        public string pathToImages = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         private ISendNew? sendStrategy;
         MyTelegramBot myTelegramBot;
         public MyNewTelegramSendler(MyTelegramBot myTelegramBot)
@@ -27,6 +27,40 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         public async Task SendNew(MyNew myNew, ISendNew strategy)
         {
             await strategy.SendNew(myTelegramBot, myNew);
+            if (myNew.photoName != null)
+                DeleteImages(myNew);
+
+        }
+        private void DeleteImages(MyNew myNew)
+        {
+
+            string photoBefore = Path.Combine(pathToImages, myNew.photoName + ".png");
+            string photoAfter = Path.Combine(pathToImages, myNew.photoName + "Done.png");
+
+
+            if (File.Exists(photoBefore)){
+                try{
+                    File.Delete(photoBefore);
+                    Console.WriteLine($"Файл {myNew.photoName} успешно удален.");
+                }
+                catch (Exception ex){
+                    Console.WriteLine($"Ошибка при удалении файла: {ex.Message}");
+                }
+            }
+            else
+                Console.WriteLine($"Файл {myNew.photoName} не существует.");
+
+            if (File.Exists(photoAfter)){
+                try{
+                    File.Delete(photoAfter);
+                    Console.WriteLine($"Файл {myNew.photoName + "Done"} успешно удален.");
+                }
+                catch (Exception ex){
+                    Console.WriteLine($"Ошибка при удалении файла: {ex.Message}");
+                }
+            }
+            else
+                Console.WriteLine($"Файл {myNew.photoName + "Done"} не существует.");
         }
 
     }

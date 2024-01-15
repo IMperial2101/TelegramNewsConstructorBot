@@ -20,6 +20,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public static int maxParagraphCount { get; set; }
         public static int maxDescripSymbCount { get; set; }
         public static int ownerId { get; set; }
+        public static Dictionary<string, int> WeightSendStrategies { get; set; }
         public static void MakeStaticProperties(MyProperties properties)
         {
             MyPropertiesStatic.botToken = properties.botToken;
@@ -38,6 +39,8 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
             MyPropertiesStatic.maxParagraphCount = properties.maxParagraphCount;
             MyPropertiesStatic.maxDescripSymbCount = properties.maxDescripSymbCount;
             MyPropertiesStatic.ownerId = properties.ownerId;
+            MyPropertiesStatic.WeightSendStrategies = properties.WeightSendStrategies;
+
         }
 
         public static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");

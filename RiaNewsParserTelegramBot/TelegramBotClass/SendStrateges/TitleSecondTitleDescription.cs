@@ -15,7 +15,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
             myNew.descriptionToSend = MakeDescriptionToSend(myNew, 2);
-            myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*_{MakeSecondTitle(myNew)}_\n\n{myNew.descriptionToSend}", ParseMode.Markdown);
+            await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*_{MakeSecondTitle(myNew)}_\n\n{myNew.descriptionToSend}", ParseMode.Markdown);
         }
         private string MakeSecondTitle(MyNew myNew)
         {
