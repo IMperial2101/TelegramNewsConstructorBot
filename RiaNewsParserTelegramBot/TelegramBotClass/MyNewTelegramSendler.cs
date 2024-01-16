@@ -13,7 +13,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
 {
     internal class MyNewTelegramSendler
     {
-        
+        public string pathToImages = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         private ISendNew? sendStrategy;
         MyTelegramBot myTelegramBot;
         public MyNewTelegramSendler(MyTelegramBot myTelegramBot)
@@ -24,13 +24,44 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         {
             sendStrategy = strategy;
         }
-        public async Task SendNew(MyNew myNew, ISendNew strategy,string channel)
+        public async Task SendNew(MyNew myNew, ISendNew strategy)
         {
-            strategy.SendNew(myTelegramBot, myNew, channel);
+            await strategy.SendNew(myTelegramBot, myNew);
+            if (myNew.photoName != null)
+                DeleteImages(myNew);
+
         }
-        public bool CheckNewAdjust(MyNew myNew, ISendNew strategy)
+        private void DeleteImages(MyNew myNew)
         {
-            return strategy.CheckNewAdjust(myNew);
+
+            string photoBefore = Path.Combine(pathToImages, myNew.photoName + ".png");
+            string photoAfter = Path.Combine(pathToImages, myNew.photoName + "Done.png");
+
+
+            if (File.Exists(photoBefore)){
+                try{
+                    File.Delete(photoBefore);
+                    Console.WriteLine($"Файл {myNew.photoName} успешно удален.");
+                }
+                catch (Exception ex){
+                    Console.WriteLine($"Ошибка при удалении файла: {ex.Message}");
+                }
+            }
+            else
+                Console.WriteLine($"Файл {myNew.photoName} не существует.");
+
+            if (File.Exists(photoAfter)){
+                try{
+                    File.Delete(photoAfter);
+                    Console.WriteLine($"Файл {myNew.photoName + "Done"} успешно удален.");
+                }
+                catch (Exception ex){
+                    Console.WriteLine($"Ошибка при удалении файла: {ex.Message}");
+                }
+            }
+            else
+                Console.WriteLine($"Файл {myNew.photoName + "Done"} не существует.");
         }
+
     }
 }

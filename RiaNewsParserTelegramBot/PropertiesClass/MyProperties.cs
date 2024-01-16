@@ -12,21 +12,22 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
     public class MyProperties
     {
         public string botToken { get; set; }
-        public string[] channelID { get; set; }
+        public string channelID { get; set; }
         public string parseLink { get; set; }
         public string useProxy { get; set; }
         public MyProxy myProxy { get; set; }
-        public bool randomMessageDesign { get; set; }
-        public int sendPhotoPercent { get; set; }
-        public int sendPhotoWithTextRandomPercent { get; set; }
-        public int sendSecondTitleRandomPerсent { get; set; }
         public int timeBetweenMainParseMinutes { get; set; }
         public int minViewCount { get; set; }
         public int timeBetweenSendMessSeconds { get; set; }
         public string smile { get; set; }
+        public string abzatcSmile { get; set; }
+        public string decoreLineSmile { get; set; }
         public int maxParagraphCount { get; set; }
+        public int minParagraphCount { get; set; }
         public int maxDescripSymbCount { get; set; }
         public int ownerId { get; set; }
-        
+        public Dictionary<string,int> WeightSendStrategies { get; set; }
+
+
     }
 }

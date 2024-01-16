@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies
 {
-    internal class TitleUnderBlackBlock : AbstractPhotoConstructor, IConstructor
+    internal class TitleUnderBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
     {
 
-        public Image MakePhoto(Image image, MyNew myNew)
+        public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
             MyTextPadding titlePadding = new MyTextPadding(70, 3, 5, 5);
 
-            string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,titlePadding.Bottom);
 
-            AddTitleBlock(image, titlePadding, myNew.title, colors[1]);
+            AddTitleBlock(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
             AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
 
             return image;
@@ -104,7 +104,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             return (int)(height - topPadding - bottomPadding);
         }
 
-
+        public string GetStrategyName()
+        {
+            return "TitleUnderBlackBlock";
+        }
 
 
 

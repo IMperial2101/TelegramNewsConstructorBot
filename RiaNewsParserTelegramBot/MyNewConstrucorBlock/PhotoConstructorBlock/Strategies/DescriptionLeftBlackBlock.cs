@@ -5,27 +5,24 @@ using System.Drawing.Drawing2D;
 using System.Drawing;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
-internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructor
+internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
 {
-
-    
-    public Image MakePhoto(Image image, MyNew myNew)
+    public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
     {
         MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 5, 55); 
 
-        string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+        string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
         image = MakeImageWithBlackBlockAndGradient(image, colors[0],descriptionPadding.Left,descriptionPadding.Right);
-        AddDescriptionBlock(image, descriptionPadding, myNew, colors[1]);
+        AddDescriptionBlock(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), colors[1]);
         
-        AddDateWithBlackBlock(image, true, false, colors[0], colors[1]);
+        AddDateWithBlackBlock(image, true, true, colors[0], colors[1]);
 
         return image;
     }
-    private void AddDescriptionBlock(Image image,MyTextPadding descriptionPadding,MyNew myNew,string color)
+    private void AddDescriptionBlock(Image image,MyTextPadding descriptionPadding,string description,string color)
     {
         RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
-        myNew.descriptionToSend = makeDescriptionToSend(myNew.description[0]);
-        MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Near, StringAlignment.Center);
+        MyText descriptionText = new MyText(description, color, "Montserrat", textRectangle, StringAlignment.Near, StringAlignment.Center);
 
         AddTextOnImage(image, descriptionText);
     }
@@ -119,5 +116,8 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IConstructo
 
         return (int)(width - leftPadding - rightPadding);
     }
-
+    public string GetStrategyName()
+    {
+        return "DescriptionLeftBlackBlock";
+    }
 }

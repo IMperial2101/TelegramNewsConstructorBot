@@ -62,7 +62,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             }
         }
-       
         public void AddDateOnImage(Image image, bool right, bool up)
         {
             using (Graphics graphics = Graphics.FromImage(image))
@@ -88,6 +87,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         }
         public void AddDateWithBlackBlock(Image image, bool right, bool up, string blockColor, string dateColor)
         {
+            if (image.Width < 1900 && image.Height < 1000)
+                return;
             using (Graphics graphics = Graphics.FromImage(image))
             {
                 // Шрифт и размер текста
@@ -120,7 +121,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 graphics.DrawString(DateTime.Now.ToShortDateString(), font, brush, new PointF(textX, textY));
             }
         }
-
         public RectangleF MakeRectangleWithPaddings(float topPaddingPercent, float bottomPaddingPercent, float leftPaddingPercent, float rightPaddingPercent, int width, int height)
         {
             float topPadding, bottomPadding, leftPadding, rightPadding;
@@ -152,22 +152,20 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             return new RectangleF(leftPadding, topPadding, rectWidth, rectHeight);
         }
 
-        protected string makeDescriptionToSend(string description)
+        public string MakeCorrectTitle(string title)
         {
-            int indexOfDot = description.IndexOf(". "); 
-
-            if (indexOfDot != -1)
-                return description.Substring(indexOfDot + 2); // +2 для включения пробела после точки
+            if (title.Length > 180)
+                return title.Substring(0, 180) + "...";
             else
-                return string.Empty;
+                return title;
         }
-
-       
-
-
-
-        
-        
+        public string MakeCorrectDescription(string description)
+        {
+            if (description.Length > 350)
+                return description.Substring(0, 350) + "...";
+            else
+                return description;
+        }
     }
     
 }

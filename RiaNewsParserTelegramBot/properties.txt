@@ -1,23 +1,27 @@
 ﻿{
 	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
-	"channelID": ["@RiaNewsParseWorld2"],
+	"channelID": "@RiaNewsParseWorld2",
 	"parseLink": "https://ria.ru/world/",
 	"useProxy": "yes",
-	"myProxy":{
+	"myProxy": {
 		"host": "91.188.243.122",
 		"port": 9487,
 		"login": "XrVHcG",
 		"password": "pthNrV"
 	},
-	"randomMessageDesign": true,
-	"sendPhotoPercent": 90,
-	"sendPhotoWithTextRandomPercent":70,
-	"sendSecondTitleRandomPerсent": 50,
 	"timeBetweenMainParseMinutes": 5,
-	"minViewCount": 1000,
+	"minViewCount": 3000,
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
-	"maxParagraphCount": 2,
-	"maxDescripSymbCount": 600,
-	"ownerId": 626774740
+	"abzatcSmile": "🔶",
+	"decoreLineSmile": "🌍",
+	"minParagraphCount":1,
+	"maxParagraphCount": 4,
+	"maxDescripSymbCount": 1000,
+	"ownerId": 626774740,
+	"WeightSendStrategies": {
+		"Title": 100,
+		"TitleDescription": 50,
+		"PhotoWithTitle":200
+	}
 }

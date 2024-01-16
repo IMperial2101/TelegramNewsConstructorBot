@@ -1,4 +1,5 @@
 ﻿using NewsPropertyBot.NewClass;
+using NewsPropertyBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
 using RiaNewsParserTelegramBot.PropertiesClass;
 using System;
@@ -13,21 +14,31 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 {
     public class PhotoConstructor
     {
-        private IConstructor? addText;
-        public void SetStrategyAddText(IConstructor addText)
+
+        private MyTelegramBot myTelegramBot = new MyTelegramBot();
+        private IPhotoConstructorStrategy? constructoStrategy;
+        public void SetStrategyAddText(IPhotoConstructorStrategy addText)
         {
-            this.addText = addText;
+            this.constructoStrategy = addText;
         }
-        public async Task MakePhoto(MyNew myNew,IConstructor strategy)
+        public async Task MakePhoto(MyNew myNew,IPhotoConstructorStrategy strategy,ColorVariationsEnum colorsVariation)
         {
-            
-            myNew.photoName = MakeRandomString();
-            await DownloadImage(myNew);
-            using (Image image = Image.FromFile(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + ".png"))
+            try
             {
-                Image finalImage = strategy.MakePhoto(image,myNew);           
-                finalImage.Save(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + "Done.png", ImageFormat.Png);
+                myNew.photoName = MakeRandomString();
+                await DownloadImage(myNew);
+                using (Image image = Image.FromFile(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + ".png"))
+                {
+                    Image finalImage = strategy.MakePhoto(image, myNew, colorsVariation);
+                    finalImage.Save(Path.Combine(MyPropertiesStatic.imagesFolderPath, myNew.photoName) + "Done.png", ImageFormat.Png);
+                }
             }
+            catch(Exception ex)
+            {
+                await myTelegramBot.SendMessageToOwner($"Ошибка создания фотографии: {ex.Message} - {myNew.url}\nСтратегия - {strategy.GetStrategyName}.");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            
         }
         public async Task DownloadImage(MyNew myNew)
         {
