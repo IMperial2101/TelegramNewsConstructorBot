@@ -20,15 +20,18 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         {
             await photoConstructor.MakePhoto(myNew, constructorStrategy, colorsVariation);
         }
-        protected string MakeDescriptionToSend(MyNew myNew, int abzatcCount)
+        protected string MakeDescriptionToSend(MyNew myNew)
         {
+            Random random = new Random();
             StringBuilder stringBuilder = new StringBuilder();
+
+            int abzatcCount = random.Next(MyPropertiesStatic.minParagraphCount, MyPropertiesStatic.maxParagraphCount);
 
             if (abzatcCount > myNew.description.Count)
                 abzatcCount = myNew.description.Count;
             for (int i = 0; i < abzatcCount; i++)
             {
-                if (stringBuilder.Length > 1000)
+                if (stringBuilder.Length > MyPropertiesStatic.maxDescripSymbCount)
                     break;
                 stringBuilder.Append($"{MyPropertiesStatic.abzatcSmile}  ");
                 stringBuilder.AppendLine(myNew.description[i]);

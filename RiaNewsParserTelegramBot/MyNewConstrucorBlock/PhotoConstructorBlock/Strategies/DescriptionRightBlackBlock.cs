@@ -12,17 +12,16 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0], descriptionPadding.Left, descriptionPadding.Right);
-            AddDescriptionBlock(image, descriptionPadding, myNew, colors[1]);
+            AddDescriptionBlock(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), colors[1]);
 
             AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
 
             return image;
         }
-        private void AddDescriptionBlock(Image image, MyTextPadding descriptionPadding, MyNew myNew, string color)
+        private void AddDescriptionBlock(Image image, MyTextPadding descriptionPadding, string description, string color)
         {
             RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
-            myNew.descriptionToSend = myNew.description[0];
-            MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Far, StringAlignment.Center);
+            MyText descriptionText = new MyText(description, color, "Montserrat", textRectangle, StringAlignment.Far, StringAlignment.Center);
 
             AddTextOnImage(image, descriptionText);
         }

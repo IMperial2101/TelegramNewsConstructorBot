@@ -32,5 +32,9 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
                 Console.WriteLine("Файл не найден!");
             }
         }
+        public string GetSendStrategyName()
+        {
+            return "PhotoWithTitle";
+        }
     }
 }

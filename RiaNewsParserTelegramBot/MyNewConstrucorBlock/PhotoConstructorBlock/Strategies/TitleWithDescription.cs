@@ -18,10 +18,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             MyTextPadding titlePadding = new MyTextPadding(50,30,5,5);
 
             string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
-            image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,0);
+            image = MakeImageWithBlackBlockAndGradient(image, MyColorConverter.black,titlePadding.Top,0);
 
-            AddTitleBlockOnImage(image, titlePadding, myNew.title, MyColorConverter.orangeLava);
-            AddDescriptionBlockOnImage(image, descriptionPadding, myNew, colors[1]);
+            AddTitleBlockOnImage(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
+            AddDescriptionBlockOnImage(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), MyColorConverter.white);
 
 
             AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
@@ -103,11 +103,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             MyText titleText = new MyText(title, color, "Montserrat", titleRectangle, StringAlignment.Center, StringAlignment.Far);
             AddTextOnImage(image, titleText);
         }
-        private void AddDescriptionBlockOnImage(Image image,MyTextPadding descriptionPadding,MyNew myNew, string color)
+        private void AddDescriptionBlockOnImage(Image image,MyTextPadding descriptionPadding,string description, string color)
         {
             RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
-            myNew.descriptionToSend = myNew.description[0];
-            MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Near);
+            MyText descriptionText = new MyText(description, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Near);
             AddTextOnImage(image, descriptionText);
         }
         public string GetStrategyName()

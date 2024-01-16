@@ -151,7 +151,21 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             return new RectangleF(leftPadding, topPadding, rectWidth, rectHeight);
         }
-        
+
+        public string MakeCorrectTitle(string title)
+        {
+            if (title.Length > 180)
+                return title.Substring(0, 180) + "...";
+            else
+                return title;
+        }
+        public string MakeCorrectDescription(string description)
+        {
+            if (description.Length > 350)
+                return description.Substring(0, 350) + "...";
+            else
+                return description;
+        }
     }
     
 }

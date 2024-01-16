@@ -22,7 +22,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,titlePadding.Bottom);
 
-            AddTitleBlock(image, titlePadding, myNew.title, colors[1]);
+            AddTitleBlock(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
             AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
 
             return image;

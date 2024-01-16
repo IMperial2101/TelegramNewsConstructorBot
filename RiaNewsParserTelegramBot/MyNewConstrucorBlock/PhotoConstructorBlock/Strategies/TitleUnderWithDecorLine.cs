@@ -24,7 +24,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0],mainTitlePadding.Top,mainTitlePadding.Bottom);
 
-            AddTextBlockOnImage(image, mainTitlePadding, myNew.title, colors[1]);
+            AddTextBlockOnImage(image, mainTitlePadding,MakeCorrectTitle( myNew.title), colors[1]);
             AddLineBlockOnImage(image, linePadding, colors[1]);
 
             DrawGradientLines(image, linePadding, 450, 10, colors[1]);
@@ -35,7 +35,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         private void AddLineBlockOnImage(Image image, MyTextPadding textPadding, string color)
         {
             RectangleF lineRectangle = MakeRectangleWithPaddings(textPadding.Top, textPadding.Bottom, textPadding.Left, textPadding.Right, image.Width, image.Height);
-            MyText lineUpText = new MyText("🌍", color, "Segoe UI Emoji", lineRectangle);
+            MyText lineUpText = new MyText(MyPropertiesStatic.decoreLineSmile, color, "Segoe UI Emoji", lineRectangle);
             AddTextOnImage(image, lineUpText);
         }
         private void AddTextBlockOnImage(Image image, MyTextPadding mainTitlePadding, string title, string textColor)

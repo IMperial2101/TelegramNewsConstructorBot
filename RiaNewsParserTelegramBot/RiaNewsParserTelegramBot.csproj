@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MyNewConstrucorBlock\NewConstructorBlock\**" />
+    <EmbeddedResource Remove="MyNewConstrucorBlock\NewConstructorBlock\**" />
+    <None Remove="MyNewConstrucorBlock\NewConstructorBlock\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\AbstractPhotoConstructorSaved.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\IBlackBlock.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderDescription.cs" />
@@ -35,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MyNewConstrucorBlock\NewConstructorBlock\Strategies\" />
     <Folder Include="TelegramBotClass\SendStrateges\WithClearPhoto\" />
   </ItemGroup>
 

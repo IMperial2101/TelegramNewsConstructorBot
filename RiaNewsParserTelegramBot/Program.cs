@@ -7,14 +7,13 @@ using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strate
 using RiaNewsParserTelegramBot.PropertiesClass;
 using RiaNewsParserTelegramBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges;
+using System.Text.RegularExpressions;
 
 class Program
 {
     static MyProperties properties = ReadLineProperties();
     static async Task Main()
     {
-
-
         Random random = new Random();
         MyPropertiesStatic.MakeStaticProperties(properties);
         MyTelegramBot telegramBot = new MyTelegramBot();
@@ -25,12 +24,12 @@ class Program
 
         
         
-        /*
-        MyNew myNew;
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240114/kupyanskoe-1921269575.html");
-        telegramSendler.SendNew(myNew, new Title());
+        
+        MyNew myNew = new MyNew();
+        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240116/spetsoperatsiya-1921626558.html");
+        telegramSendler.SendNew(myNew, new PhotoWithTitleWithDescription());
         Console.ReadLine();
-        */
+        
         
 
         //await parser.FirstParseAddLinks();

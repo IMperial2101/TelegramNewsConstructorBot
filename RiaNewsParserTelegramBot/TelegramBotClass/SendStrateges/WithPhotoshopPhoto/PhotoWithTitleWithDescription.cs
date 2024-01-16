@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
@@ -16,20 +17,49 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
     {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
-            myNew.descriptionToSend = myNew.description[0];
-            await MakePhoto(myNew, new TitleWithDescription(), ColorVariationsEnum.Black_OrangeLava);
+            ColorVariationsEnum colorVariations = MyColorConverter.GetRandomColorVariation();
 
-            string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
-            if (System.IO.File.Exists(pathToPhoto))
+            myNew.descriptionToSend = myNew.description[0];
+            await MakePhoto(myNew, new TitleWithDescription(), colorVariations);
+            try
             {
-                using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
-                InputOnlineFile inputFile = new InputOnlineFile(fileStream);
-                await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile);
+                string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
+                string message = MakeMessage(myNew);
+                if (System.IO.File.Exists(pathToPhoto))
+                {
+                    using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    InputOnlineFile inputFile = new InputOnlineFile(fileStream);
+                    await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile,message, ParseMode.Markdown);
+                }
+                else
+                {
+                    Console.WriteLine("Файл не найден!");
+                }
+            }
+            catch (Exception ex)
+            {
+                await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
+                    $"Стратегия отправки {GetSendStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+        private string MakeMessage(MyNew myNew)
+        {
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.Append(MyPropertiesStatic.smile);
+            if (myNew.secondTitle != null)
+            {
+                messageBuilder.AppendLine($"*{myNew.secondTitle}*");
             }
             else
             {
-                Console.WriteLine("Файл не найден!");
+                messageBuilder.AppendLine($"*{myNew.title}*");
             }
+            return messageBuilder.ToString();
+        }
+        public string GetSendStrategyName()
+        {
+            return "PhotoWithTitleWithDescription";
         }
     }
 }

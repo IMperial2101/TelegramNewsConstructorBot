@@ -17,5 +17,9 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         {
             await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*", ParseMode.Markdown);
         }
+        public string GetSendStrategyName()
+        {
+            return "Title";
+        }
     }
 }
