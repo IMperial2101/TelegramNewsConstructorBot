@@ -15,7 +15,7 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    internal class PhotoWithTitleAndDescription : PhotoConstructorForSendler,ISendNew
+    internal class TitleAndDescriptionPhoto : PhotoConstructorForSendler,ISendNew
     {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
@@ -42,8 +42,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
             catch(Exception ex)
             {
                 await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
-                    $"Стратегия отправки {GetSendStrategyName()}");
-                
+                    $"Стратегия отправки {GetSendStrategyName()}");   
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
             

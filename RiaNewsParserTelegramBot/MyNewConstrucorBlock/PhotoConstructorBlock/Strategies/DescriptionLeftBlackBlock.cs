@@ -15,7 +15,7 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IPhotoConst
         image = MakeImageWithBlackBlockAndGradient(image, colors[0],descriptionPadding.Left,descriptionPadding.Right);
         AddDescriptionBlock(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), colors[1]);
         
-        AddDateWithBlackBlock(image, true, false, colors[0], colors[1]);
+        AddDateWithBlackBlock(image, true, true, colors[0], colors[1]);
 
         return image;
     }

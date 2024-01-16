@@ -7,6 +7,9 @@ using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strate
 using RiaNewsParserTelegramBot.PropertiesClass;
 using RiaNewsParserTelegramBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges;
+using RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto;
+using RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopPhoto;
+using RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopPhoto.OnlyDescriptionOnPhoto;
 using System.Text.RegularExpressions;
 
 class Program
@@ -27,7 +30,18 @@ class Program
         
         MyNew myNew = new MyNew();
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240116/spetsoperatsiya-1921626558.html");
-        telegramSendler.SendNew(myNew, new PhotoWithTitleWithDescription());
+        await telegramSendler.SendNew(myNew, new Title());
+        await telegramSendler.SendNew(myNew, new TitleDescription());
+        await telegramSendler.SendNew(myNew, new TitleSecondTitleDescription());
+        await telegramSendler.SendNew(myNew, new TitleClearPhoto());
+        await telegramSendler.SendNew(myNew, new TitleSecondTitleClearPhoto());
+        await telegramSendler.SendNew(myNew, new TitleSecondTitleDescriptionClearPhoto());
+        await telegramSendler.SendNew(myNew, new DescriptionLeftPhoto());
+        await telegramSendler.SendNew(myNew, new DescriptionRightPhoto());
+        await telegramSendler.SendNew(myNew, new DescriptionUnderPhoto());
+        await telegramSendler.SendNew(myNew, new TitleAndDescriptionPhoto());
+        await telegramSendler.SendNew(myNew, new TitlePhoto());
+        await telegramSendler.SendNew(myNew, new TitleWithDescriptionPhoto());
         Console.ReadLine();
         
         
@@ -40,7 +54,7 @@ class Program
             
             foreach(var myNews in newsList)
             {
-                await telegramSendler.SendNew(myNews, new PhotoWithTitleAndDescription());
+                await telegramSendler.SendNew(myNews, new TitleAndDescriptionPhoto());
             }
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
@@ -109,7 +123,7 @@ class Program
                 }
             case "PhotoWithTitle":
                 {
-                    return new PhotoWithTitle();
+                    return new TitlePhoto();
                     break;
                 }
         }

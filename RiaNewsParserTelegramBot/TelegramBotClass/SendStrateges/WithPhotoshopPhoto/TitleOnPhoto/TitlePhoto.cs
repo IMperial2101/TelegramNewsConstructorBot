@@ -13,7 +13,7 @@ using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-     class PhotoWithTitle : PhotoConstructorForSendler, ISendNew
+     class TitlePhoto : PhotoConstructorForSendler, ISendNew
      {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {

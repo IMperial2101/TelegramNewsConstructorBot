@@ -41,5 +41,13 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
 
             return stringBuilder.ToString();
         }
+        public string MakeCorrectTitle(string title)
+        {
+            if (title.Length > 280)
+                return title.Substring(0, 180) + "...";
+            else
+                return title;
+        }
+        
     }
 }

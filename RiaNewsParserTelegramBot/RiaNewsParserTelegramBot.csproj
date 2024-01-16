@@ -9,8 +9,17 @@
 
   <ItemGroup>
     <Compile Remove="MyNewConstrucorBlock\NewConstructorBlock\**" />
+    <Compile Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\OnlyDescriptionOnPhoto\TitleOnPhoto\**" />
+    <Compile Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\Новая папка1\**" />
+    <Compile Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\Новая папка\**" />
     <EmbeddedResource Remove="MyNewConstrucorBlock\NewConstructorBlock\**" />
+    <EmbeddedResource Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\OnlyDescriptionOnPhoto\TitleOnPhoto\**" />
+    <EmbeddedResource Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\Новая папка1\**" />
+    <EmbeddedResource Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\Новая папка\**" />
     <None Remove="MyNewConstrucorBlock\NewConstructorBlock\**" />
+    <None Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\OnlyDescriptionOnPhoto\TitleOnPhoto\**" />
+    <None Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\Новая папка1\**" />
+    <None Remove="TelegramBotClass\SendStrateges\WithPhotoshopPhoto\Новая папка\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,10 +47,6 @@
     <None Update="properties.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TelegramBotClass\SendStrateges\WithClearPhoto\" />
   </ItemGroup>
 
 </Project>

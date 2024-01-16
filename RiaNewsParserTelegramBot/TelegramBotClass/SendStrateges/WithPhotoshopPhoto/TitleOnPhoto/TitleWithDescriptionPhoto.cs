@@ -13,7 +13,7 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    internal class PhotoWithTitleWithDescription : PhotoConstructorForSendler,ISendNew
+    internal class TitleWithDescriptionPhoto : PhotoConstructorForSendler,ISendNew
     {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {

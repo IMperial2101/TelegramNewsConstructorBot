@@ -21,7 +21,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         {
             if (myNew.secondTitle == null)
                 return "";
-            return myNew.secondTitle;
+            return myNew.secondTitle + "\n";
         }
         public string GetSendStrategyName()
         {
