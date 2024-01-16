@@ -10,6 +10,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     public interface IPhotoConstructorStrategy
     {
-        public abstract Image MakePhoto(Image image, MyNew myNew);
+        Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colors);
+        string GetStrategyName();
     }
 }

@@ -16,12 +16,12 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
     {
 
         
-        public Image MakePhoto(Image image, MyNew myNew)
+        public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
             MyTextPadding mainTitlePadding = new MyTextPadding(70, 3, 5, 5);
             MyTextPadding linePadding = new MyTextPadding(60, 30, 45, 45);
 
-            string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0],mainTitlePadding.Top,mainTitlePadding.Bottom);
 
             AddTextBlockOnImage(image, mainTitlePadding, myNew.title, colors[1]);
@@ -134,7 +134,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 
             }
         }
-
+        public string GetStrategyName()
+        {
+            return "TitleUnderWithDecorLine";
+        }
 
 
 

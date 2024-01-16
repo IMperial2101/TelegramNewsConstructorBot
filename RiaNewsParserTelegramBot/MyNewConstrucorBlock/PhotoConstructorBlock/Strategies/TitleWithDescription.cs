@@ -12,12 +12,12 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
     internal class TitleWithDescription : AbstractPhotoConstructor, IPhotoConstructorStrategy
     {
 
-        public Image MakePhoto(Image image, MyNew myNew)
+        public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
             MyTextPadding descriptionPadding = new MyTextPadding(70, 3, 5, 5);
             MyTextPadding titlePadding = new MyTextPadding(50,30,5,5);
 
-            string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,0);
 
             AddTitleBlockOnImage(image, titlePadding, myNew.title, MyColorConverter.orangeLava);
@@ -110,7 +110,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             MyText descriptionText = new MyText(myNew.descriptionToSend, color, "Montserrat", textRectangle, StringAlignment.Center, StringAlignment.Near);
             AddTextOnImage(image, descriptionText);
         }
-
+        public string GetStrategyName()
+        {
+            return "TitleWithDescription";
+        }
 
 
 

@@ -150,7 +150,7 @@ namespace NewsPropertyBot.ParsingClasses
                 }
                     HtmlNode afterName = htmlDocumentNew.DocumentNode.SelectSingleNode(xPathStrings.secondTitle);
                 if (afterName != null)               
-                    myNew.secondTitle = "\n" + HttpUtility.HtmlDecode(afterName.InnerText.Trim());               
+                    myNew.secondTitle = HttpUtility.HtmlDecode(afterName.InnerText.Trim());               
                 else{
                     telegramBot.SendMessageToOwner($"Ошибка: Не удалось найти узел для описания после заголовка.- [url]({url})");
                     Console.WriteLine($"Ошибка: Не удалось найти узел для описания после заголовка.- {url}");

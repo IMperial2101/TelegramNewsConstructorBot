@@ -7,11 +7,11 @@ using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
 internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
 {
-    public Image MakePhoto(Image image, MyNew myNew)
+    public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
     {
         MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 5, 55); 
 
-        string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+        string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
         image = MakeImageWithBlackBlockAndGradient(image, colors[0],descriptionPadding.Left,descriptionPadding.Right);
         AddDescriptionBlock(image, descriptionPadding, myNew, colors[1]);
         
@@ -117,5 +117,8 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IPhotoConst
 
         return (int)(width - leftPadding - rightPadding);
     }
-
+    public string GetStrategyName()
+    {
+        return "DescriptionLeftBlackBlock";
+    }
 }

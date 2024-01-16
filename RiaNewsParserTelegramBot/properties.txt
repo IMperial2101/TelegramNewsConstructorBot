@@ -17,6 +17,7 @@
 	"minViewCount": 3000,
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
+	"abzatcSmile": "🔶",
 	"maxParagraphCount": 2,
 	"maxDescripSymbCount": 600,
 	"ownerId": 626774740,

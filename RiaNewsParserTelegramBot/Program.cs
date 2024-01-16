@@ -28,7 +28,7 @@ class Program
         /*
         MyNew myNew;
         myNew = await parser.ParseOneNewAsync("https://ria.ru/20240114/kupyanskoe-1921269575.html");
-        telegramSendler.SendNew(myNew, new PhotoWithTitle());
+        telegramSendler.SendNew(myNew, new Title());
         Console.ReadLine();
         */
         
@@ -41,7 +41,7 @@ class Program
             
             foreach(var myNews in newsList)
             {
-                await telegramSendler.SendNew(myNews, RandomSendStrategy(MyPropertiesStatic.WeightSendStrategies));
+                await telegramSendler.SendNew(myNews, new PhotoWithTitleAndDescription());
             }
 
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");

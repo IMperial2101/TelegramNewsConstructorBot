@@ -19,7 +19,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
         Black_PaleGreen,
         Black_PaleYellow,
         Black_GreyBlue,
-        Black_
+        Black_OrangeLava,
     }
     public static class MyColorConverter
     {
@@ -46,7 +46,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
                 { ColorVariationsEnum.Black_PaleGreen, new string[] { black, paleGreen } },
                 { ColorVariationsEnum.Black_PaleYellow, new string[] { black, paleYellow } },
                 { ColorVariationsEnum.Black_GreyBlue, new string[] { black, greyBlue } },
-                { ColorVariationsEnum.Black_, new string[] { black, "7099A0" } },
+                { ColorVariationsEnum.Black_OrangeLava, new string[] { black, orangeLava } },
 
             };
 
@@ -67,6 +67,13 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
                 return ColorVariationsMap[color];
             }
             throw new ArgumentException("ColorEnum not found in ColorVariationsMap");
+        }
+        public static ColorVariationsEnum GetRandomColorVariation()
+        {
+            Random random = new Random();
+            Array values = Enum.GetValues(typeof(ColorVariationsEnum));
+            ColorVariationsEnum randomColor = (ColorVariationsEnum)values.GetValue(random.Next(values.Length));
+            return randomColor;
         }
     }
 }

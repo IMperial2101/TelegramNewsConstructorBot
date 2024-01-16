@@ -17,7 +17,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
      {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
-            await MakePhoto(myNew,new TitleUnderBlackBlock());
+
+            await MakePhoto(myNew,new TitleUnderBlackBlock(), ColorVariationsEnum.Black_OrangeLava);
 
             string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
             if (System.IO.File.Exists(pathToPhoto))

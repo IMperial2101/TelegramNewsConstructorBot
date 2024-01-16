@@ -24,6 +24,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public int minViewCount { get; set; }
         public int timeBetweenSendMessSeconds { get; set; }
         public string smile { get; set; }
+        public string abzatcSmile { get; set; }
         public int maxParagraphCount { get; set; }
         public int maxDescripSymbCount { get; set; }
         public int ownerId { get; set; }

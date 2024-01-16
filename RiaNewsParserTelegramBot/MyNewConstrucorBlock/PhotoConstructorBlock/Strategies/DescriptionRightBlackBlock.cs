@@ -6,11 +6,11 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     internal class DescriptionRightBlackBlock : AbstractPhotoConstructor, IPhotoConstructorStrategy
     {
-        public Image MakePhoto(Image image, MyNew myNew)
+        public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
             MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 55, 5);
 
-            string[] colors = MyColorConverter.GetColorVariations(ColorVariationsEnum.Black_White);
+            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
             image = MakeImageWithBlackBlockAndGradient(image, colors[0], descriptionPadding.Left, descriptionPadding.Right);
             AddDescriptionBlock(image, descriptionPadding, myNew, colors[1]);
 
@@ -18,7 +18,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             return image;
         }
-
         private void AddDescriptionBlock(Image image, MyTextPadding descriptionPadding, MyNew myNew, string color)
         {
             RectangleF textRectangle = MakeRectangleWithPaddings(descriptionPadding.Top, descriptionPadding.Bottom, descriptionPadding.Left, descriptionPadding.Right, image.Width, image.Height);
@@ -27,7 +26,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             AddTextOnImage(image, descriptionText);
         }
-
         private Image MakeImageWithBlackBlockAndGradient(Image originalImage, string gradientColor, int textPaddingLeft, int textPaddingRight)
         {
             int blackRectangleWidth = CalculateRectangleWidth(textPaddingLeft, textPaddingRight, originalImage.Width);
@@ -35,7 +33,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
             AddGradient(imageWithBlackBlock, blackRectangleWidth, gradientColor);
             return imageWithBlackBlock;
         }
-
         private Image MakeImageWithBlackBlockWide(Image originalImage, int blackRectangleWidth, string gradientColor)
         {
             int newWidth = originalImage.Width + blackRectangleWidth;
@@ -56,7 +53,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
             return newImage;
         }
-
         private void AddGradient(Image image, int blackRectangleWidth, string gradientColor)
         {
             using (Graphics graphics = Graphics.FromImage(image))
@@ -81,7 +77,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 }
             }
         }
-
         private int CalculateRectangleWidth(float leftPaddingPercent, float rightPaddingPercent, int width)
         {
             float leftPadding, rightPadding;
@@ -97,6 +92,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 rightPadding = (rightPaddingPercent / 100) * width;
 
             return (int)(width - leftPadding - rightPadding);
+        }
+        public string GetStrategyName()
+        {
+            return "DescriptionRightBlackBlock";
         }
     }
 }

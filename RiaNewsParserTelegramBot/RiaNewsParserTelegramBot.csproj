@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="MyNewConstrucorBlock\NewConstructorBlock\Strategies\" />
+    <Folder Include="TelegramBotClass\SendStrateges\WithClearPhoto\" />
   </ItemGroup>
 
 </Project>
