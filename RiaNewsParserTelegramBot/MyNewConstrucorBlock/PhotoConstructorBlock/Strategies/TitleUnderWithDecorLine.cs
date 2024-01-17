@@ -18,17 +18,27 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         
         public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
-            MyTextPadding mainTitlePadding = new MyTextPadding(70, 3, 5, 5);
-            MyTextPadding linePadding = new MyTextPadding(60, 30, 45, 45);
+            try
+            {
+                MyTextPadding mainTitlePadding = new MyTextPadding(70, 3, 5, 5);
+                MyTextPadding linePadding = new MyTextPadding(60, 30, 45, 45);
 
-            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
-            image = MakeImageWithBlackBlockAndGradient(image, colors[0],mainTitlePadding.Top,mainTitlePadding.Bottom);
+                string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
+                image = MakeImageWithBlackBlockAndGradient(image, colors[0], mainTitlePadding.Top, mainTitlePadding.Bottom);
 
-            AddTextBlockOnImage(image, mainTitlePadding,MakeCorrectTitle( myNew.title), colors[1]);
-            AddLineBlockOnImage(image, linePadding, colors[1]);
+                AddTextBlockOnImage(image, mainTitlePadding, MakeCorrectTitle(myNew.title), colors[1]);
+                AddLineBlockOnImage(image, linePadding, colors[1]);
 
-            DrawGradientLines(image, linePadding, 450, 10, colors[1]);
-            AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
+                DrawGradientLines(image, linePadding, 450, 10, colors[1]);
+                AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
+            }
+            catch (Exception ex)
+            {
+                myTelegramBot.SendMessageToOwner($"Ошибка создания фотографии: {ex.Message} - {myNew.url}\n" +
+                        $"Стратегия отправки {GetStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            
 
             return image;
         }

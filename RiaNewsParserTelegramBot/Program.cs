@@ -25,28 +25,10 @@ class Program
         MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
         MakeImagesFolder();
 
-        
-        
-        
-        MyNew myNew = new MyNew();
-        myNew = await parser.ParseOneNewAsync("https://ria.ru/20240116/spetsoperatsiya-1921626558.html");
-        await telegramSendler.SendNew(myNew, new Title());
-        await telegramSendler.SendNew(myNew, new TitleDescription());
-        await telegramSendler.SendNew(myNew, new TitleSecondTitleDescription());
-        await telegramSendler.SendNew(myNew, new TitleClearPhoto());
-        await telegramSendler.SendNew(myNew, new TitleSecondTitleClearPhoto());
-        await telegramSendler.SendNew(myNew, new TitleSecondTitleDescriptionClearPhoto());
-        await telegramSendler.SendNew(myNew, new DescriptionLeftPhoto());
-        await telegramSendler.SendNew(myNew, new DescriptionRightPhoto());
-        await telegramSendler.SendNew(myNew, new DescriptionUnderPhoto());
-        await telegramSendler.SendNew(myNew, new TitleAndDescriptionPhoto());
-        await telegramSendler.SendNew(myNew, new TitlePhoto());
-        await telegramSendler.SendNew(myNew, new TitleWithDescriptionPhoto());
-        Console.ReadLine();
-        
-        
 
-        //await parser.FirstParseAddLinks();
+
+        string lastSendStrategy = "Title";
+        await parser.FirstParseAddLinks();
         while (true)
         {
             Console.WriteLine("Начало парсинга");
@@ -54,9 +36,14 @@ class Program
             
             foreach(var myNews in newsList)
             {
-                await telegramSendler.SendNew(myNews, new TitleAndDescriptionPhoto());
+                string sendNewStrategy = ChooseRandomSendStrategy(MyPropertiesStatic.WeightSendStrategies, lastSendStrategy);
+                
+                ISendNew sendStrategy = ReturnISendNew(sendNewStrategy);
+                await telegramSendler.SendNew(myNews, sendStrategy);
+                lastSendStrategy = sendNewStrategy;
+                
             }
-
+            GC.Collect();
             Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
             await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
         }
@@ -88,14 +75,18 @@ class Program
             Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images"));
         }
     }
-    static string ChooseRandomSendStrategy(Dictionary<string, int> weightSendStrategies)
+    static string ChooseRandomSendStrategy(Dictionary<string, int> _weightSendStrategies,string lastSendStrategy)
     {
+        Dictionary<string, int> weightSendStrategies = new Dictionary<string, int>(_weightSendStrategies);
         Random random = new Random();
         int totalWeight = 0;
 
+        if(weightSendStrategies.ContainsKey(lastSendStrategy))
+            weightSendStrategies.Remove(lastSendStrategy);
 
         foreach (var el in weightSendStrategies)
             totalWeight += el.Value;
+
 
         foreach(var el in weightSendStrategies)
         {
@@ -106,9 +97,8 @@ class Program
         }
         return null;
     }
-    static ISendNew RandomSendStrategy(Dictionary<string, int> weightSendStrategies)
+    static ISendNew ReturnISendNew(string strategy)
     {
-        string strategy = ChooseRandomSendStrategy(weightSendStrategies);
         switch (strategy)
         {
             case "Title":
@@ -121,9 +111,54 @@ class Program
                     return new TitleDescription();
                     break;
                 }
-            case "PhotoWithTitle":
+            case "TitleSecondTitleDescription":
+                {
+                    return new TitleSecondTitleDescription();
+                    break;
+                }
+            case "TitleClearPhoto":
+                {
+                    return new TitleClearPhoto();
+                    break;
+                }
+            case "TitleSecondTitleClearPhoto":
+                {
+                    return new TitleSecondTitleClearPhoto();
+                    break;
+                }
+            case "TitleSecondTitleDescriptionClearPhoto":
+                {
+                    return new TitleSecondTitleDescriptionClearPhoto();
+                    break;
+                }
+            case "DescriptionLeftPhoto":
+                {
+                    return new DescriptionLeftPhoto();
+                    break;
+                }
+            case "DescriptionRightPhoto":
+                {
+                    return new DescriptionRightPhoto();
+                    break;
+                }
+            case "DescriptionUnderPhoto":
+                {
+                    return new DescriptionUnderPhoto();
+                    break;
+                }
+            case "TitleAndDescriptionPhoto":
+                {
+                    return new TitleAndDescriptionPhoto();
+                    break;
+                }
+            case "TitlePhoto":
                 {
                     return new TitlePhoto();
+                    break;
+                }
+            case "TitleWithDescriptionPhoto":
+                {
+                    return new TitleWithDescriptionPhoto();
                     break;
                 }
         }

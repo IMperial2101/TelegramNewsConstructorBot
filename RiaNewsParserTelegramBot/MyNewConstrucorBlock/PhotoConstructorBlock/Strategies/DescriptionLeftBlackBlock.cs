@@ -9,14 +9,24 @@ internal class DescriptionLeftBlackBlock : AbstractPhotoConstructor, IPhotoConst
 {
     public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
     {
-        MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 5, 55); 
+        try
+        {
+            MyTextPadding descriptionPadding = new MyTextPadding(7, 7, 5, 55);
 
-        string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
-        image = MakeImageWithBlackBlockAndGradient(image, colors[0],descriptionPadding.Left,descriptionPadding.Right);
-        AddDescriptionBlock(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), colors[1]);
-        
-        AddDateWithBlackBlock(image, true, true, colors[0], colors[1]);
+            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
+            image = MakeImageWithBlackBlockAndGradient(image, colors[0], descriptionPadding.Left, descriptionPadding.Right);
+            AddDescriptionBlock(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), colors[1]);
 
+            AddDateWithBlackBlock(image, true, true, colors[0], colors[1]);
+
+            
+        }
+        catch(Exception ex)
+        {
+            myTelegramBot.SendMessageToOwner($"Ошибка создания фотографии: {ex.Message} - {myNew.url}\n" +
+                    $"Стратегия отправки {GetStrategyName()}");
+            Console.WriteLine($"Ошибка: {ex.Message}");
+        }
         return image;
     }
     private void AddDescriptionBlock(Image image,MyTextPadding descriptionPadding,string description,string color)

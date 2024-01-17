@@ -10,7 +10,7 @@
 		"password": "pthNrV"
 	},
 	"timeBetweenMainParseMinutes": 5,
-	"minViewCount": 3000,
+	"minViewCount": 2000,
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
 	"abzatcSmile": "🔶",
@@ -20,8 +20,17 @@
 	"maxDescripSymbCount": 1000,
 	"ownerId": 626774740,
 	"WeightSendStrategies": {
-		"Title": 100,
-		"TitleDescription": 50,
-		"PhotoWithTitle":200
+		"Title":0,
+		"TitleDescription":0,
+		"TitleSecondTitleDescription":0,
+		"TitleClearPhoto":0,
+		"TitleSecondTitleClearPhoto":0,
+		"TitleSecondTitleDescriptionClearPhoto":100,
+		"DescriptionLeftPhoto":0,
+		"DescriptionRightPhoto":0,
+		"DescriptionUnderPhoto":100,
+		"TitleAndDescriptionPhoto":100,
+		"TitlePhoto":0,
+		"TitleWithDescriptionPhoto":100,
 	}
 }

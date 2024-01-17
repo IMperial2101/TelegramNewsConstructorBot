@@ -17,13 +17,23 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
-            MyTextPadding titlePadding = new MyTextPadding(70, 3, 5, 5);
+            try
+            {
+                MyTextPadding titlePadding = new MyTextPadding(70, 3, 5, 5);
 
-            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
-            image = MakeImageWithBlackBlockAndGradient(image, colors[0],titlePadding.Top,titlePadding.Bottom);
+                string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
+                image = MakeImageWithBlackBlockAndGradient(image, colors[0], titlePadding.Top, titlePadding.Bottom);
 
-            AddTitleBlock(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
-            AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
+                AddTitleBlock(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
+                AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
+            }
+            catch (Exception ex)
+            {
+                myTelegramBot.SendMessageToOwner($"Ошибка создания фотографии: {ex.Message} - {myNew.url}\n" +
+                        $"Стратегия отправки {GetStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            
 
             return image;
         }

@@ -3,6 +3,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using AForge.Imaging.Filters;
 using NewsPropertyBot.NewClass;
+using NewsPropertyBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.PropertiesClass;
 
 
@@ -10,7 +11,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     internal abstract class AbstractPhotoConstructor
     {
-        
+        protected MyTelegramBot myTelegramBot = new MyTelegramBot();
         public Font AdjustFontSize(string text,string fontName, RectangleF rect)
         {
             Font font;

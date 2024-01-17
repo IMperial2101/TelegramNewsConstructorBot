@@ -38,7 +38,6 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopP
             {
                 await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
                     $"Стратегия отправки {GetSendStrategyName()}");
-
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
