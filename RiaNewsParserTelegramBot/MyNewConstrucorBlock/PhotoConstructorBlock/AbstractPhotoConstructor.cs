@@ -46,6 +46,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         public void AddTextOnImage(Image image,MyText myText)
         {
+            
             using (Graphics graphics = Graphics.FromImage(image))
             {
                 int width = image.Width;
@@ -155,6 +156,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         public string MakeCorrectTitle(string title)
         {
+            if (title == null)
+                return null;
             if (title.Length > 180)
                 return title.Substring(0, 180) + "...";
             else
@@ -162,6 +165,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         }
         public string MakeCorrectDescription(string description)
         {
+            if (description == null)
+                return null;
             if (description.Length > 350)
                 return description.Substring(0, 350) + "...";
             else

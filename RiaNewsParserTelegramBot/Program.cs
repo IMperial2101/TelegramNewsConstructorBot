@@ -24,11 +24,15 @@ class Program
         PhotoConstructor photoConstructor = new PhotoConstructor();
         MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
         MakeImagesFolder();
-
-
+        
+        /*
+        MyNew myNew = await parser.ParseOneNewAsync("https://radiosputnik.ru/20240121/tanki-1922615705.html");
+        await photoConstructor.MakePhoto(myNew, new TitleWithDescription(), ColorVariationsEnum.Black_White);
+        Console.ReadLine();
+        */
 
         string lastSendStrategy = "Title";
-        await parser.FirstParseAddLinks();
+        //await parser.FirstParseAddLinks();
         while (true)
         {
             Console.WriteLine("Начало парсинга");

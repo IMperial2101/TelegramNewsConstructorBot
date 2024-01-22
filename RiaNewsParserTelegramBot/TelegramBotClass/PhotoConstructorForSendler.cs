@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot.Exceptions;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass
 {
@@ -33,9 +34,19 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
             {
                 if (stringBuilder.Length > MyPropertiesStatic.maxDescripSymbCount)
                     break;
-                stringBuilder.Append($"{MyPropertiesStatic.abzatcSmile}  ");
-                stringBuilder.AppendLine(myNew.description[i]);
-                stringBuilder.AppendLine();
+                if (myNew.description[i] != null || myNew.description[i].Length > 20)
+                {
+                    stringBuilder.Append($"{MyPropertiesStatic.abzatcSmile}  ");
+                    stringBuilder.AppendLine(myNew.description[i]);
+                    stringBuilder.AppendLine();
+                }               
+                if (stringBuilder.Length >= 800)
+                {
+                    stringBuilder.Length = 790;
+                    stringBuilder.Append("...");
+                    break;
+                }
+
                 
             }
 

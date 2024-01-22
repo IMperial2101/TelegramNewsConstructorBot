@@ -21,7 +21,6 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
         Black_GreyBlue,
         Black_OrangeLava,
         Black_Peach,
-        Black_Test,
         Black_PaleBlue,
     }
     public static class MyColorConverter

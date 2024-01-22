@@ -29,7 +29,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
                 AddTextBlockOnImage(image, mainTitlePadding, MakeCorrectTitle(myNew.title), colors[1]);
                 AddLineBlockOnImage(image, linePadding, colors[1]);
 
-                DrawGradientLines(image, linePadding, 450, 10, colors[1]);
+                if (image.Height >= 1000 || image.Width >= 1900)
+                    DrawGradientLines(image, linePadding, 450, 10, colors[1]);
                 AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
             }
             catch (Exception ex)

@@ -44,7 +44,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         }
         public string GetSendStrategyName()
         {
-            return "PhotoWithTitle";
+            return "TitlePhoto";
         }
     }
 }

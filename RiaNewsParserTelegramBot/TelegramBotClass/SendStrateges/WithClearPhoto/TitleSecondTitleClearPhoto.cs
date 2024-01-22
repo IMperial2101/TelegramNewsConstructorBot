@@ -28,7 +28,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
         }
         public string GetSendStrategyName()
         {
-            return "TitleClearPhoto";
+            return "TitleSecondTitleClearPhoto";
         }
         private string MakeMessage(MyNew myNew)
         {

@@ -10,14 +10,14 @@
 		"password": "pthNrV"
 	},
 	"timeBetweenMainParseMinutes": 5,
-	"minViewCount": 2000,
+	"minViewCount": 1000,
 	"timeBetweenSendMessSeconds": 5,
 	"smile": "🇷🇺",
 	"abzatcSmile": "🔶",
 	"decoreLineSmile": "🌍",
 	"minParagraphCount":1,
 	"maxParagraphCount": 4,
-	"maxDescripSymbCount": 1000,
+	"maxDescripSymbCount": 800,
 	"ownerId": 626774740,
 	"WeightSendStrategies": {
 		"Title":0,
@@ -25,12 +25,12 @@
 		"TitleSecondTitleDescription":0,
 		"TitleClearPhoto":0,
 		"TitleSecondTitleClearPhoto":0,
-		"TitleSecondTitleDescriptionClearPhoto":100,
-		"DescriptionLeftPhoto":0,
-		"DescriptionRightPhoto":0,
+		"TitleSecondTitleDescriptionClearPhoto":0,
+		"DescriptionLeftPhoto":100,
+		"DescriptionRightPhoto":100,
 		"DescriptionUnderPhoto":100,
 		"TitleAndDescriptionPhoto":100,
-		"TitlePhoto":0,
+		"TitlePhoto":100,
 		"TitleWithDescriptionPhoto":100,
 	}
 }
