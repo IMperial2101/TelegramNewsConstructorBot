@@ -53,7 +53,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
             }
 
             messageBuilder.AppendLine(myNew.descriptionToSend);
-
+            messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
         }
     }

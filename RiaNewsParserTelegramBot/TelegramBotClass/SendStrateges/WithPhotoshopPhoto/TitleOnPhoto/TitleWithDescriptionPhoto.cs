@@ -13,7 +13,7 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    internal class TitleWithDescriptionPhoto : PhotoConstructorForSendler,ISendNew
+    public class TitleWithDescriptionPhoto : PhotoConstructorForSendler,ISendNew
     {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
@@ -55,6 +55,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
             {
                 messageBuilder.AppendLine($"*{myNew.title}*");
             }
+            messageBuilder.AppendLine();
+            messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
         }
         public string GetSendStrategyName()

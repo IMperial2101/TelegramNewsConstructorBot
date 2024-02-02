@@ -17,7 +17,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         {
             try
             {
-                await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*", ParseMode.Markdown);
+                string message = MakeMessage(myNew);
+                await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID,message, ParseMode.Markdown);
             }
             catch (Exception ex)
             {
@@ -29,6 +30,12 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         public string GetSendStrategyName()
         {
             return "Title";
+        }
+        private string MakeMessage(MyNew myNew)
+        {
+            string message = $"*{myNew.title}*";
+            message += $"\n\n{MakeSubscribeBar()}";
+            return message;
         }
     }
 }

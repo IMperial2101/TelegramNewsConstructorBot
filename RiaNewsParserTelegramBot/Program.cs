@@ -24,32 +24,40 @@ class Program
         PhotoConstructor photoConstructor = new PhotoConstructor();
         MyNewTelegramSendler telegramSendler = new MyNewTelegramSendler(telegramBot);
         MakeImagesFolder();
+
         
-        /*
-        MyNew myNew = await parser.ParseOneNewAsync("https://radiosputnik.ru/20240121/tanki-1922615705.html");
-        await photoConstructor.MakePhoto(myNew, new TitleWithDescription(), ColorVariationsEnum.Black_White);
+        MyNew myNew = await parser.ParseOneNewAsync("https://ria.ru/20240202/moshenniki-1924953017.html");
+        await telegramSendler.SendNew(myNew, new TitleAndDescriptionPhoto());
         Console.ReadLine();
-        */
+        
 
         string lastSendStrategy = "Title";
         //await parser.FirstParseAddLinks();
         while (true)
         {
-            Console.WriteLine("Начало парсинга");
-            List<MyNew> newsList = await parser.ParseNews();
-            
-            foreach(var myNews in newsList)
+            try
             {
-                string sendNewStrategy = ChooseRandomSendStrategy(MyPropertiesStatic.WeightSendStrategies, lastSendStrategy);
-                
-                ISendNew sendStrategy = ReturnISendNew(sendNewStrategy);
-                await telegramSendler.SendNew(myNews, sendStrategy);
-                lastSendStrategy = sendNewStrategy;
-                
+                Console.WriteLine("Начало парсинга");
+                List<MyNew> newsList = await parser.ParseNews();
+
+                foreach (var myNews in newsList)
+                {
+                    string sendNewStrategy = ChooseRandomSendStrategy(MyPropertiesStatic.WeightSendStrategies, lastSendStrategy);
+
+                    ISendNew sendStrategy = ReturnISendNew(sendNewStrategy);
+                    await telegramSendler.SendNew(myNews, sendStrategy);
+                    lastSendStrategy = sendNewStrategy;
+
+                }
+                GC.Collect();
+                Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
+                await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
             }
-            GC.Collect();
-            Console.WriteLine($"Конец, ожидание {MyPropertiesStatic.timeBetweenMainParseMinutes} минут {DateTime.Now}\n");
-            await Task.Delay(TimeSpan.FromMinutes(MyPropertiesStatic.timeBetweenMainParseMinutes));
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Ошибка в Main: {ex.Message}");
+                telegramBot.SendMessageToOwner($"Ошибка в Main: {ex.Message}");
+            }
         }
         Console.ReadLine();
      

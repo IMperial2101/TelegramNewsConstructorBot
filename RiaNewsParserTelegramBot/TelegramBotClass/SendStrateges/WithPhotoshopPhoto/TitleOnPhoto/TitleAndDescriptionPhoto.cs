@@ -70,7 +70,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
             }
 
             messageBuilder.AppendLine(myNew.descriptionToSend);
-
+            messageBuilder.AppendLine();
+            messageBuilder.AppendLine(MakeSubscribeBar());
 
             return messageBuilder.ToString();
         }

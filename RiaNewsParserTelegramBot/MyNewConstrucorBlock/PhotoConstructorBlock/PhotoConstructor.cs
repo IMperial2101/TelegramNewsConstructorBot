@@ -106,7 +106,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
 
             if (title.Length < 20)
                 return false;
-            if (description.Length < 100)
+            if (description.Length < 10)
                 return false;
             return true;
         }

@@ -33,7 +33,9 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
         }
         private string MakeMessage(MyNew myNew)
         {
-            return  MakeCorrectTitle($"{MyPropertiesStatic.smile}*{myNew.title}*");
+            string message = MakeCorrectTitle($"{MyPropertiesStatic.smile}*{myNew.title}*");
+            message += $"\n\n{MakeSubscribeBar()}";
+            return message;
         }
     }
 }

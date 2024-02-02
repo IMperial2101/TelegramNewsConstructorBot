@@ -26,6 +26,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         }
         public async Task SendNew(MyNew myNew, ISendNew strategy)
         {
+            if (myNew.photoUrl == null)
+                return;
             await strategy.SendNew(myTelegramBot, myNew);
             if (myNew.photoName != null)
                 DeleteImages(myNew);
