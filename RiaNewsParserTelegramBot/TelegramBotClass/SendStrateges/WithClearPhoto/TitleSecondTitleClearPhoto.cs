@@ -28,7 +28,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
         }
         public string GetSendStrategyName()
         {
-            return "TitleClearPhoto";
+            return "TitleSecondTitleClearPhoto";
         }
         private string MakeMessage(MyNew myNew)
         {
@@ -36,7 +36,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
             messageBuilder.AppendLine(MakeCorrectTitle($"{MyPropertiesStatic.smile}*{myNew.title}*"));
             if(myNew.secondTitle != null)
                 messageBuilder.AppendLine($"_{myNew.secondTitle}_");
-
+            messageBuilder.AppendLine();
+            messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
         }
     }

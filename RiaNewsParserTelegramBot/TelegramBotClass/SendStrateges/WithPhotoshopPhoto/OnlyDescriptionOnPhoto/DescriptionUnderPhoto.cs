@@ -38,13 +38,12 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopP
             {
                 await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
                     $"Стратегия отправки {GetSendStrategyName()}");
-
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
         public string GetSendStrategyName()
         {
-            return "DescriptionRightPhoto";
+            return "DescriptionUnderPhoto";
         }
         public string MakeMessage(MyNew myNew)
         {
@@ -53,7 +52,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopP
             messageBuilder.AppendLine($"*{myNew.title}*");
             if (myNew.secondTitle != null)
                 messageBuilder.AppendLine($"_{myNew.secondTitle}_");
-
+            messageBuilder.AppendLine();
+            messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
 
         }

@@ -15,11 +15,27 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
     {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
-            await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*", ParseMode.Markdown);
+            try
+            {
+                string message = MakeMessage(myNew);
+                await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID,message, ParseMode.Markdown);
+            }
+            catch (Exception ex)
+            {
+                await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
+                    $"Стратегия отправки {GetSendStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }   
         }
         public string GetSendStrategyName()
         {
             return "Title";
+        }
+        private string MakeMessage(MyNew myNew)
+        {
+            string message = $"*{myNew.title}*";
+            message += $"\n\n{MakeSubscribeBar()}";
+            return message;
         }
     }
 }

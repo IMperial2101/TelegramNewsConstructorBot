@@ -44,7 +44,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopP
         }
         public string GetSendStrategyName()
         {
-            return "DescriptionRightPhoto";
+            return "DescriptionLeftPhoto";
         }
         public string MakeMessage(MyNew myNew)
         {
@@ -53,7 +53,8 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopP
             messageBuilder.AppendLine($"*{myNew.title}*");
             if (myNew.secondTitle != null)
                 messageBuilder.AppendLine($"_{myNew.secondTitle}_");
-
+            messageBuilder.AppendLine();
+            messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
 
         }

@@ -29,14 +29,14 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
         }
         public string GetSendStrategyName()
         {
-            return "TitleClearPhoto";
+            return "TitleSecondTitleDescriptionClearPhoto";
         }
         private string MakeMessage(MyNew myNew)
         {
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.AppendLine(MakeCorrectTitle($"{MyPropertiesStatic.smile}*{myNew.title}*"));
             if (myNew.secondTitle != null)
-                messageBuilder.AppendLine($"_{myNew.secondTitle}_");
+                messageBuilder.AppendLine(MakeCorrectTitle($"_{myNew.secondTitle}_"));
             messageBuilder.AppendLine();
             myNew.descriptionToSend = MakeDescriptionToSend(myNew);
 
@@ -53,7 +53,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
             }
 
             messageBuilder.AppendLine(myNew.descriptionToSend);
-
+            messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
         }
     }

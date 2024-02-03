@@ -14,18 +14,26 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         public Image MakePhoto(Image image, MyNew myNew, ColorVariationsEnum colorsVariation)
         {
-            MyTextPadding descriptionPadding = new MyTextPadding(70, 3, 5, 5);
-            MyTextPadding titlePadding = new MyTextPadding(50,30,5,5);
+            try
+            {
+                MyTextPadding descriptionPadding = new MyTextPadding(70, 3, 5, 5);
+                MyTextPadding titlePadding = new MyTextPadding(50, 30, 5, 5);
 
-            string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
-            image = MakeImageWithBlackBlockAndGradient(image, MyColorConverter.black,titlePadding.Top,0);
+                string[] colors = MyColorConverter.GetColorVariations(colorsVariation);
+                image = MakeImageWithBlackBlockAndGradient(image, MyColorConverter.black, titlePadding.Top, 0);
 
-            AddTitleBlockOnImage(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
-            AddDescriptionBlockOnImage(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), MyColorConverter.white);
+                AddTitleBlockOnImage(image, titlePadding, MakeCorrectTitle(myNew.title), colors[1]);
+                AddDescriptionBlockOnImage(image, descriptionPadding, MakeCorrectDescription(myNew.description[0]), MyColorConverter.white);
 
 
-            AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
-
+                AddDateWithBlackBlock(image, false, true, colors[0], colors[1]);
+            }
+            catch (Exception ex)
+            {
+                myTelegramBot.SendMessageToOwner($"Ошибка создания фотографии: {ex.Message} - {myNew.url}\n" +
+                        $"Стратегия отправки {GetStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
             return image;
         }
         private Image MakeImageWithBlackBlockAndGradient(Image image, string gradientColor,int textPaddingTop,int textPaddingBottom)

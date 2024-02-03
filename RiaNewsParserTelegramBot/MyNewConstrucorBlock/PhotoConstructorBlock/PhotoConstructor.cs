@@ -23,6 +23,11 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
         }
         public async Task MakePhoto(MyNew myNew,IPhotoConstructorStrategy strategy,ColorVariationsEnum colorsVariation)
         {
+            if (!CheckNew(myNew))
+            {
+                await myTelegramBot.SendMessageToOwner($"Новость не прошла проверку содержания: - {myNew.url}\nСтратегия - {strategy.GetStrategyName}.");
+                Console.WriteLine($"Новость не прошла проверку содержания: - {myNew.url}\nСтратегия - {strategy.GetStrategyName}.");
+            }
             try
             {
                 myNew.photoName = MakeRandomString();
@@ -50,7 +55,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
             using var file = System.IO.File.OpenWrite(imagePath);
 
             await stream.CopyToAsync(file);
-            Console.WriteLine($"Скачали фото {myNew.title.Substring(0, 20)}");
+            Console.WriteLine($"Скачали фото {myNew.title}");
         }
         static string MakeRandomString()
         {
@@ -91,6 +96,19 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
             {
                 Console.WriteLine($"Ошибка удаления файла: {e.Message}");
             }
+        }
+        private bool CheckNew(MyNew myNew)
+        {
+            if (myNew.title == null || myNew.description[0] == null)
+                return false;
+            string title = myNew.title.Trim();
+            string description = myNew.description[0].Trim();
+
+            if (title.Length < 20)
+                return false;
+            if (description.Length < 10)
+                return false;
+            return true;
         }
 
     }

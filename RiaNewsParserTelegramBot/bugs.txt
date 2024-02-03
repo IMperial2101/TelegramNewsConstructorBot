@@ -1,1 +1,2 @@
-﻿
+﻿https://ria.ru/20240118/irak-1922030739.html - какая-то хуйня с 
+HTTP Request Error: The SSL connection could not be established, see inner exception. При парсинге

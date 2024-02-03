@@ -3,6 +3,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using AForge.Imaging.Filters;
 using NewsPropertyBot.NewClass;
+using NewsPropertyBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.PropertiesClass;
 
 
@@ -10,7 +11,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     internal abstract class AbstractPhotoConstructor
     {
-        
+        protected MyTelegramBot myTelegramBot = new MyTelegramBot();
         public Font AdjustFontSize(string text,string fontName, RectangleF rect)
         {
             Font font;
@@ -45,6 +46,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         public void AddTextOnImage(Image image,MyText myText)
         {
+            
             using (Graphics graphics = Graphics.FromImage(image))
             {
                 int width = image.Width;
@@ -154,6 +156,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 
         public string MakeCorrectTitle(string title)
         {
+            if (title == null)
+                return null;
             if (title.Length > 180)
                 return title.Substring(0, 180) + "...";
             else
@@ -161,6 +165,8 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
         }
         public string MakeCorrectDescription(string description)
         {
+            if (description == null)
+                return null;
             if (description.Length > 350)
                 return description.Substring(0, 350) + "...";
             else

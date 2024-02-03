@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types;
 using RiaNewsParserTelegramBot.PropertiesClass;
+using Telegram.Bot.Types.Enums;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
@@ -19,22 +20,38 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         {
 
             await MakePhoto(myNew,new TitleUnderBlackBlock(), ColorVariationsEnum.Black_OrangeLava);
+            try
+            {
+                string message = MakeMessage();
+                string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
+                if (System.IO.File.Exists(pathToPhoto))
+                {
+                    using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    InputOnlineFile inputFile = new InputOnlineFile(fileStream);
+                    await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile,message,ParseMode.Markdown);
+                }
+                else
+                {
+                    Console.WriteLine("Файл не найден!");
+                }
+            }
+            catch (Exception ex)
+            {
+                await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
+                    $"Стратегия отправки {GetSendStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
 
-            string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
-            if (System.IO.File.Exists(pathToPhoto))
-            {
-                using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
-                InputOnlineFile inputFile = new InputOnlineFile(fileStream);
-                await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile);
-            }
-            else
-            {
-                Console.WriteLine("Файл не найден!");
-            }
+            
         }
         public string GetSendStrategyName()
         {
-            return "PhotoWithTitle";
+            return "TitlePhoto";
+        }
+        private string MakeMessage()
+        {
+            string message = $"\n{MakeSubscribeBar()}";
+            return message;
         }
     }
 }

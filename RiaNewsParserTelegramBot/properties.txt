@@ -1,7 +1,7 @@
 ﻿{
 	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
-	"channelID": "@RiaNewsParseWorld2",
-	"parseLink": "https://ria.ru/world/",
+	"channelID": "@OfficialWorldNews",
+	"parseLink": "https://rsport.ria.ru/category_mma/",
 	"useProxy": "yes",
 	"myProxy": {
 		"host": "91.188.243.122",
@@ -10,18 +10,27 @@
 		"password": "pthNrV"
 	},
 	"timeBetweenMainParseMinutes": 5,
-	"minViewCount": 3000,
+	"minViewCount": 10000,
 	"timeBetweenSendMessSeconds": 5,
-	"smile": "🇷🇺",
+	"smile": "🌍",
 	"abzatcSmile": "🔶",
 	"decoreLineSmile": "🌍",
-	"minParagraphCount":1,
+	"minParagraphCount":3,
 	"maxParagraphCount": 4,
-	"maxDescripSymbCount": 1000,
+	"maxDescripSymbCount": 800,
 	"ownerId": 626774740,
 	"WeightSendStrategies": {
-		"Title": 100,
-		"TitleDescription": 50,
-		"PhotoWithTitle":200
+		"Title":0,
+		"TitleDescription":0,
+		"TitleSecondTitleDescription":0,
+		"TitleClearPhoto":0,
+		"TitleSecondTitleClearPhoto":0,
+		"TitleSecondTitleDescriptionClearPhoto":50,
+		"DescriptionLeftPhoto":70,
+		"DescriptionRightPhoto":0,
+		"DescriptionUnderPhoto":70,
+		"TitleAndDescriptionPhoto":100,
+		"TitlePhoto":0,
+		"TitleWithDescriptionPhoto":100,
 	}
 }

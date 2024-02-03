@@ -20,24 +20,22 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
         Black_PaleYellow,
         Black_GreyBlue,
         Black_OrangeLava,
+        Black_Peach,
+        Black_PaleBlue,
     }
     public static class MyColorConverter
     {
         
         public readonly static string black = "000000";
         public readonly static string greyDark = "1E1E1E";
-        public readonly static string white = "FFFFFF";
+        public readonly static string white = "FDFDFD";
         public readonly static string purple = "D4CCFF";
         public readonly static string paleGreen = "C2D1A7";
         public readonly static string paleYellow = "E9CC86";
         public readonly static string greyBlue = "7099A0";
         public readonly static string orangeLava = "FD6236";
-        private static readonly Dictionary<ColorEnum, string> ColorMap = new Dictionary<ColorEnum, string>
-                {
-                { ColorEnum.Black, "000000" },
-                { ColorEnum.White, "FFFFFF" },
-                { ColorEnum.Red, "822B31" }
-                };
+        public readonly static string peach = "FB7259";
+        public readonly static string paleBlue = "8870FD";
 
         private static readonly Dictionary<ColorVariationsEnum, string[]> ColorVariationsMap = new Dictionary<ColorVariationsEnum, string[]>
             {
@@ -47,18 +45,10 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
                 { ColorVariationsEnum.Black_PaleYellow, new string[] { black, paleYellow } },
                 { ColorVariationsEnum.Black_GreyBlue, new string[] { black, greyBlue } },
                 { ColorVariationsEnum.Black_OrangeLava, new string[] { black, orangeLava } },
-
+                { ColorVariationsEnum.Black_Peach, new string[] { black, peach } },
+                { ColorVariationsEnum.Black_PaleBlue, new string[] { black, paleBlue } },
             };
 
-
-        public static string GetColorCode(ColorEnum color)
-        {
-            if (ColorMap.ContainsKey(color))
-            {
-                return ColorMap[color];
-            }
-            throw new ArgumentException("ColorEnum not found in ColorMap");
-        }
 
         public static string[] GetColorVariations(ColorVariationsEnum color)
         {

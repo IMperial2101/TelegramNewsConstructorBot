@@ -1,4 +1,5 @@
-﻿using NewsPropertyBot.NewClass;
+﻿using AngleSharp.Dom;
+using NewsPropertyBot.NewClass;
 using NewsPropertyBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.PropertiesClass;
 using System;
@@ -14,12 +15,29 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
     {
         public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
         {
-            myNew.descriptionToSend = MakeDescriptionToSend(myNew);
-            await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, $"*{myNew.title}*\n\n{myNew.descriptionToSend}", ParseMode.Markdown);
+            try
+            {
+                string message = MakeMessage(myNew);
+                await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, message, ParseMode.Markdown);
+            }
+            catch (Exception ex)
+            {
+                await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
+                    $"Стратегия отправки {GetSendStrategyName()}");
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            
         }
         public string GetSendStrategyName()
         {
             return "TitleDescription";
+        }
+        private string MakeMessage(MyNew myNew)
+        {
+            myNew.descriptionToSend = MakeDescriptionToSend(myNew);
+            string message = $"*{myNew.title}*\n\n{myNew.descriptionToSend}";
+            message += $"\n\n{MakeSubscribeBar()}";
+            return message;
         }
     }
 }
