@@ -11,7 +11,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.St
 {
     internal abstract class AbstractPhotoConstructor
     {
-        protected MyTelegramBot myTelegramBot = new MyTelegramBot();
+        protected TelegramBotSendler myTelegramBot = new TelegramBotSendler();
         public Font AdjustFontSize(string text,string fontName, RectangleF rect)
         {
             Font font;

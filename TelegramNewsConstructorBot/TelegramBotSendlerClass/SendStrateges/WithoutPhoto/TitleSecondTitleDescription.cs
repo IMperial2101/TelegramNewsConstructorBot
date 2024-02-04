@@ -9,16 +9,16 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.Enums;
 
-namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
+namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
-    internal class TitleSecondTitleDescriptionClearPhoto : PhotoConstructorForSendler, ISendNew
+    public class TitleSecondTitleDescription : PhotoConstructorForSendler,ISendNew
     {
-        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
         {
-            string message = MakeMessage(myNew);
             try
             {
-                await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, myNew.photoUrl, message, ParseMode.Markdown);
+                string message = MakeMessage(myNew);
+                await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID, message, ParseMode.Markdown);
             }
             catch (Exception ex)
             {
@@ -26,18 +26,17 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
                     $"Стратегия отправки {GetSendStrategyName()}");
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
-        }
-        public string GetSendStrategyName()
-        {
-            return "TitleSecondTitleDescriptionClearPhoto";
+            
         }
         private string MakeMessage(MyNew myNew)
         {
             StringBuilder messageBuilder = new StringBuilder();
-            messageBuilder.AppendLine(MakeCorrectTitle($"{MyPropertiesStatic.smile}*{myNew.title}*"));
+            messageBuilder.Append(MyPropertiesStatic.smile);
+            messageBuilder.AppendLine($"*{myNew.title}*");
             if (myNew.secondTitle != null)
-                messageBuilder.AppendLine(MakeCorrectTitle($"_{myNew.secondTitle}_"));
-            messageBuilder.AppendLine();
+            {
+                messageBuilder.AppendLine($"_{myNew.secondTitle}_\n");
+            }
             myNew.descriptionToSend = MakeDescriptionToSend(myNew);
 
             // Используем регулярное выражение для поиска текста внутри кавычек
@@ -53,8 +52,20 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
             }
 
             messageBuilder.AppendLine(myNew.descriptionToSend);
+            messageBuilder.AppendLine();
             messageBuilder.AppendLine(MakeSubscribeBar());
+
             return messageBuilder.ToString();
+        }
+        private string MakeSecondTitle(MyNew myNew)
+        {
+            if (myNew.secondTitle == null)
+                return "";
+            return myNew.secondTitle + "\n";
+        }
+        public string GetSendStrategyName()
+        {
+            return "TitleSecondTitleDescription";
         }
     }
 }

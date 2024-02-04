@@ -1,6 +1,6 @@
 ﻿{
 	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
-	"channelID": "@OfficialWorldNews",
+	"channelID": "@RiaNewsParseWorld2",
 	"parseLink": "https://rsport.ria.ru/category_mma/",
 	"useProxy": "yes",
 	"myProxy": {
@@ -9,6 +9,7 @@
 		"login": "XrVHcG",
 		"password": "pthNrV"
 	},
+	"adminKey": "1234",
 	"timeBetweenMainParseMinutes": 5,
 	"minViewCount": 10000,
 	"timeBetweenSendMessSeconds": 5,

@@ -15,7 +15,7 @@ namespace RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock
     public class PhotoConstructor
     {
 
-        private MyTelegramBot myTelegramBot = new MyTelegramBot();
+        private TelegramBotSendler myTelegramBot = new TelegramBotSendler();
         private IPhotoConstructorStrategy? constructoStrategy;
         public void SetStrategyAddText(IPhotoConstructorStrategy addText)
         {

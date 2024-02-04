@@ -2,23 +2,23 @@
 using NewsPropertyBot.TelegramBotClass;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
+using RiaNewsParserTelegramBot.PropertiesClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RiaNewsParserTelegramBot.PropertiesClass;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 
-namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopPhoto
+namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopPhoto.OnlyDescriptionOnPhoto
 {
-    internal class DescriptionRightPhoto : PhotoConstructorForSendler, ISendNew
+    public class DescriptionLeftPhoto : PhotoConstructorForSendler,ISendNew
     {
-        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
         {
             ColorVariationsEnum colorVariations = MyColorConverter.GetRandomColorVariation();
-            await MakePhoto(myNew, new DescriptionRightBlackBlock(), colorVariations);
+            await MakePhoto(myNew, new DescriptionLeftBlackBlock(), colorVariations);
             try
             {
                 string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
@@ -34,23 +34,24 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopP
                     Console.WriteLine("Файл не найден!");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await myTelegramBot.SendMessageToOwner($"Ошибка отправки сообщения: {ex.Message} - {myNew.url}\n" +
                     $"Стратегия отправки {GetSendStrategyName()}");
+
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
         public string GetSendStrategyName()
         {
-            return "DescriptionRightPhoto";
+            return "DescriptionLeftPhoto";
         }
         public string MakeMessage(MyNew myNew)
         {
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.Append(MyPropertiesStatic.smile);
             messageBuilder.AppendLine($"*{myNew.title}*");
-            if(myNew.secondTitle != null)
+            if (myNew.secondTitle != null)
                 messageBuilder.AppendLine($"_{myNew.secondTitle}_");
             messageBuilder.AppendLine();
             messageBuilder.AppendLine(MakeSubscribeBar());

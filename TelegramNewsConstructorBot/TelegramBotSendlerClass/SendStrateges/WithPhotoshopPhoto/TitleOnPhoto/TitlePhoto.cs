@@ -16,7 +16,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
      class TitlePhoto : PhotoConstructorForSendler, ISendNew
      {
-        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
         {
 
             await MakePhoto(myNew,new TitleUnderBlackBlock(), ColorVariationsEnum.Black_OrangeLava);

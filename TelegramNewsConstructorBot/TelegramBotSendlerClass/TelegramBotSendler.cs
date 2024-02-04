@@ -14,12 +14,12 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace NewsPropertyBot.TelegramBotClass
 {
-    public class MyTelegramBot
+    public class TelegramBotSendler
     {
         static string imagesFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         public TelegramBotClient botClient;
         string ownerMessage;
-        public MyTelegramBot()
+        public TelegramBotSendler()
         {
             botClient = new TelegramBotClient(MyPropertiesStatic.botToken);
             ownerMessage = $"Date: {DateTime.Now}\n" +

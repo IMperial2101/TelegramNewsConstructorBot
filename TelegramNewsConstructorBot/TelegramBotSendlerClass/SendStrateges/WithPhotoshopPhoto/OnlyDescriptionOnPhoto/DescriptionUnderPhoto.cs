@@ -1,7 +1,7 @@
 ﻿using NewsPropertyBot.NewClass;
 using NewsPropertyBot.TelegramBotClass;
-using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock.Strategies;
+using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 using RiaNewsParserTelegramBot.PropertiesClass;
 using System;
 using System.Collections.Generic;
@@ -11,25 +11,23 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 
-namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
+namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithPhotoshopPhoto.OnlyDescriptionOnPhoto
 {
-    public class TitleWithDescriptionPhoto : PhotoConstructorForSendler,ISendNew
+    public class DescriptionUnderPhoto : PhotoConstructorForSendler,ISendNew
     {
-        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
         {
             ColorVariationsEnum colorVariations = MyColorConverter.GetRandomColorVariation();
-
-            myNew.descriptionToSend = myNew.description[0];
-            await MakePhoto(myNew, new TitleWithDescription(), colorVariations);
+            await MakePhoto(myNew, new DescriptionUnderBlackBlock(), colorVariations);
             try
             {
                 string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
-                string message = MakeMessage(myNew);
                 if (System.IO.File.Exists(pathToPhoto))
                 {
+                    string message = MakeMessage(myNew);
                     using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
                     InputOnlineFile inputFile = new InputOnlineFile(fileStream);
-                    await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile,message, ParseMode.Markdown);
+                    await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile, message, ParseMode.Markdown);
                 }
                 else
                 {
@@ -43,25 +41,21 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
-        private string MakeMessage(MyNew myNew)
+        public string GetSendStrategyName()
+        {
+            return "DescriptionUnderPhoto";
+        }
+        public string MakeMessage(MyNew myNew)
         {
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.Append(MyPropertiesStatic.smile);
+            messageBuilder.AppendLine($"*{myNew.title}*");
             if (myNew.secondTitle != null)
-            {
-                messageBuilder.AppendLine($"*{myNew.secondTitle}*");
-            }
-            else
-            {
-                messageBuilder.AppendLine($"*{myNew.title}*");
-            }
+                messageBuilder.AppendLine($"_{myNew.secondTitle}_");
             messageBuilder.AppendLine();
             messageBuilder.AppendLine(MakeSubscribeBar());
             return messageBuilder.ToString();
-        }
-        public string GetSendStrategyName()
-        {
-            return "TitleWithDescriptionPhoto";
+
         }
     }
 }

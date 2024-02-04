@@ -3,7 +3,7 @@ using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace NewsPropertyBot.ParsingClasses
 {
-    partial class Parser
+    public partial class MyParser
     {
         private Dictionary<string, bool> AddNewLinksToSend(Dictionary<string, int> mainPageLinksWithViewsDict, Dictionary<string, bool> currLinksForSendInChannel)
         {

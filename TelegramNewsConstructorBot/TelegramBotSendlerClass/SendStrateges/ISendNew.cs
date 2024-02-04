@@ -11,7 +11,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
     public interface ISendNew
     {
-        Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew);
+        Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew);
         string GetSendStrategyName();
     }
 }

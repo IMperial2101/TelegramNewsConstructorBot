@@ -11,12 +11,12 @@ using RiaNewsParserTelegramBot.MyNewConstrucorBlock.PhotoConstructorBlock;
 
 namespace RiaNewsParserTelegramBot.TelegramBotClass
 {
-    internal class MyNewTelegramSendler
+    public class MyNewTelegramSendler
     {
         public string pathToImages = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
         private ISendNew? sendStrategy;
-        MyTelegramBot myTelegramBot;
-        public MyNewTelegramSendler(MyTelegramBot myTelegramBot)
+        TelegramBotSendler myTelegramBot;
+        public MyNewTelegramSendler(TelegramBotSendler myTelegramBot)
         {
             this.myTelegramBot = myTelegramBot; 
         }

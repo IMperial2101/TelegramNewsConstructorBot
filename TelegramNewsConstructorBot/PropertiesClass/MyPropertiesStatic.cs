@@ -9,6 +9,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public static string parseLink { get; set; }
         public static string useProxy { get; set; }
         public static MyProxy myProxy { get; set; }
+        public static string adminKey { get; set; }
         public static int timeBetweenMainParseMinutes { get; set; }
         public static int minViewCount { get; set; }
         public static int timeBetweenSendMessSeconds { get; set; }
@@ -27,6 +28,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
             parseLink = properties.parseLink;
             useProxy = properties.useProxy;
             myProxy = properties.myProxy;
+            adminKey = properties.adminKey;
             timeBetweenMainParseMinutes = properties.timeBetweenMainParseMinutes;
             minViewCount = properties.minViewCount;
             timeBetweenSendMessSeconds = properties.timeBetweenSendMessSeconds;

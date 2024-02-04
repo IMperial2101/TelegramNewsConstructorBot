@@ -8,18 +8,18 @@ using RiaNewsParserTelegramBot.PropertiesClass;
 
 namespace NewsPropertyBot.ParsingClasses
 {
-    partial class Parser
+    public partial class MyParser
     {
         Dictionary<string, bool> currLinksForSendInChannel = new Dictionary<string, bool>();
         Dictionary<string, int> mainPageLinksWithViewsDict;
         XPathStrings xPathStrings = new XPathStrings();
         HtmlDocument htmlDocumentMainPage = new HtmlDocument();        
         HttpClient httpClient;
-        MyTelegramBot telegramBot;
+        TelegramBotSendler telegramBot;
 
         string parseLink;
         
-        public Parser(MyTelegramBot telegramBot)
+        public MyParser(TelegramBotSendler telegramBot)
         {
             this.telegramBot = telegramBot;
             parseLink = MyPropertiesStatic.parseLink;

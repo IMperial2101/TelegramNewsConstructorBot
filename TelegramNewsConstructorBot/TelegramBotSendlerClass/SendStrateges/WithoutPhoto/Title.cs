@@ -13,7 +13,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
     public class Title : PhotoConstructorForSendler, ISendNew
     {
-        public async Task SendNew(MyTelegramBot myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
         {
             try
             {
