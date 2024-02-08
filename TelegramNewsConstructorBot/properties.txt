@@ -1,6 +1,9 @@
 ﻿{
+	"userNames": {
+		"Danilll9997":"1234"
+	},
 	"botToken": "6624455464:AAEEoZDmTM1q4GQgsXqQiIGIHSbW2jb3BS0",
-	"channelID": "@RiaNewsParseWorld2",
+	"channelID": "626774740",
 	"parseLink": "https://rsport.ria.ru/category_mma/",
 	"useProxy": "yes",
 	"myProxy": {

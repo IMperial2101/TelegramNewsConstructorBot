@@ -5,45 +5,7 @@ namespace NewsPropertyBot.ParsingClasses
 {
     public partial class MyParser
     {
-        private Dictionary<string, bool> AddNewLinksToSend(Dictionary<string, int> mainPageLinksWithViewsDict, Dictionary<string, bool> currLinksForSendInChannel)
-        {
-            try
-            {
-                foreach (var myNew in mainPageLinksWithViewsDict)
-                {
-
-                    if (!currLinksForSendInChannel.ContainsKey(myNew.Key) && myNew.Value > MyPropertiesStatic.minViewCount)
-                    {
-                        currLinksForSendInChannel.Add(myNew.Key, false);
-                    }
-                }
-                return currLinksForSendInChannel;
-            }
-            catch (Exception ex)
-            {
-                telegramBot.SendMessageToOwner($"Ошибка в методе AddNewLinksToSend(): {ex.Message}");
-                return null;
-            }
-        }
-        private Dictionary<string, bool> RemoveNoActualLinks(Dictionary<string, int> mainPageLinksWithViewsDict, Dictionary<string, bool> currLinksForSendInChannel)
-        {
-            try
-            {
-                foreach (var link in currLinksForSendInChannel)
-                {
-                    if (!mainPageLinksWithViewsDict.ContainsKey(link.Key) && link.Value == true)
-                    {
-                        currLinksForSendInChannel.Remove(link.Key);
-                    }
-                }
-                return currLinksForSendInChannel;
-            }
-            catch (Exception ex)
-            {
-                telegramBot.SendMessageToOwner($"Ошибка в методе RemoveNoActualLinks(): {ex.Message}");
-                return null;
-            }
-        }
+       
         public async Task DownloadPageAsync(string pageUrl, HtmlDocument htmlDocument)
         {
             try

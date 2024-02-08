@@ -41,6 +41,7 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
         }
         private void MakeNew(MyUser user)
         {
+            user.myNew = null;
             telegramBot.SendTextMessageAsync(user.chatId, "*Отправьте ссылку на новость*",ParseMode.Markdown);
             user.UserStateCommands = EnumsState.Enums.UserStateCommands.CreateNew;
             user.CreateNewState = EnumsState.Enums.CreateNewState.GetLink;
@@ -52,5 +53,6 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
             user.UserStateCommands = EnumsState.Enums.UserStateCommands.Default;
             myMessages.SendCommandsAsync(user);
         }
+
     }
 }

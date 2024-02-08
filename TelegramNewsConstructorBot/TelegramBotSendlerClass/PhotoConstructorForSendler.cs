@@ -59,12 +59,12 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
             else
                 return title;
         }
-        protected string MakeSubscribeBar()
+        protected string MakeSubscribeBar(MyNew myNew)
         {
-            string subscribeBar = $"[🔥MARHSALL.ПОДПИСАТЬСЯ🔥](https://t.me/{MyPropertiesStatic.channelID.Substring(1)})\n\n";
+            string subscribeBar = $"[Читать полностью]({myNew.url})\n\n[🔥MARHSALL.ПОДПИСАТЬСЯ🔥](https://t.me/{MyPropertiesStatic.channelID.Substring(1)})\n\n";
             return subscribeBar;
 
         }
-        
+
     }
 }

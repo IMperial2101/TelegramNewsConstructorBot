@@ -13,12 +13,12 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
 {
     internal class TitleClearPhoto : PhotoConstructorForSendler, ISendNew
     {
-        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew,string chatId)
         {
             string message = MakeMessage(myNew);
             try
             {
-                await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, myNew.photoUrl,message, ParseMode.Markdown);
+                await myTelegramBot.botClient.SendPhotoAsync(chatId, myNew.photoUrl,message, ParseMode.Markdown);
             }
             catch(Exception ex)
             {
@@ -34,7 +34,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges.WithClearPhoto
         private string MakeMessage(MyNew myNew)
         {
             string message = MakeCorrectTitle($"{MyPropertiesStatic.smile}*{myNew.title}*");
-            message += $"\n\n{MakeSubscribeBar()}";
+            message += $"\n\n{MakeSubscribeBar(myNew)}";
             return message;
         }
     }

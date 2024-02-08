@@ -11,6 +11,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
 {
     public class MyProperties
     {
+        public Dictionary<string, string> userNames { get; set; }
         public string botToken { get; set; }
         public string channelID { get; set; }
         public string parseLink { get; set; }

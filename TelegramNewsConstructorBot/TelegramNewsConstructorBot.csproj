@@ -28,6 +28,7 @@
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderDescription.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\PhotoTextUnderTitle.cs" />
     <Compile Remove="MyNewConstrucorBlock\PhotoConstructorBlock\Strategies\test.cs" />
+    <Compile Remove="ParsingBlock\ParsingClasses\ParserController.cs" />
     <Compile Remove="TelegramBotSendlerClass\AbstractPhotoSendler.cs" />
     <Compile Remove="TelegramBotSendlerClass\TelegramBotSendlerFactory.cs" />
   </ItemGroup>

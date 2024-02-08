@@ -16,19 +16,19 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
      class TitlePhoto : PhotoConstructorForSendler, ISendNew
      {
-        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew,string chatId)
         {
 
             await MakePhoto(myNew,new TitleUnderBlackBlock(), ColorVariationsEnum.Black_OrangeLava);
             try
             {
-                string message = MakeMessage();
+                string message = MakeMessage(myNew);
                 string pathToPhoto = Path.Combine(pathToImages, myNew.photoName + "Done.png");
                 if (System.IO.File.Exists(pathToPhoto))
                 {
                     using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
                     InputOnlineFile inputFile = new InputOnlineFile(fileStream);
-                    await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile,message,ParseMode.Markdown);
+                    await myTelegramBot.botClient.SendPhotoAsync(chatId, inputFile,message,ParseMode.Markdown);
                 }
                 else
                 {
@@ -48,9 +48,9 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         {
             return "TitlePhoto";
         }
-        private string MakeMessage()
+        private string MakeMessage(MyNew myNew)
         {
-            string message = $"\n{MakeSubscribeBar()}";
+            string message = $"\n{MakeSubscribeBar(myNew)}";
             return message;
         }
     }

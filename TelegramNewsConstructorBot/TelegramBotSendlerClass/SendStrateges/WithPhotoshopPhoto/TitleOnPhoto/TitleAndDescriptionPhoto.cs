@@ -17,7 +17,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
     internal class TitleAndDescriptionPhoto : PhotoConstructorForSendler,ISendNew
     {
-        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew,string chatId)
         {
 
             ColorVariationsEnum colorVariations = MyColorConverter.GetRandomColorVariation();
@@ -32,7 +32,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
                     string message = MakeMessage(myNew);
                     using FileStream fileStream = new(pathToPhoto, FileMode.Open, FileAccess.Read, FileShare.Read);
                     InputOnlineFile inputFile = new InputOnlineFile(fileStream);
-                    await myTelegramBot.botClient.SendPhotoAsync(MyPropertiesStatic.channelID, inputFile, message, ParseMode.Markdown);
+                    await myTelegramBot.botClient.SendPhotoAsync(chatId, inputFile, message, ParseMode.Markdown);
                 }
                 else
                 {
@@ -70,8 +70,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
             }
 
             messageBuilder.AppendLine(myNew.descriptionToSend);
-            messageBuilder.AppendLine();
-            messageBuilder.AppendLine(MakeSubscribeBar());
+            messageBuilder.AppendLine(MakeSubscribeBar(myNew));
 
             return messageBuilder.ToString();
         }

@@ -22,7 +22,10 @@ namespace TelegramNewsConstructorBot.TelegramBot.EnumsState
         }
         public enum CreateNewState
         {
-            GetLink
+            GetLink,
+            ChooseStrategy,
+            SendChannel,
+            Confirm
         }
 
     }

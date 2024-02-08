@@ -13,12 +13,12 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
 {
     public class Title : PhotoConstructorForSendler, ISendNew
     {
-        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew)
+        public async Task SendNew(TelegramBotSendler myTelegramBot, MyNew myNew, string chatId)
         {
             try
             {
                 string message = MakeMessage(myNew);
-                await myTelegramBot.botClient.SendTextMessageAsync(MyPropertiesStatic.channelID,message, ParseMode.Markdown);
+                await myTelegramBot.botClient.SendTextMessageAsync(chatId, message, ParseMode.Markdown);
             }
             catch (Exception ex)
             {
@@ -34,7 +34,7 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass.SendStrateges
         private string MakeMessage(MyNew myNew)
         {
             string message = $"*{myNew.title}*";
-            message += $"\n\n{MakeSubscribeBar()}";
+            message += $"\n\n{MakeSubscribeBar(myNew)}";
             return message;
         }
     }

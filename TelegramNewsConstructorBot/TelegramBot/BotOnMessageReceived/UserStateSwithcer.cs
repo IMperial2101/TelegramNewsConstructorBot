@@ -14,6 +14,7 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using TelegramNewsConstructorBot.TelegramBot.EnumsState;
 using TelegramNewsConstructorBot.TelegramBot.User;
+using static TelegramNewsConstructorBot.TelegramBot.EnumsState.Enums;
 
 namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
 {
@@ -38,23 +39,32 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
                 return;
             switch (user.UserState)
             {
-                case Enums.UserState.Start:
+                case UserState.Start:
                     UserState_Start(user);
                     break;
-                case Enums.UserState.EnterKey:
+                case UserState.EnterKey:
                     UserState_EnterKey(user,message);
                     break;
-                case Enums.UserState.Commands:
+                case UserState.Commands:
                     switch(user.UserStateCommands)
                     {
-                        case Enums.UserStateCommands.Default:
+                        case UserStateCommands.Default:
                             UserStateCommandsDefault(user);
                             break;
-                        case Enums.UserStateCommands.CreateNew:
+                        case UserStateCommands.CreateNew:
                             switch(user.CreateNewState)
                             {
-                                case Enums.CreateNewState.GetLink:
+                                case CreateNewState.GetLink:
                                     CreateNewState_GetLink(user,message);
+                                    break;
+                                case CreateNewState.ChooseStrategy:
+                                    CreateNewState_ChooseStrategy(user);
+                                    break;
+                                case CreateNewState.SendChannel:
+                                    CreateNewState_SendChannel(user,message);
+                                    break;
+                                case CreateNewState.Confirm:
+                                    CreateNewState_Confirm(user);
                                     break;
                             }
                             break;
@@ -71,8 +81,14 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
         }
         private async void UserState_EnterKey(MyUser user,Message message)
         {
+            string username = message.Chat.Username;
+            if (!MyPropertiesStatic.userNames.ContainsKey(username))
+            {
+                await telegramBot.SendTextMessageAsync(user.chatId, "У вас нет доступа к этому боту, обратитесь к @Danilll9997 ");
+                return;
+            }
             string messageText = message.Text;
-            if (messageText == MyPropertiesStatic.adminKey)
+            if (messageText == MyPropertiesStatic.userNames[username])
             {
                 await telegramBot.SendTextMessageAsync(user.chatId, "Успешная авторизация");
                 user.UserState = Enums.UserState.Commands;
@@ -87,10 +103,6 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
         {
             telegramBot.SendTextMessageAsync(user.chatId, "Выберите команду на клавиатуре");
         }
-        private async void UserState_ChooseCommands(MyUser user, Message message)
-        {
-            await telegramBot.SendTextMessageAsync(user.chatId, "Выберите команду");
-        }
         private async void CreateNewState_GetLink(MyUser user,Message message)
         {
             
@@ -99,18 +111,55 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
             {
                 await telegramBot.SendTextMessageAsync(user.chatId, "Это не похоже на ссылку с РИА Новостей");
                 return;
-            }           
+            }
+            user.linkNew = link;
+            await telegramBot.SendTextMessageAsync(user.chatId, $"Выберите тип новости:");
+            user.skipCallbackData = false;
+            myMessages.ChooseSendStrategy(user);
+            user.CreateNewState = Enums.CreateNewState.ChooseStrategy;
+            
+            
+        }
+        private async void CreateNewState_ChooseStrategy(MyUser user)
+        {
+
+        }
+        private async void CreateNewState_SendChannel(MyUser user,Message message)
+        {
+            string channelId;
+            if(message.Text.Contains("https://t.me/"))
+            {
+                channelId = "@"+message.Text.Substring(13);
+            }
+            else if(message.Text.Contains("@"))
+            {
+                channelId = message.Text;
+            }
+            else
+            {
+                telegramBot.SendTextMessageAsync(user.chatId, "Эта ссылку не подходит, попробуйте еще раз");
+                return;
+            }
             try
             {
-                MyNew myNew = await myParser.ParseOneNewAsync(link);
-                myNewTelegramSendler.SendNew(myNew, new TitleAndDescriptionPhoto());
-                await telegramBot.SendTextMessageAsync(user.chatId, "Новость отправлена, можете отправить еще новости");
+                await myNewTelegramSendler.SendNew(user.myNew, user.ISendNew, channelId);
+                user.CreateNewState = CreateNewState.Confirm;
+                user.savedChannel = channelId;
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                user.savedChannel = null;
+                Console.WriteLine($"{ex.Message}");
+                telegramBot.SendTextMessageAsync(user.chatId, "Не удалось отправить новость попробуйте еще раз");
+                user.UserState = UserState.Commands;
+                myMessages.SendCommandsAsync(user);
             }
-            
+            user.myNew = null;
+            myMessages.BackToMenuOrCreateNew(user);
+        }
+        private async void CreateNewState_Confirm(MyUser user)
+        {
+            await telegramBot.SendTextMessageAsync(user.chatId, "Вы можете отправить создать еще новость, либо вернуться в меню");
         }
     }
 }

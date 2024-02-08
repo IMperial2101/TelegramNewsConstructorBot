@@ -4,6 +4,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
 {
     static class MyPropertiesStatic
     {
+        public static Dictionary<string,string> userNames { get; set; }
         public static string botToken { get; set; }
         public static string channelID { get; set; }
         public static string parseLink { get; set; }
@@ -23,6 +24,7 @@ namespace RiaNewsParserTelegramBot.PropertiesClass
         public static Dictionary<string, int> WeightSendStrategies { get; set; }
         public static void MakeStaticProperties(MyProperties properties)
         {
+            userNames = properties.userNames;
             botToken = properties.botToken;
             channelID = properties.channelID;
             parseLink = properties.parseLink;

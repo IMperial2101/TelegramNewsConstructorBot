@@ -24,11 +24,12 @@ namespace RiaNewsParserTelegramBot.TelegramBotClass
         {
             sendStrategy = strategy;
         }
-        public async Task SendNew(MyNew myNew, ISendNew strategy)
+        public async Task SendNew(MyNew myNew, ISendNew strategy,string chatId)
         {
+            
             if (myNew.photoUrl == null)
                 return;
-            await strategy.SendNew(myTelegramBot, myNew);
+            await strategy.SendNew(myTelegramBot, myNew, chatId);
             if (myNew.photoName != null)
                 DeleteImages(myNew);
 

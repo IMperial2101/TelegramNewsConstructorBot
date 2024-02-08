@@ -17,7 +17,7 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
 {
     public class BotOnMessageReceivedClass
     {
-        public BotOnMessageReceivedClass(TelegramBotClient _telegramBot, MyParser _myParser, MyNewTelegramSendler _myNewTelegramSendler)
+        public BotOnMessageReceivedClass(TelegramBotClient _telegramBot, MyParser _myParser, MyNewTelegramSendler _myNewTelegramSendler, Dictionary<long, MyUser> _users)
         {
             myNewTelegramSendler = _myNewTelegramSendler;
             myParser = _myParser;
@@ -25,8 +25,7 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
             myMessages = new MyMessages(telegramBot);
             userStateSwitcher = new UserStateSwithcer(telegramBot, myMessages,myParser, myNewTelegramSendler);
             userCommandSwitcher = new UserCommandSwitcher(telegramBot, myMessages,myParser, myNewTelegramSendler);
-
-            
+            users = _users;
         }
         MyNewTelegramSendler myNewTelegramSendler;
         MyParser myParser;
@@ -34,17 +33,16 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
         UserStateSwithcer userStateSwitcher;
         UserCommandSwitcher userCommandSwitcher;
         TelegramBotClient telegramBot;
-        Dictionary<long, MyUser> Users = new Dictionary<long, MyUser>();
-        List<string> allCommands = new List<string>(new string[] { "🆕Создать новость", "⬅️Комманды" });
+        Dictionary<long, MyUser> users;
+        List<string> allCommands = new List<string>(new string[] { "🆕Создать новость", "⬅️Комманды", "✅Отправить", "❌Не отправлять" });
 
         private bool switchUserstate;
-        public async void _BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        public async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
-            Console.WriteLine("@{0} send {1}\n", messageEventArgs.Message.Chat.Username, messageEventArgs.Message.Text);
-
             var message = messageEventArgs.Message;
             var chatId = message.Chat.Id;
-
+            Console.WriteLine(chatId);
+            Console.WriteLine("@{0} send {1}\n", messageEventArgs.Message.Chat.Username, messageEventArgs.Message.Text);
             if (message == null || message.Type != MessageType.Text)
                 return;
 
@@ -69,12 +67,12 @@ namespace TelegramNewsConstructorBot.TelegramBot.BotOnMessageReceived
         private MyUser CheckUserAndAdd(long chatId, string username)
         {
             MyUser user;
-            if (!Users.TryGetValue(chatId, out user))
+            if (!users.TryGetValue(chatId, out user))
             {
                 user = new MyUser();
                 user.chatId = chatId;
                 user.telegramUserName = "@" + username;
-                Users.Add(chatId, user);
+                users.Add(chatId, user);
 
             }
             return user;
